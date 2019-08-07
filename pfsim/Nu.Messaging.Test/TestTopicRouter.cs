@@ -20,5 +20,29 @@ namespace Nu.Messaging.Test
 
             testObj.ShouldBeTrue();
         }
+
+        [TestMethod]
+        public void TestPubSubByClass()
+        {
+            var router = new TopicRouter();
+            var tc = new TestClass();
+
+            router.SubscribeClass(tc);
+
+            router.Publish(true, "DoesNotMatter");
+
+            tc.Value.ShouldBeTrue();
+        }
+    }
+
+    class TestClass
+    {
+        public bool Value { get; set; }
+
+        [Subscription(typeof(bool), "#")]
+        public void HandleBool(bool b)
+        {
+            Value = b;
+        }
     }
 }

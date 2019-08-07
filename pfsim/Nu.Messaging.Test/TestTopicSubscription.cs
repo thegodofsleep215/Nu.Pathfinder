@@ -87,8 +87,21 @@ namespace Nu.Messaging.Test
                 sub.TestRoutingKey("Test.Word.Foo.Thing").ShouldBeTrue();
             }
 
+            [TestMethod]
+            public void KeysAreNotSameLengthPubIsLonger()
+            {
+                var sub = new TopicSubscription(null, "Test.Thing");
+                sub.TestRoutingKey("Test.Word.Foo.Thing").ShouldBeFalse();
+            }
+
+            [TestMethod]
+            public void KeysAreNotSameLengthSubIsLonger()
+            {
+                var sub = new TopicSubscription(null, "Test.Thing.Very.Long.Key.You.See");
+                sub.TestRoutingKey("Test.Word.Foo.Thing").ShouldBeFalse();
+            }
+
 
         }
-
     }
 }
