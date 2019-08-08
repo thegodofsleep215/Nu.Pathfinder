@@ -6,10 +6,4 @@
 
         public int Initiative { get; set; }
     }
-
-    public class CharacterLoaded
-    {
-        public static string RoutingKey = "Character.Loaded";
-        public Character Character { get; set; }
-    }
 }

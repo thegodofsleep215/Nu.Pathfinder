@@ -3,4 +3,6 @@
     public class RollForInitiative
     {
     }
+
+    public class StartCombat { }
 }

@@ -36,8 +36,8 @@
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="Nu.CommandLine, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Nu.CommandLine.1.6.0\lib\Nu.CommandLine.dll</HintPath>
+    <Reference Include="Nu.CommandLine, Version=1.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Nu.CommandLine.1.7.0\lib\Nu.CommandLine.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration.Install" />
@@ -54,11 +54,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ControlService.cs" />
     <Compile Include="ActionContainers\ShutdownCommand.cs" />
+    <Compile Include="Events\CharacterLoaded.cs" />
     <Compile Include="Events\InitiativeRolled.cs" />
     <Compile Include="Game\Character.cs" />
     <Compile Include="ActionContainers\PfSimCommands.cs" />
-    <Compile Include="Game\ChracterManager.cs" />
+    <Compile Include="Game\CombatEngine.cs" />
     <Compile Include="Game\DiceRoller.cs" />
     <Compile Include="Game\GameCharacter.cs" />
     <Compile Include="Game\IWeaponAttack.cs" />

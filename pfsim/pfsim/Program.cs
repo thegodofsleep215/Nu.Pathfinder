@@ -17,18 +17,7 @@ namespace pfsim
             var rc = HostFactory.Run(x =>
             {
                 HostLogger.UseLogger(new NullLogger());
-                x.Service<CommandProcessor>(s =>
-                {
-                    s.ConstructUsing(name =>
-                    {
-                        var cp = CommandProcessor.GenerateCommandProcessor(new InteractiveCommandLineCommunicator("pfsim"));
-                        cp.RegisterObject(new PfSimCommands());
-                        return cp;
-                    });
-                    s.WhenStarted(cp => cp.Start());
-                    s.WhenStopped(cp => cp.Stop());
-                    x.RunAsPrompt();
-                });
+                x.Service<ControlService>();
             });
         }
     }
@@ -157,7 +146,6 @@ namespace pfsim
 
         public void Shutdown()
         {
-            throw new NotImplementedException();
         }
 
         public void Warn(object obj)
