@@ -12,8 +12,6 @@ namespace pfsim
 
         public int Dexterity { get; set; }
 
-        public string Affiliation { get; set; }
-
         public MeleeAttacks[] MeleeAttacks { get; set; }
 
         public int MaxHitPoints { get; set; }

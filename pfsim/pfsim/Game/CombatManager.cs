@@ -32,7 +32,7 @@ namespace pfsim
         {
             if (activeCombat != null)
             {
-                Enumerable.Repeat(characters[ac.Name.ToLower()], ac.Quantity).ToList().ForEach(activeCombat.AddCombatant);
+                Enumerable.Repeat(characters[ac.Name.ToLower()], ac.Quantity).ToList().ForEach(x => activeCombat.AddCombatant(x, ac.Affiliation));
             }
         }
 

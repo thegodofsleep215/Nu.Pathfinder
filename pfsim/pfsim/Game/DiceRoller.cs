@@ -12,7 +12,7 @@ namespace pfsim
             return Roll(20, quantity);
         }
 
-        private int Roll(int sides, int quantity)
+        public int Roll(int sides, int quantity)
         {
             return Enumerable.Repeat(sides + 1, quantity).Sum(x => rand.Next(1, x));
         }

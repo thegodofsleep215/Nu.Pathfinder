@@ -5,5 +5,6 @@
         public string Name { get; set; }
 
         public int Quantity { get; set; }
+        public string Affiliation { get; internal set; }
     }
 }

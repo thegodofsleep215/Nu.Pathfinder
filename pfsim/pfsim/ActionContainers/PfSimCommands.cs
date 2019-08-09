@@ -54,6 +54,15 @@ namespace pfsim.ActionContainers
             return "Added.";
         }
 
+        [TypedCommand("add", "Adds combatants.")]
+        public string AddCombatant(string name, int quantity, string affiliation)
+        {
+            messageRouter.Publish(new AddCombatants { Name = name, Quantity = quantity, Affiliation = affiliation }, "Combat.Add");
+            return "Added.";
+        }
+
+
+
         [TypedCommand("rollForInitiative", "")]
         [TypedCommand("rfi", "")]
         public string RollForInitiative()

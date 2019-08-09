@@ -1,4 +1,6 @@
-﻿namespace pfsim
+﻿using System.Linq;
+
+namespace pfsim
 {
     public class MeleeAttacks : IWeaponAttack
     {
@@ -11,5 +13,17 @@
         public int DamageBonus { get; set; }
 
         public int StartOfCritRange { get; set; }
+
+        public int CritMultiplier { get; set; }
+
+        public int RollDamage(DiceRoller roller, bool isCrit)
+        {
+            return isCrit ? roller.Roll(DiceSize, DiceNumber * CritMultiplier) + DamageBonus * CritMultiplier : roller.Roll(DiceSize, DiceNumber) + DamageBonus ;
+        }
+
+        public int RollToHit(DiceRoller roller)
+        {
+            return roller.D20(1) + Bonus;
+        }
     }
 }
