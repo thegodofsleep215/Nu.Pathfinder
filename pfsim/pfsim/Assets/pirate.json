@@ -1,0 +1,8 @@
+{
+"Name":"Pirate",
+"InitiativeBonus":2,
+"AC":12,
+"MaxHitPoints":11,
+"Deterity":14,
+"MeleeAttacks":[{"Bonus":3, "DiceSize":6, "DiceNumber":1, "DamageBonus":1, "StartOfCritRange":18}]
+}

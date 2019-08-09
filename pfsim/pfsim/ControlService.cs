@@ -1,8 +1,12 @@
-﻿using Nu.CommandLine;
+﻿using Newtonsoft.Json;
+using Nu.CommandLine;
 using Nu.CommandLine.Communication;
 using Nu.Messaging;
 using pfsim.ActionContainers;
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using Topshelf;
 
 namespace pfsim
@@ -13,7 +17,7 @@ namespace pfsim
         private HostControl hostControl;
         private CommandProcessor cp;
         private readonly IMessageRouter messageRouter;
-        private CombatEngine ce;
+        private CombatManager ce;
 
         public ControlService()
         {
@@ -23,7 +27,7 @@ namespace pfsim
             cp = CommandProcessor.GenerateCommandProcessor(new InteractiveCommandLineCommunicator("pfsim"));
             cp.RegisterObject(new PfSimCommands(messageRouter));
 
-            ce = new CombatEngine(messageRouter);
+            ce = new CombatManager(messageRouter, LoadAssets());
 
         }
         public bool Start(HostControl hostControl)
@@ -39,11 +43,22 @@ namespace pfsim
             return true;
         }
 
-        [Subscription(typeof(ShutdownCommand), ShutdownCommand.RoutingKey)]
+        [Subscription(ShutdownCommand.RoutingKey)]
         public void ShutDown(ShutdownCommand sc)
         {
             hostControl.Stop();
             Environment.Exit(0);
+        }
+
+        private List<Character> LoadAssets()
+        {
+            var folder = ".\\Assets";
+            if (!Directory.Exists(folder))
+            {
+                return new List<Character>();
+            }
+            var charFiles = Directory.GetFiles(folder, "*.json");
+            return charFiles.Select(cf => JsonConvert.DeserializeObject<Character>(File.ReadAllText(cf))).ToList();
         }
     }
 }

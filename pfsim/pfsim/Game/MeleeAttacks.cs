@@ -9,5 +9,7 @@
         public int DiceNumber { get; set; }
 
         public int DamageBonus { get; set; }
+
+        public int StartOfCritRange { get; set; }
     }
 }

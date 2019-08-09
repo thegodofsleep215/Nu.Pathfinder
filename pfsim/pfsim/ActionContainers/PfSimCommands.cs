@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Nu.CommandLine.Attributes;
 using Nu.Messaging;
+using pfsim.Commands;
 using pfsim.Events;
 using System.Collections.Generic;
 using System.IO;
@@ -44,6 +45,29 @@ namespace pfsim.ActionContainers
                     break;
             }
             return message;
+        }
+        
+        [TypedCommand("add", "Adds combatants.")]
+        public string AddCombatant(string name, int quantity)
+        {
+            messageRouter.Publish(new AddCombatants { Name = name, Quantity = quantity }, "Combat.Add");
+            return "Added.";
+        }
+
+        [TypedCommand("rollForInitiative", "")]
+        [TypedCommand("rfi", "")]
+        public string RollForInitiative()
+        {
+            messageRouter.Publish(new RollForInitiative(), "Combat.RollForInitiative");
+            return "Done.";
+        }
+
+
+        [TypedCommand("next", "Runs the next combat action")]
+        public string NextCombatAction()
+        {
+            var result = messageRouter.RemoteCall<NextCombatAction, ActionResult>(new NextCombatAction());
+            return result.Message;
         }
 
         [TypedCommand("exit", "")]

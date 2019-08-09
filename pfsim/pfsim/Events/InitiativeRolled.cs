@@ -6,4 +6,9 @@
 
         public int Initiative { get; set; }
     }
+
+    public class ActionResult
+    {
+        public string Message { get; set; }
+    }
 }

@@ -54,6 +54,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\AddCombatants.cs" />
+    <Compile Include="Commands\StartCombat.cs" />
     <Compile Include="ControlService.cs" />
     <Compile Include="ActionContainers\ShutdownCommand.cs" />
     <Compile Include="Events\CharacterLoaded.cs" />
@@ -61,17 +63,21 @@
     <Compile Include="Game\Character.cs" />
     <Compile Include="ActionContainers\PfSimCommands.cs" />
     <Compile Include="Game\CombatEngine.cs" />
+    <Compile Include="Game\CombatManager.cs" />
     <Compile Include="Game\DiceRoller.cs" />
     <Compile Include="Game\GameCharacter.cs" />
     <Compile Include="Game\IWeaponAttack.cs" />
     <Compile Include="Game\MeleeAttacks.cs" />
     <Compile Include="Game\RangedAttack.cs" />
-    <Compile Include="Commands\RollForInitiative.cs" />
+    <Compile Include="Commands\NextCombatAction.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Assets\pirate.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
