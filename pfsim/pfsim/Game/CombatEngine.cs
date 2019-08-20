@@ -15,7 +15,6 @@ namespace pfsim
 
     public class CombatEngine : ICharacterInteraction
     {
-        private DiceRoller roller = new DiceRoller();
 
         class GameCharacterCollection : IEnumerable<GameCharacter>
         {
@@ -55,7 +54,6 @@ namespace pfsim
             }
         }
 
-        private DiceRoller diceRoller = new DiceRoller();
 
         private GameCharacterCollection characters = new GameCharacterCollection();
 
@@ -67,7 +65,7 @@ namespace pfsim
 
         public void RollForInitiative()
         {
-            characters.ForEach(x => x.InitiativeRoll(diceRoller.D20(1)));
+            characters.ForEach(x => x.InitiativeRoll(DiceRoller.D20(1)));
             initiativeEnumerator = characters.GetEnumerator();
         }
 
@@ -102,19 +100,19 @@ namespace pfsim
         {
             var result = new AttackResult
             {
-                RollToHit = weapon.RollToHit(roller)
+                RollToHit = weapon.RollToHit()
             };
             if (result.RollToHit >= characters[opponentId].BaseCharacter.AC)
             {
-                if (result.RollToHit >= weapon.StartOfCritRange && weapon.RollToHit(roller) >= characters[opponentId].BaseCharacter.AC)
+                if (result.RollToHit >= weapon.StartOfCritRange && weapon.RollToHit() >= characters[opponentId].BaseCharacter.AC)
                 {
                     result.AttackType = AttackResult.AttackResultType.Crit;
-                    result.Damage = weapon.RollDamage(roller, true);
+                    result.Damage = weapon.RollDamage(true);
                 }
                 else
                 {
                     result.AttackType = AttackResult.AttackResultType.Hit;
-                    result.Damage = weapon.RollDamage(roller, false);
+                    result.Damage = weapon.RollDamage(false);
                 }
                 characters[opponentId].CurrentHitpoints -= result.Damage;
             }

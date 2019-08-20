@@ -16,14 +16,15 @@ namespace pfsim
 
         public int CritMultiplier { get; set; }
 
-        public int RollDamage(DiceRoller roller, bool isCrit)
+        public int RollDamage(bool isCrit)
         {
-            return isCrit ? roller.Roll(DiceSize, DiceNumber * CritMultiplier) + DamageBonus * CritMultiplier : roller.Roll(DiceSize, DiceNumber) + DamageBonus ;
+            return isCrit ? DiceRoller.Roll(DiceSize, DiceNumber * CritMultiplier) + DamageBonus * CritMultiplier :
+                DiceRoller.Roll(DiceSize, DiceNumber) + DamageBonus;
         }
 
-        public int RollToHit(DiceRoller roller)
+        public int RollToHit()
         {
-            return roller.D20(1) + Bonus;
+            return DiceRoller.D20(1) + Bonus;
         }
     }
 }

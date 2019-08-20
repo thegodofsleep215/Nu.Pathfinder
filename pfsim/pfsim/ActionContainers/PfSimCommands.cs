@@ -46,7 +46,7 @@ namespace pfsim.ActionContainers
             }
             return message;
         }
-        
+
         [TypedCommand("add", "Adds combatants.")]
         public string AddCombatant(string name, int quantity)
         {
@@ -86,4 +86,21 @@ namespace pfsim.ActionContainers
             return "Exiting";
         }
     }
+
+    public class OfficerMiniGameCommands
+    {
+        IMessageRouter messageRouter;
+
+        public OfficerMiniGameCommands(IMessageRouter messageRouter)
+        {
+            this.messageRouter = messageRouter;
+        }
+
+        [TypedCommand("omg", "Rolls one day of the officer mini game.")]
+        public string OmgRoll()
+        {
+            return "";
+        }
+    }
+
 }

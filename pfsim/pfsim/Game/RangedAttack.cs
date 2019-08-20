@@ -9,12 +9,12 @@
         public int StartOfCritRange { get; set; }
         public int CritMultiplier { get; set; }
 
-        public int RollDamage(DiceRoller roller, bool isCrit)
+        public int RollDamage(bool isCrit)
         {
             throw new System.NotImplementedException();
         }
 
-        public int RollToHit(DiceRoller roller)
+        public int RollToHit()
         {
             throw new System.NotImplementedException();
         }

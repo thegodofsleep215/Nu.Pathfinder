@@ -14,9 +14,9 @@
 
         int CritMultiplier { get; set; }
 
-        int RollDamage(DiceRoller roller, bool isCrit);
+        int RollDamage(bool isCrit);
 
 
-        int RollToHit(DiceRoller roller);
+        int RollToHit();
     }
 }

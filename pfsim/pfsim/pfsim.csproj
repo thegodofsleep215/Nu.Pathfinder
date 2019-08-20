@@ -54,6 +54,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Officer\Command.cs" />
+    <Compile Include="Officer\Crew.cs" />
+    <Compile Include="Officer\Discipline.cs" />
+    <Compile Include="Officer\IDuty.cs" />
+    <Compile Include="Officer\Maintain.cs" />
+    <Compile Include="Officer\Manage.cs" />
+    <Compile Include="Officer\Navigate.cs" />
+    <Compile Include="Officer\MiniGameStatus.cs" />
     <Compile Include="Commands\AddCombatants.cs" />
     <Compile Include="Commands\StartCombat.cs" />
     <Compile Include="ControlService.cs" />
@@ -70,6 +78,10 @@
     <Compile Include="Game\MeleeAttacks.cs" />
     <Compile Include="Game\RangedAttack.cs" />
     <Compile Include="Commands\NextCombatAction.cs" />
+    <Compile Include="Officer\Pilot.cs" />
+    <Compile Include="Officer\ShipSize.cs" />
+    <Compile Include="Officer\Watch.cs" />
+    <Compile Include="Officer\WeatherConditions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -3,18 +3,48 @@ using System.Linq;
 
 namespace pfsim
 {
-    public class DiceRoller
+    public static class DiceRoller
     {
-        private Random rand = new Random();
+        private static Random rand = new Random();
 
-        public int D20(int quantity)
+        public static int Roll(int sides, int quantity)
+        {
+            return Enumerable.Repeat(sides + 1, quantity).Sum(x => rand.Next(1, x));
+        }
+
+        public static int D20(int quantity)
         {
             return Roll(20, quantity);
         }
 
-        public int Roll(int sides, int quantity)
+        public static int D12(int quantity)
         {
-            return Enumerable.Repeat(sides + 1, quantity).Sum(x => rand.Next(1, x));
+            return Roll(12, quantity);
+        }
+
+        public static int D10(int quantity)
+        {
+            return Roll(10, quantity);
+        }
+
+        public static int D8(int quantity)
+        {
+            return  Roll(8, quantity);
+        }
+
+        public static int D6(int quantity)
+        {
+            return Roll(6, quantity);
+        }
+
+        public static int D4(int quantity)
+        {
+            return Roll(4, quantity);
+        }
+
+        internal static int D3(int quantity)
+        {
+            return Roll(3, quantity);
         }
     }
 }
