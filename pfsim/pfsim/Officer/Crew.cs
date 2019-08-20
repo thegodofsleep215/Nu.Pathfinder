@@ -2,6 +2,7 @@
 {
     public class Crew
     {
+        public string CrewName { get; set; }
 
         public ShipSize ShipSize { get; set; }
 
@@ -14,11 +15,11 @@
         public int FirstWatchBonus { get; set; }
 
         public int CrewSize { get; set; }
-        public int CrewPilotModifier { get; internal set; }
-        public int PilotSkillBonus { get; internal set; }
-        public int NavigatorSkillBonus { get; internal set; }
-        public bool HasDisciplineOfficer { get; internal set; }
-        public int DisciplineSkillBonus { get; internal set; }
-        public int MaintainSkillBonus { get; internal set; }
+        public int CrewPilotModifier { get; set; }
+        public int PilotSkillBonus { get; set; }
+        public int NavigatorSkillBonus { get; set; }
+        public bool HasDisciplineOfficer { get; set; }
+        public int DisciplineSkillBonus { get; set; }
+        public int MaintainSkillBonus { get; set; }
     }
 }

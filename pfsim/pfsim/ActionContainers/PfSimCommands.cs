@@ -87,20 +87,4 @@ namespace pfsim.ActionContainers
         }
     }
 
-    public class OfficerMiniGameCommands
-    {
-        IMessageRouter messageRouter;
-
-        public OfficerMiniGameCommands(IMessageRouter messageRouter)
-        {
-            this.messageRouter = messageRouter;
-        }
-
-        [TypedCommand("omg", "Rolls one day of the officer mini game.")]
-        public string OmgRoll()
-        {
-            return "";
-        }
-    }
-
 }

@@ -54,6 +54,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActionContainers\OfficerMiniGameCommands.cs" />
     <Compile Include="Officer\Command.cs" />
     <Compile Include="Officer\Crew.cs" />
     <Compile Include="Officer\Discipline.cs" />
@@ -78,6 +79,7 @@
     <Compile Include="Game\MeleeAttacks.cs" />
     <Compile Include="Game\RangedAttack.cs" />
     <Compile Include="Commands\NextCombatAction.cs" />
+    <Compile Include="Officer\OfficerEngine.cs" />
     <Compile Include="Officer\Pilot.cs" />
     <Compile Include="Officer\ShipSize.cs" />
     <Compile Include="Officer\Watch.cs" />
@@ -87,7 +89,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="Assets\pirate.json">
+    <None Include="Crews\dogfish.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
@@ -98,6 +100,8 @@
       <Name>Nu.Messaging</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Assets\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

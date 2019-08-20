@@ -15,24 +15,24 @@
         public void PerformDuty(Crew crew, ref MiniGameStatus status)
         {
             var dc = 5 + crew.ShipDc + (crew.CrewSize / 10) + status.CommandModifier;
-            status.ManageResult = (DiceRoller.D20(10) + crew.ManagerSkillBonus) - dc;
+            status.ManageResult = (DiceRoller.D20(1) + crew.ManagerSkillBonus) - dc;
 
             if (status.ManageResult >= 0) status.ActionResults.Add("Resources managed.");
-            if (status.ManageResult > -10)
+            if (status.ManageResult < 0)
             {
                 switch (DiceRoller.D4(1))
                 {
                     case 1:
-                        status.ActionResults.Add("Resources mismanaged resulting in a loss of a rum ration.");
+                        status.ActionResults.Add("Resources mismanaged resulting in the loss of a rum ration.");
                         break;
                     case 2:
-                        status.ActionResults.Add("Resources mismanaged resulting in a loss of a water ration.");
+                        status.ActionResults.Add("Resources mismanaged resulting in the loss of a water ration.");
                         break;
                     case 3:
-                        status.ActionResults.Add("Resources mismanaged resulting in a loss of a food ration.");
+                        status.ActionResults.Add("Resources mismanaged resulting in the loss of a food ration.");
                         break;
                     case 4:
-                        status.ActionResults.Add("Resources mismanaged resulting in a loss of ship's supplies.");
+                        status.ActionResults.Add("Resources mismanaged resulting in the loss of ship's supplies.");
                         break;
                 }
             }

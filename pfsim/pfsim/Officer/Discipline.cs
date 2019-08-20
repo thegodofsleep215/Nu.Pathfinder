@@ -27,18 +27,19 @@ namespace pfsim.Officer
     {
         public void PerformDuty(Crew crew, ref MiniGameStatus status)
         {
-            var tension = 6 + (crew.HasDisciplineOfficer ? 0 : 4)
-                        + status.CommandResult <= -15 ? 4 : 0
-                        + status.ManageResult <= -10 ? 2 : 0
-                        + status.DisciplineModifier
-                        + (status.CrewMorale * -1);
+            var tension = 6;
+            tension += (crew.HasDisciplineOfficer ? 0 : 4);
+            tension += status.CommandResult <= -15 ? 4 : 0;
+            tension += status.ManageResult <= -10 ? 2 : 0;
+            tension += status.DisciplineModifier;
+            tension += (status.CrewMorale * -1);
 
             var roll = DiceRoller.D20(1);
 
             if (roll < tension)
             {
                 var dc = 10 + (crew.CrewSize / 10) + status.CommandModifier;
-                if (DiceRoller.D20(1) + crew.DisciplineSkillBonus < dc)
+                if (DiceRoller.D20(1) + crew.DisciplineSkillBonus < dc || !crew.HasDisciplineOfficer)
                 {
                     status.ActionResults.Add($"The crew is getting out of control resulting the following issues, {string.Join(", ", RollUpDisciplineIssues(tension >= 20 ? 1 : 0))}");
                 }
