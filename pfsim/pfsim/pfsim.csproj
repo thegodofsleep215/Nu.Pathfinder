@@ -55,6 +55,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActionContainers\OfficerMiniGameCommands.cs" />
+    <Compile Include="Officer\BaseResponse.cs" />
+    <Compile Include="Officer\CrewMember.cs" />
+    <Compile Include="Officer\DutyType.cs" />
+    <Compile Include="Officer\IShip.cs" />
+    <Compile Include="Officer\Job.cs" />
+    <Compile Include="Officer\Morale.cs" />
+    <Compile Include="Officer\NightStatus.cs" />
+    <Compile Include="Officer\Propulsion.cs" />
+    <Compile Include="Officer\ShipType.cs" />
     <Compile Include="Officer\Command.cs" />
     <Compile Include="Officer\Crew.cs" />
     <Compile Include="Officer\Discipline.cs" />
@@ -81,8 +90,12 @@
     <Compile Include="Commands\NextCombatAction.cs" />
     <Compile Include="Officer\OfficerEngine.cs" />
     <Compile Include="Officer\Pilot.cs" />
+    <Compile Include="Officer\Ship.cs" />
     <Compile Include="Officer\ShipSize.cs" />
+    <Compile Include="Officer\CrewSkills.cs" />
+    <Compile Include="Officer\Voyage.cs" />
     <Compile Include="Officer\Watch.cs" />
+    <Compile Include="Officer\Weather.cs" />
     <Compile Include="Officer\WeatherConditions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

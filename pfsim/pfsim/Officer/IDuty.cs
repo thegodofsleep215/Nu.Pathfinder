@@ -2,6 +2,6 @@
 {
     public interface IDuty
     {
-        void PerformDuty(Crew crew, ref MiniGameStatus status);
+        void PerformDuty(IShip crew, ref MiniGameStatus status);
     }
 }

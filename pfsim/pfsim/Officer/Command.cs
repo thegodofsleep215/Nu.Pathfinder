@@ -9,7 +9,7 @@
     /// </summary>
     public class Command : IDuty
     {
-        public void PerformDuty(Crew crew, ref MiniGameStatus status)
+        public void PerformDuty(IShip crew, ref MiniGameStatus status)
         {
             var dc = 5 + crew.ShipDc + (crew.CrewSize / 10);
             status.CommandResult = (DiceRoller.D20(1) + crew.CommanderSkillBonus) - dc;
