@@ -2,15 +2,16 @@
 {
     public class DailyInput
     {
-        public int NavigateDc { get; internal set; }
+        public int NavigateDc { get; set; }
 
-        public int CrewMorale { get; internal set; }
+        public int CrewMorale { get; set; }
 
-        public int DisciplineModifier { get; internal set; }
+        public int DisciplineModifier { get; set; }
 
-        public int SailingModifiers { get; internal set; }
+        public int SailingModifier { get; set; }
 
-        public int Wellbeing { get; internal set; }
-        public int HealModifier { get; internal set; }
+        public int Wellbeing { get; set; }
+
+        public int HealModifier { get; set; }
     }
 }

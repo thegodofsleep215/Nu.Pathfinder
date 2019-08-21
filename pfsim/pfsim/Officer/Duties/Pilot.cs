@@ -24,7 +24,7 @@
         public void PerformDuty(Crew crew, DailyInput input, ref MiniGameStatus status)
         {
             var dc = 7 + crew.ShipDc + status.CommandModifier + status.WatchModifier
-                + crew.CrewPilotModifier + input.SailingModifiers;
+                + crew.CrewPilotModifier + input.SailingModifier;
             status.PilotResult = (DiceRoller.D20(1) + crew.PilotSkillBonus) - dc;
 
             if (status.PilotResult >= 0)
