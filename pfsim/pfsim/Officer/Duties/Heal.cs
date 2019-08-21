@@ -39,7 +39,7 @@
     /// If disease is indicated, that character acquires a serious infection 1d4 days after receiving the injury.  
     public class Heal : IDuty
     {
-        public void PerformDuty(Crew crew, DailyInput input, ref MiniGameStatus status)
+        public void PerformDuty(IShip crew, DailyInput input, ref MiniGameStatus status)
         {
             var dc = 2;
             dc += crew.HasHealer ? 0 : 4;

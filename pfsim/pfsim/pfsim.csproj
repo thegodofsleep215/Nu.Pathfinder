@@ -55,9 +55,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActionContainers\OfficerMiniGameCommands.cs" />
+    <Compile Include="Officer\BaseResponse.cs" />
+    <Compile Include="Officer\Configuration\CrewMember.cs" />
+    <Compile Include="Officer\Configuration\CrewSkills.cs" />
     <Compile Include="Officer\Duties\Command.cs" />
-    <Compile Include="Officer\Crew.cs" />
+    <Compile Include="Officer\Configuration\Crew.cs" />
     <Compile Include="Officer\DailyInput.cs" />
+    <Compile Include="Officer\Duties\Cook.cs" />
     <Compile Include="Officer\Duties\Discipline.cs" />
     <Compile Include="Officer\Duties\Heal.cs" />
     <Compile Include="Officer\Duties\IDuty.cs" />
@@ -66,6 +70,9 @@
     <Compile Include="Officer\Duties\Navigate.cs" />
     <Compile Include="Officer\Duties\Pilot.cs" />
     <Compile Include="Officer\Duties\Watch.cs" />
+    <Compile Include="Officer\DutyType.cs" />
+    <Compile Include="Officer\Configuration\IShip.cs" />
+    <Compile Include="Officer\Job.cs" />
     <Compile Include="Officer\MiniGameStatus.cs" />
     <Compile Include="Commands\AddCombatants.cs" />
     <Compile Include="Commands\StartCombat.cs" />
@@ -83,8 +90,15 @@
     <Compile Include="Game\MeleeAttacks.cs" />
     <Compile Include="Game\RangedAttack.cs" />
     <Compile Include="Commands\NextCombatAction.cs" />
+    <Compile Include="Officer\Morale.cs" />
+    <Compile Include="Officer\NightStatus.cs" />
     <Compile Include="Officer\OfficerEngine.cs" />
-    <Compile Include="Officer\ShipSize.cs" />
+    <Compile Include="Officer\Propulsion.cs" />
+    <Compile Include="Officer\Configuration\Ship.cs" />
+    <Compile Include="Officer\Configuration\ShipSize.cs" />
+    <Compile Include="Officer\Configuration\ShipType.cs" />
+    <Compile Include="Officer\Voyage.cs" />
+    <Compile Include="Officer\Weather.cs" />
     <Compile Include="Officer\WeatherConditions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

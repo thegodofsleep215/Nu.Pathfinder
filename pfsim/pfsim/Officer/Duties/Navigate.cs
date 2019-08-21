@@ -10,7 +10,7 @@
     /// check.  You may have 1 assistant.
     public class Navigate : IDuty
     {
-        public void PerformDuty(Crew crew, DailyInput input, ref MiniGameStatus status)
+        public void PerformDuty(IShip crew, DailyInput input, ref MiniGameStatus status)
         {
             var dc = input.NavigateDc + status.CommandModifier + status.WeatherModifier;
             status.NavigationResult = (DiceRoller.D20(1) + crew.NavigatorSkillBonus) - dc;

@@ -15,7 +15,7 @@
     /// </summary>
     public class Maintain : IDuty
     {
-        public void PerformDuty(Crew crew, DailyInput input, ref MiniGameStatus status)
+        public void PerformDuty(IShip crew, DailyInput input, ref MiniGameStatus status)
         {
             var dc = 5 + crew.ShipDc + status.CommandModifier + status.ManageModifier + status.WeatherModifier;
             status.MaintainResult = DiceRoller.D20(1) + crew.MaintainSkillBonus - dc;

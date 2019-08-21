@@ -21,7 +21,7 @@
     /// Colossal	8d8	
     public class Pilot : IDuty
     {
-        public void PerformDuty(Crew crew, DailyInput input, ref MiniGameStatus status)
+        public void PerformDuty(IShip crew, DailyInput input, ref MiniGameStatus status)
         {
             var dc = 7 + crew.ShipDc + status.CommandModifier + status.WatchModifier
                 + crew.CrewPilotModifier + input.SailingModifier;

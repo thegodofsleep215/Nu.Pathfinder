@@ -25,7 +25,7 @@ namespace pfsim.Officer
     /// is modified by the crew’s morale bonus.
     public class Discipline : IDuty
     {
-        public void PerformDuty(Crew crew, DailyInput input, ref MiniGameStatus status)
+        public void PerformDuty(IShip crew, DailyInput input, ref MiniGameStatus status)
         {
             var tension = 6;
             tension += (crew.HasDisciplineOfficer ? 0 : 4);
