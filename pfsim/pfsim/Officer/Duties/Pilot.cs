@@ -21,10 +21,10 @@
     /// Colossal	8d8	
     public class Pilot : IDuty
     {
-        public void PerformDuty(Crew crew, ref MiniGameStatus status)
+        public void PerformDuty(Crew crew, DailyInput input, ref MiniGameStatus status)
         {
             var dc = 7 + crew.ShipDc + status.CommandModifier + status.WatchModifier
-                + crew.CrewPilotModifier + status.SailingModifiers;
+                + crew.CrewPilotModifier + input.SailingModifiers;
             status.PilotResult = (DiceRoller.D20(1) + crew.PilotSkillBonus) - dc;
 
             if (status.PilotResult >= 0)

@@ -55,13 +55,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActionContainers\OfficerMiniGameCommands.cs" />
-    <Compile Include="Officer\Command.cs" />
+    <Compile Include="Officer\Duties\Command.cs" />
     <Compile Include="Officer\Crew.cs" />
-    <Compile Include="Officer\Discipline.cs" />
-    <Compile Include="Officer\IDuty.cs" />
-    <Compile Include="Officer\Maintain.cs" />
-    <Compile Include="Officer\Manage.cs" />
-    <Compile Include="Officer\Navigate.cs" />
+    <Compile Include="Officer\DailyInput.cs" />
+    <Compile Include="Officer\Duties\Discipline.cs" />
+    <Compile Include="Officer\Duties\Heal.cs" />
+    <Compile Include="Officer\Duties\IDuty.cs" />
+    <Compile Include="Officer\Duties\Maintain.cs" />
+    <Compile Include="Officer\Duties\Manage.cs" />
+    <Compile Include="Officer\Duties\Navigate.cs" />
+    <Compile Include="Officer\Duties\Pilot.cs" />
+    <Compile Include="Officer\Duties\Watch.cs" />
     <Compile Include="Officer\MiniGameStatus.cs" />
     <Compile Include="Commands\AddCombatants.cs" />
     <Compile Include="Commands\StartCombat.cs" />
@@ -80,9 +84,7 @@
     <Compile Include="Game\RangedAttack.cs" />
     <Compile Include="Commands\NextCombatAction.cs" />
     <Compile Include="Officer\OfficerEngine.cs" />
-    <Compile Include="Officer\Pilot.cs" />
     <Compile Include="Officer\ShipSize.cs" />
-    <Compile Include="Officer\Watch.cs" />
     <Compile Include="Officer\WeatherConditions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

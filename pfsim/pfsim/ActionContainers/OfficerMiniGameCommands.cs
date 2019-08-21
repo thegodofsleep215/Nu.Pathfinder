@@ -24,7 +24,7 @@ namespace pfsim.ActionContainers
                 return "Crew not found.";
             }
             var mgs = new MiniGameStatus();
-            var game = new OfficerEngine(crews[crew], mgs);
+            var game = new OfficerEngine(crews[crew], new DailyInput());
             var result = game.Run();
             return string.Join(Environment.NewLine, result);
         }

@@ -25,14 +25,14 @@ namespace pfsim.Officer
     /// is modified by the crew’s morale bonus.
     public class Discipline : IDuty
     {
-        public void PerformDuty(Crew crew, ref MiniGameStatus status)
+        public void PerformDuty(Crew crew, DailyInput input, ref MiniGameStatus status)
         {
             var tension = 6;
             tension += (crew.HasDisciplineOfficer ? 0 : 4);
             tension += status.CommandResult <= -15 ? 4 : 0;
             tension += status.ManageResult <= -10 ? 2 : 0;
-            tension += status.DisciplineModifier;
-            tension += (status.CrewMorale * -1);
+            tension += input.DisciplineModifier;
+            tension += (input.CrewMorale * -1);
 
             var roll = DiceRoller.D20(1);
 

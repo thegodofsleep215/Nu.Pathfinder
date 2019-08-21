@@ -10,11 +10,12 @@
     /// </summary>
     public class Watch : IDuty
     {
-        public void PerformDuty(Crew crew, ref MiniGameStatus status)
+        public void PerformDuty(Crew crew, DailyInput input, ref MiniGameStatus status)
         {
             var dc = 10 + status.WeatherModifier + status.CommandModifier;
             status.WatchResult = (DiceRoller.D20(1) + crew.FirstWatchBonus) - dc;
             status.ActionResults.Add($"Watch Result: {status.WatchResult}");
         }
     }
+
 }

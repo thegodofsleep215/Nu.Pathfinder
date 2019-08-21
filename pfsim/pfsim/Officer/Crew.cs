@@ -21,5 +21,8 @@
         public bool HasDisciplineOfficer { get; set; }
         public int DisciplineSkillBonus { get; set; }
         public int MaintainSkillBonus { get; set; }
+        public int CookSkillBonus { get; set; }
+        public bool HasHealer { get; set; }
+        public int HealerBonus { get; set; }
     }
 }
