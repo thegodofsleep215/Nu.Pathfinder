@@ -1,4 +1,6 @@
-﻿namespace pfsim.Officer
+﻿using System.Collections.Generic;
+
+namespace pfsim.Officer
 {
     /// <summary>
     /// Watch – Keep watch over the ship.  Always the third check of the day.   Two or three checks are required 
@@ -13,8 +15,24 @@
         public void PerformDuty(IShip crew, ref MiniGameStatus status)
         {
             var dc = 10 + status.WeatherModifier + status.CommandModifier;
-            status.WatchResult = (DiceRoller.D20(1) + crew.FirstWatchBonus) - dc;
-            status.ActionResults.Add($"Watch Result: {status.WatchResult}");
+            var assistBonus = PerformAssists(crew.GetAssistance(DutyType.Watch), status);
+            var result = (DiceRoller.D20(1) + crew.FirstWatchBonus + assistBonus) - dc;
+            status.WatchResults.Add(result);
+            status.ActionResults.Add($"Watch Result #{status.WatchResults.Count}: {result}");
+        }
+
+        private int PerformAssists(List<Assists> list, MiniGameStatus status)
+        {
+            int retval = 0;
+            int watch = status.WatchResults.Count;
+
+            if(list.Count <= watch)
+            {
+                var assist = list[watch - 1];
+                retval += ((DiceRoller.D20(1) + assist.SkillBonus) >= (10 + status.WeatherModifier)) ? 2 : 0;
+            }
+
+            return retval;
         }
     }
 }

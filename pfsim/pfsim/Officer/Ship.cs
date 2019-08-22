@@ -10,6 +10,41 @@ namespace pfsim.Officer
     public class Ship : IShip
     { 
         private List<Job> _assignedJobs;
+        private List<Propulsion> _propulsionTypes;
+        private List<CrewMember> _shipsCrew;
+        private Morale _shipsMorale;
+
+        private int MaxPilotAssistants
+        {
+            get
+            {
+                switch(ShipSize)
+                {
+                    case ShipSize.Large:
+                    case ShipSize.Huge:
+                        return 3;
+                    case ShipSize.Gargantuan:
+                    case ShipSize.Colossal:
+                        return 6;
+                    default:
+                        return 6;
+                }
+            }
+        }
+        private int MaxCookAssistants
+        {
+            get
+            {
+                return 1;
+            }
+        }
+        private int MaxClerks
+        {
+            get
+            {
+                return 2;
+            }
+        }
 
         public string CrewName { get; set; }
         public ShipType ShipType { get; set; }
@@ -28,7 +63,6 @@ namespace pfsim.Officer
                 _propulsionTypes = value;
             }
         }
-        private List<Propulsion> _propulsionTypes;
         public int HullHitPoints { get; set; }
         public int CrewSize { get; set; }
         public int MinimumCrewSize
@@ -56,7 +90,6 @@ namespace pfsim.Officer
                 _shipsCrew = value;
             }
         }
-        private List<CrewMember> _shipsCrew;
 
         public Morale ShipsMorale
         {
@@ -72,7 +105,6 @@ namespace pfsim.Officer
                 _shipsMorale = value;
             }
         }
-        private Morale _shipsMorale;
 
         public int CrewQuality
         {
@@ -173,34 +205,58 @@ namespace pfsim.Officer
         {
             BaseResponse retval = new BaseResponse();
 
-            // This is a bit of a simplification, as I can see situations where you could have more than 1 of these, but for now
+            // This is a bit of a simplification, as I can see situations where you could have different numbers of these, but for now
             // this is complex enough.
             if(AssignedJobs.Count(a => a.DutyType == DutyType.Command && !a.IsAssistant) > 1)
             {
                 retval.Messages.Add("Can't have two commanders!");
             }
-            if(AssignedJobs.Count(a => a.DutyType == DutyType.Manage && !a.IsAssistant) > 1)
+            if (AssignedJobs.Count(a => a.DutyType == DutyType.Command && !a.IsAssistant) > 2)
+            {
+                retval.Messages.Add("Too many leutinants!");
+            }
+            if (AssignedJobs.Count(a => a.DutyType == DutyType.Manage && !a.IsAssistant) > 1)
             {
                 retval.Messages.Add("Can't have two managers!");
+            }
+            if (AssignedJobs.Count(a => a.DutyType == DutyType.Manage && a.IsAssistant) > MaxClerks)
+            {
+                retval.Messages.Add("Too many clerks!");
             }
             if (AssignedJobs.Count(a => a.DutyType == DutyType.Pilot && !a.IsAssistant) > 1)
             {
                 retval.Messages.Add("Can't have two pilots!");
             }
+            if (AssignedJobs.Count(a => a.DutyType == DutyType.Pilot && a.IsAssistant) > MaxPilotAssistants)
+            {
+                retval.Messages.Add("Too many hands for the ship's wheel!");
+            }
             if (AssignedJobs.Count(a => a.DutyType == DutyType.Navigate && !a.IsAssistant) > 1)
             {
-                retval.Messages.Add("Can't have two navigators!");
+                retval.Messages.Add("Too many Master's Mates!");
+            }
+            if (AssignedJobs.Count(a => a.DutyType == DutyType.Navigate && a.IsAssistant) > 1)
+            {
+                retval.Messages.Add("Too many navigator's mates!");
             }
             if (AssignedJobs.Count(a => a.DutyType == DutyType.Cook && !a.IsAssistant) > 1)
             {
                 retval.Messages.Add("Too many cooks spoil the pot!");
             }
+            if (AssignedJobs.Count(a => a.DutyType == DutyType.Cook && a.IsAssistant) > MaxCookAssistants)
+            {
+                retval.Messages.Add("Too many cook's mates!");
+            }
             if (AssignedJobs.Count(a => a.DutyType == DutyType.Discipline && !a.IsAssistant) > 1)
             {
                 retval.Messages.Add("Can't have two discipline officers!");
             }
+            if (AssignedJobs.Count(a => a.DutyType == DutyType.Discipline && a.IsAssistant) > 0)
+            {
+                retval.Messages.Add("Can't have an assistant discipline officer!");
+            }
 
-            foreach(var matey in ShipsCrew)
+            foreach (var matey in ShipsCrew)
             {
                 retval.Messages.AddRange(matey.ValidateJobs());
             }
