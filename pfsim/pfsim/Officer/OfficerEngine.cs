@@ -1,16 +1,17 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace pfsim.Officer
 {
     public class OfficerEngine
     {
-        private readonly Crew crew;
+        private readonly Ship ship;
         private readonly DailyInput input;
         private readonly Queue<IDuty> gameQueue;
 
-        public OfficerEngine(Crew crew, DailyInput input)
+        public OfficerEngine(Ship ship, DailyInput input)
         {
-            this.crew = crew;
+            this.ship = ship;
             this.input = input;
             gameQueue = new Queue<IDuty>();
             gameQueue.Enqueue(new Command());
@@ -30,9 +31,9 @@ namespace pfsim.Officer
             while(gameQueue.Count > 0)
             {
                 var duty = gameQueue.Dequeue();
-                duty.PerformDuty(crew, input, ref mgs);
+                duty.PerformDuty(ship, input, ref mgs);
             }
-            return mgs.ActionResults;
+            return mgs.DutyEvents.Select(x => x.ToString()).ToList(); // This won't do anything yet
         }
     }
 }

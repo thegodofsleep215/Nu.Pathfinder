@@ -10,17 +10,13 @@
     /// check.  You may have 1 assistant.
     public class Navigate : IDuty
     {
-        public void PerformDuty(IShip crew, DailyInput input, ref MiniGameStatus status)
+        public void PerformDuty(Ship ship, DailyInput input, ref MiniGameStatus status)
         {
             var dc = input.NavigateDc + status.CommandModifier + status.WeatherModifier;
-            status.NavigationResult = (DiceRoller.D20(1) + crew.NavigatorSkillBonus) - dc;
-            if (status.NavigationResult >= 0)
+            status.NavigationResult = (DiceRoller.D20(1) + ship.NavigatorSkillBonus) - dc;
+            if (status.NavigationResult < 0)
             {
-                status.ActionResults.Add("On course.");
-            }
-            else
-            {
-                status.ActionResults.Add("Off course.");
+                status.DutyEvents.Add(new OffCourseEvent());
             }
         }
     }

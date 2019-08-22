@@ -1,36 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace pfsim.Officer
 {
     [Serializable]
     public class Ship
-    { 
+    {
         private List<Job> _assignedJobs;
 
         public string Name { get; set; }
-        public ShipType ShipType { get; set; }
-        public ShipSize ShipSize { get; set; }
-        public List<Propulsion> PropulsionTypes
-        {
-            get
-            {
-                if (_propulsionTypes == null)
-                    _propulsionTypes = new List<Propulsion>();
 
-                return _propulsionTypes;
-            }
-            set
-            {
-                _propulsionTypes = value;
-            }
-        }
-        private List<Propulsion> _propulsionTypes;
+        public ShipType ShipType { get; set; }
+
+        public ShipSize ShipSize { get; set; }
+
+        public Morale CrewMorale { get; set; } = new Morale();
+
+        public List<Propulsion> PropulsionTypes { get; set; } = new List<Propulsion>();
+
         public int HullHitPoints { get; set; }
+
         public int CrewSize { get; set; }
+
         public int MinimumCrewSize
         {
             get
@@ -38,9 +30,13 @@ namespace pfsim.Officer
                 return CrewSize / 2;
             }
         }
+
         public int ShipDc { get; set; }
+
         public int ShipPilotingBonus { get; set; }
+
         public int ShipQuality { get; set; }
+
         public int CrewQuality
         {
             get
@@ -57,6 +53,7 @@ namespace pfsim.Officer
                     return (int)retval;
             }
         }
+
         public bool HasDisciplineOfficer
         {
             get
@@ -64,6 +61,7 @@ namespace pfsim.Officer
                 return AssignedJobs.Exists(a => a.DutyType == DutyType.Discipline);
             }
         }
+
         public bool HasShipsDoctor
         {
             get
@@ -71,6 +69,7 @@ namespace pfsim.Officer
                 return AssignedJobs.Exists(a => a.DutyType == DutyType.Heal);
             }
         }
+
         public bool HasMinimumCrew
         {
             get
@@ -79,25 +78,16 @@ namespace pfsim.Officer
             }
         }
 
-        public List<CrewMember> ShipsCrew
-        {
-            get
-            {
-                if (_shipsCrew == null)
-                    _shipsCrew = new List<CrewMember>();
+        public List<CrewMember> ShipsCrew { get; set; } = new List<CrewMember>();
 
-                return _shipsCrew;
-            }
-            set
-            {
-                _shipsCrew = value;
-            }
-        }
-        private List<CrewMember> _shipsCrew;
         public int Marines { get; set; }
+
         public int Passengers { get; set; }
+
         public int Swabbies { get; set; }
+
         public decimal AverageSwabbieQuality { get; set; }
+
         public int TotalCrew
         {
             get
@@ -105,6 +95,7 @@ namespace pfsim.Officer
                 return ShipsCrew.Count + Swabbies + Marines + Passengers;
             }
         }
+
         public int AvailableCrew
         {
             get
@@ -112,6 +103,7 @@ namespace pfsim.Officer
                 return ShipsCrew.Count(a => a.CountsAsCrew) + Swabbies;
             }
         }
+
         public int SkeletonCrewPenalty
         {
             get
@@ -140,7 +132,7 @@ namespace pfsim.Officer
         {
             _assignedJobs = new List<Job>();
 
-            foreach(var matey in ShipsCrew)
+            foreach (var matey in ShipsCrew)
             {
                 _assignedJobs.AddRange(matey.Jobs);
             }
@@ -154,11 +146,11 @@ namespace pfsim.Officer
 
             // This is a bit of a simplification, as I can see situations where you could have more than 1 of these, but for now
             // this is complex enough.
-            if(AssignedJobs.Count(a => a.DutyType == DutyType.Command && !a.IsAssistant) > 1)
+            if (AssignedJobs.Count(a => a.DutyType == DutyType.Command && !a.IsAssistant) > 1)
             {
                 retval.Messages.Add("Can't have two commanders!");
             }
-            if(AssignedJobs.Count(a => a.DutyType == DutyType.Manage && !a.IsAssistant) > 1)
+            if (AssignedJobs.Count(a => a.DutyType == DutyType.Manage && !a.IsAssistant) > 1)
             {
                 retval.Messages.Add("Can't have two managers!");
             }
@@ -179,7 +171,7 @@ namespace pfsim.Officer
                 retval.Messages.Add("Can't have two discipline officers!");
             }
 
-            foreach(var matey in ShipsCrew)
+            foreach (var matey in ShipsCrew)
             {
                 retval.Messages.AddRange(matey.ValidateJobs());
             }
@@ -358,17 +350,52 @@ namespace pfsim.Officer
             }
         }
 
-        public Voyage CurrentVoyage
+        public int CookingSkillBonus
         {
             get
             {
-                if (_currentVoyage == null)
-                    _currentVoyage = new Voyage();
+                int retval = -5;
 
-                return _currentVoyage;
+                if (AssignedJobs.Exists(a => a.DutyType == DutyType.Cook))
+                {
+                    string name = AssignedJobs.First(a => a.DutyType == DutyType.Cook).CrewName;
+
+                    var crewMembert = ShipsCrew.FirstOrDefault(a => a.Name == name);
+
+                    if (crewMembert != null)
+                        retval = crewMembert.CookingSkillBonus;
+                }
+
+                return retval;
+
             }
+
         }
-        private Voyage _currentVoyage;
+        public int HealSkillBonus
+        {
+            get
+            {
+                int retval = -5;
+
+                if (AssignedJobs.Exists(a => a.DutyType == DutyType.Heal))
+                {
+                    string name = AssignedJobs.First(a => a.DutyType == DutyType.Heal).CrewName;
+
+                    var crewMember = ShipsCrew.FirstOrDefault(a => a.Name == name);
+
+                    if (crewMember != null)
+                        retval = crewMember.HealSkillBonus;
+                }
+
+                return retval;
+
+            }
+
+        }
+
+
+
+        public Voyage CurrentVoyage { get; private set; } = new Voyage();
 
         public Ship()
         {

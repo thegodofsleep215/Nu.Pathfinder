@@ -12,20 +12,20 @@ namespace pfsim.Officer
     /// there is a +4 chance of medical problems the next day.You may have 1 assistant.
     public class Cook : IDuty
     {
-        public void PerformDuty(IShip crew, DailyInput input, ref MiniGameStatus status)
+        public void PerformDuty(Ship ship, DailyInput input, ref MiniGameStatus status)
         {
-            var dc = 7 + (crew.CrewSize / 10) - input.Wellbeing;
-            var result = DiceRoller.D20(1) + crew.CookSkillBonus - dc;
+            var dc = 7 + (ship.CrewSize / 10) - input.Wellbeing;
+            var result = DiceRoller.D20(1) + ship.CookingSkillBonus - dc;
             status.CookResult = result;
-            if (result >= 0)
-            {
-                status.ActionResults.Add("The crew eats well.");
-            }
-            else
+            if(result < 0)
             {
                 var wm = Math.Abs(result) / 5;
                 wm = wm > input.Wellbeing ? input.Wellbeing : wm;
-                status.ActionResults.Add($"A sorry meal has been served reducing the wellbeing score by {wm} for a day.");
+                status.DutyEvents.Add(new EpicCookingFailureEvent
+                {
+                    WellbeingPenalty = wm * -1,
+                    HealthCheckModifier = result <= -15 ? 4 : 0
+                });
             }
         }
     }

@@ -21,23 +21,23 @@
     /// Colossal	8d8	
     public class Pilot : IDuty
     {
-        public void PerformDuty(IShip crew, DailyInput input, ref MiniGameStatus status)
+        public void PerformDuty(Ship ship, DailyInput input, ref MiniGameStatus status)
         {
-            var dc = 7 + crew.ShipDc + status.CommandModifier + status.WatchModifier
-                + crew.CrewPilotModifier + input.SailingModifier;
-            status.PilotResult = (DiceRoller.D20(1) + crew.PilotSkillBonus) - dc;
+            var dc = 7 + ship.ShipDc + status.CommandModifier + status.WatchModifier
+                + ship.CrewPilotModifier + input.SailingModifier;
+            status.PilotResult = (DiceRoller.D20(1) + ship.PilotSkillBonus) - dc;
 
             if (status.PilotResult >= 0)
             {
-                status.ActionResults.Add("Piloting successful.");
+                status.DutyEvents.Add(new PilotSuccessEvent());
             }
-            else
+            if(status.PilotResult < 0)
             {
-                status.ActionResults.Add("Piloting failed, progress halved.");
+
+                    int damage = 0;
                 if(status.PilotResult <= -15)
                 {
-                    int damage = 0;
-                    switch (crew.ShipSize)
+                    switch (ship.ShipSize)
                     {
                         case ShipSize.Large:
                             damage = DiceRoller.D8(3);
@@ -52,8 +52,11 @@
                             damage = DiceRoller.D8(8);
                             break;
                     }
-                    status.ActionResults.Add($"Piloting faled so bad thate the ship took {damage} points of damage.");
                 }
+                status.DutyEvents.Add(new PilotFailedEvent
+                {
+                    Damage = damage
+                });
             }
         }
     }

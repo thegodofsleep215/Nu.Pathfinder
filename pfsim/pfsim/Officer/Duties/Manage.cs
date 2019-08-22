@@ -12,33 +12,21 @@
     /// </summary>
     public class Manage : IDuty
     {
-        public void PerformDuty(IShip crew, DailyInput input, ref MiniGameStatus status)
+        public void PerformDuty(Ship ship, DailyInput input, ref MiniGameStatus status)
         {
-            var dc = 5 + crew.ShipDc + (crew.CrewSize / 10) + status.CommandModifier;
-            status.ManageResult = (DiceRoller.D20(1) + crew.ManagerSkillBonus) - dc;
+            var dc = 5 + ship.ShipDc + (ship.CrewSize / 10) + status.CommandModifier;
+            status.ManageResult = (DiceRoller.D20(1) + ship.ManagerSkillBonus) - dc;
 
-            if (status.ManageResult >= 0) status.ActionResults.Add("Resources managed.");
             if (status.ManageResult < 0)
             {
-                switch (DiceRoller.D4(1))
-                {
-                    case 1:
-                        status.ActionResults.Add("Resources mismanaged resulting in the loss of a rum ration.");
-                        break;
-                    case 2:
-                        status.ActionResults.Add("Resources mismanaged resulting in the loss of a water ration.");
-                        break;
-                    case 3:
-                        status.ActionResults.Add("Resources mismanaged resulting in the loss of a food ration.");
-                        break;
-                    case 4:
-                        status.ActionResults.Add("Resources mismanaged resulting in the loss of ship's supplies.");
-                        break;
-                }
+                status.DutyEvents.Add(new MismanagedSuppliesEvent {
+                    SupplyType = (SupplyType)DiceRoller.D4(1),
+                });
             }
-            if(status.ManageResult <= -10)
+            if (status.ManageResult <= -10)
             {
-                status.ActionResults.Add("The crew is upset at how the resources are being poorly managed."); 
+                status.DutyEvents.Add("The crew is upset at how the resources are being poorly managed.");
+                // TODO: Apply horribly mismanaged penalty.
             }
         }
     }

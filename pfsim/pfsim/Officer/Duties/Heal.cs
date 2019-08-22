@@ -39,25 +39,21 @@
     /// If disease is indicated, that character acquires a serious infection 1d4 days after receiving the injury.  
     public class Heal : IDuty
     {
-        public void PerformDuty(IShip crew, DailyInput input, ref MiniGameStatus status)
+        public void PerformDuty(Ship ship, DailyInput input, ref MiniGameStatus status)
         {
             var dc = 2;
-            dc += crew.HasHealer ? 0 : 4;
+            dc += ship.HasShipsDoctor ? 0 : 4;
             dc += status.CookResult <= -15 ? 4 : 0;
             dc += input.Wellbeing == 2 ? 2 : 0;
             dc += input.Wellbeing <= 1 ? 4 : 0;
             dc += input.HealModifier;
 
-            var result = DiceRoller.D20(1) + crew.HealerBonus - dc;
+            var result = DiceRoller.D20(1) + ship.HealSkillBonus - dc;
 
-            if (result < 0 || !crew.HasHealer)
+            if (result < 0 || !ship.HasShipsDoctor)
             {
                 var sickCount = dc >= 20 ? DiceRoller.D3(1) : 1;
-                status.ActionResults.Add($"{sickCount} crew member(s) have fallen ill.");
-            }
-            else
-            {
-                status.ActionResults.Add("The crew is healthy.");
+                status.DutyEvents.Add(new SicknessEvent { NumberAffected = sickCount });
             }
         }
 

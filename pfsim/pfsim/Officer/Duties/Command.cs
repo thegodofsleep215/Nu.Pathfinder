@@ -9,11 +9,10 @@
     /// </summary>
     public class Command : IDuty
     {
-        public void PerformDuty(IShip crew, DailyInput input, ref MiniGameStatus status)
+        public void PerformDuty(Ship ship, DailyInput input, ref MiniGameStatus status)
         {
-            var dc = 5 + crew.ShipDc + (crew.CrewSize / 10);
-            status.CommandResult = (DiceRoller.D20(1) + crew.CommanderSkillBonus) - dc;
-            status.ActionResults.Add($"Command result: {status.CommandResult}");
+            var dc = 5 + ship.ShipDc + (ship.CrewSize / 10);
+            status.CommandResult = (DiceRoller.D20(1) + ship.CommanderSkillBonus) - dc;
         }
     }
 }

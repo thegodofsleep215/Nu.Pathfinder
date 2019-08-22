@@ -37,15 +37,15 @@ namespace pfsim.ActionContainers
             return string.Join(Environment.NewLine, result);
         }
 
-        private Dictionary<string, Crew> LoadAssets()
+        private Dictionary<string, Ship> LoadAssets()
         {
             var folder = ".\\Crews";
             if (!Directory.Exists(folder))
             {
-                return new Dictionary<string, Crew>();
+                return new Dictionary<string, Ship>();
             }
             var charFiles = Directory.GetFiles(folder, "*.json");
-            return charFiles.Select(cf => JsonConvert.DeserializeObject<Crew>(File.ReadAllText(cf))).ToDictionary(x => x.CrewName, x => x);
+            return charFiles.Select(cf => JsonConvert.DeserializeObject<Ship>(File.ReadAllText(cf))).ToDictionary(x => x.Name, x => x);
         }
 
     }
