@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 namespace pfsim.Officer
 {
     [Serializable]
-    public class Ship
+    public class Ship : IShip
     { 
         private List<Job> _assignedJobs;
 
-        public string Name { get; set; }
+        public string CrewName { get; set; }
         public ShipType ShipType { get; set; }
         public ShipSize ShipSize { get; set; }
         public List<Propulsion> PropulsionTypes
@@ -40,7 +40,7 @@ namespace pfsim.Officer
         }
         public int ShipDc { get; set; }
         public int ShipPilotingBonus { get; set; }
-        public int ShipQuality { get; set; }
+        public int ShipQuality { get; set; } // TODO: Place holder.
         public int CrewQuality
         {
             get
@@ -192,7 +192,7 @@ namespace pfsim.Officer
             Crew ship = new Crew();
 
             ship.CommanderSkillBonus = CommanderSkillBonus;
-            ship.CrewName = Name;
+            ship.CrewName = CrewName;
             ship.CrewPilotModifier = CrewPilotModifier;
             ship.CrewSize = CrewSize;
             ship.DisciplineSkillBonus = DisciplineSkillBonus;
@@ -208,6 +208,72 @@ namespace pfsim.Officer
             ship.ShipSize = ShipSize;
 
             return ship;
+        }
+
+        public List<Assists> GetAssistance(DutyType duty)
+        {
+            List<Assists> assists = new List<Assists>();
+            var jobs = AssignedJobs.Where(a => a.DutyType == duty && a.IsAssistant);
+
+            foreach(var job in jobs)
+            {
+                Assists assistance = new Assists();
+
+                assistance.Duty = duty;
+
+                var mate = ShipsCrew.FirstOrDefault(a => a.Name == job.CrewName);
+
+                if (mate != null)
+                {
+                    switch (duty)
+                    {
+                        case DutyType.Command:
+                            assistance.SkillBonus = mate.CommanderSkillBonus;
+                            break;
+                        case DutyType.Cook:
+                            assistance.SkillBonus = mate.CookSkillBonus;
+                            break;
+                        case DutyType.Discipline:
+                            assistance.SkillBonus = mate.DisciplineSkillBonus;
+                            break;
+                        case DutyType.Heal:
+                            assistance.SkillBonus = mate.HealSkillBonus;
+                            break;
+                        case DutyType.Maintain:
+                            assistance.SkillBonus = mate.DisciplineSkillBonus;
+                            break;
+                        case DutyType.Manage:
+                            assistance.SkillBonus = mate.ManagerSkillBonus;
+                            break;
+                        case DutyType.Ministrel:
+                            assistance.SkillBonus = mate.MinistrelSkillBonus;
+                            break;
+                        case DutyType.Navigate:
+                            assistance.SkillBonus = mate.NavigatorSkillBonus;
+                            break;
+                        case DutyType.Pilot:
+                            assistance.SkillBonus = mate.PilotSkillBonus;
+                            break;
+                        case DutyType.Procure:
+                            assistance.SkillBonus = mate.ProcureSkillBonus;
+                            break;
+                        case DutyType.Repair: //TODO: Need multiple types of repair.
+                            assistance.SkillBonus = mate.RepairSkillBonus;
+                            break;
+                        case DutyType.Stow:
+                            assistance.SkillBonus = mate.StowSkillBonus;
+                            break;
+                        case DutyType.Unload:
+                            assistance.SkillBonus = mate.UnloadSkillBonus;
+                            break;
+                        case DutyType.Watch:
+                            assistance.SkillBonus = mate.WatchSkillBonus;
+                            break;
+                    }
+                }
+            }
+
+            return assists;
         }
 
         public int CommanderSkillBonus
@@ -230,11 +296,15 @@ namespace pfsim.Officer
             }
         }
 
+        /// <summary>
+        /// In the engine, this adds to DC so the result needs to be inverse of a modification to a dice role.
+        /// </summary>
         public int CrewPilotModifier
         {
             get
             {
-                return SkeletonCrewPenalty; // TODO: What all goes into this?
+                // TODO: Is the voyage better part of the 'minigame'?
+                return (SkeletonCrewPenalty + ShipPilotingBonus + CrewQuality + CurrentVoyage.PilotingModifier) * -1; 
             }
         }
 
@@ -291,7 +361,7 @@ namespace pfsim.Officer
                     var deckOfficer = ShipsCrew.FirstOrDefault(a => a.Name == deckOfficerName);
 
                     if (deckOfficer != null)
-                        retval = deckOfficer.WatchBonus;
+                        retval = deckOfficer.WatchSkillBonus;
                 }
 
                 return retval;

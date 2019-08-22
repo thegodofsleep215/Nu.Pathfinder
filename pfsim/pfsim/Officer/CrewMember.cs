@@ -61,6 +61,13 @@ namespace pfsim.Officer
                 return Skills.Perception + WorkModifier + ExternalModifiers.Perception;
             }
         }
+        public int PerformSkill
+        {
+            get
+            {
+                return Skills.Perform + WorkModifier + ExternalModifiers.Perception;
+            }
+        }
         public int CraftCarpentrySkill
         {
             get
@@ -75,8 +82,34 @@ namespace pfsim.Officer
                 return Skills.CraftShip + WorkModifier + ExternalModifiers.CraftShip;
             }
         }
-        public int SurvivalSkill { get; set; }
-        public int ProfessionMerchantSkill { get; set; }
+        public int CraftCookingSkill
+        {
+            get
+            {
+                return Skills.CraftCooking + WorkModifier + ExternalModifiers.CraftCooking;
+            }
+        }
+        public int HealSkill
+        {
+            get
+            {
+                return Skills.Heal + WorkModifier + ExternalModifiers.CraftCooking;
+            }
+        }
+        public int SurvivalSkill
+        {
+            get
+            {
+                return Skills.Survival + WorkModifier + ExternalModifiers.Survival;
+            }
+        }
+        public int ProfessionMerchantSkill
+        {
+            get
+            {
+                return Skills.ProfessionMerchant + WorkModifier + ExternalModifiers.ProfessionMerchant;
+            }
+        }
 
         public int CommanderSkillBonus
         {
@@ -86,16 +119,6 @@ namespace pfsim.Officer
             }
         }
 
-        public int CrewPilotModifier
-        {
-            get
-            {
-                return ProfessionSailorSkill;
-            }
-        }
-
-        public int CrewSize { get; set; }
-
         public int DisciplineSkillBonus
         {
             get
@@ -104,7 +127,15 @@ namespace pfsim.Officer
             }
         }
 
-        public int WatchBonus
+        public int HealSkillBonus
+        {
+            get
+            {
+                return HealSkill;
+            }
+        }
+
+        public int WatchSkillBonus
         {
             get
             {
@@ -132,6 +163,14 @@ namespace pfsim.Officer
             }
         }
 
+        public int MinistrelSkillBonus
+        {
+            get
+            {
+                return PerformSkill;
+            }
+        }
+
         public int NavigatorSkillBonus
         {
             get
@@ -145,6 +184,49 @@ namespace pfsim.Officer
             get
             {
                 return ProfessionSailorSkill;
+            }
+        }
+
+        public int ProcureSkillBonus
+        {
+            get
+            {
+                return SurvivalSkill;
+            }
+        }
+
+        /// <summary>
+        /// TODO: This is a simplification.  Probably need to track other repair types separately.
+        /// </summary>
+        public int RepairSkillBonus
+        {
+            get
+            {
+                return CraftShipSkill > CraftCarpentrySkill ? CraftShipSkill : CraftCarpentrySkill;
+            }
+        }
+
+        public int StowSkillBonus
+        {
+            get
+            {
+                return ProfessionSailorSkill > KnowledgeEngineeringSkill ? ProfessionSailorSkill : KnowledgeEngineeringSkill;
+            }
+        }
+
+        public int UnloadSkillBonus
+        {
+            get
+            {
+                return ProfessionSailorSkill > KnowledgeEngineeringSkill ? ProfessionSailorSkill : KnowledgeEngineeringSkill;
+            }
+        }
+
+        public int CookSkillBonus
+        {
+            get
+            {
+                return CraftCookingSkill;
             }
         }
 

@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace pfsim.Officer
 {
-    public class Weather
+    public class Assists
     {
-        public WeatherConditions Conditions { get; set; }
+        public DutyType Duty { get; set; }
+        public int SkillBonus { get; set; }
     }
 }

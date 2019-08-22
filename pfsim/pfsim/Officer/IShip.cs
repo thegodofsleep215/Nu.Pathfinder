@@ -8,20 +8,22 @@ namespace pfsim.Officer
 {
     public interface IShip
     {
-        string CrewName { get; set; }
-        ShipSize ShipSize { get; set; }
-        int CrewSize { get; set; }
-        int ShipDc { get; set; }
-        int ShipPilotingBonus { get; set; }
-        int ShipQuality { get; set; }
-        int CommanderSkillBonus { get; set; }
-        int ManagerSkillBonus { get; set; }
-        int FirstWatchBonus { get; set; }
-        int CrewPilotModifier { get; set; }
-        int PilotSkillBonus { get; set; }
-        int NavigatorSkillBonus { get; set; }
-        bool HasDisciplineOfficer { get; set; }
-        int DisciplineSkillBonus { get; set; }
-        int MaintainSkillBonus { get; set; }
+        string CrewName { get; }
+        ShipSize ShipSize { get; }
+        int CrewSize { get; }
+        int ShipDc { get; }
+        int ShipPilotingBonus { get; }
+        int ShipQuality { get; }
+        int CommanderSkillBonus { get; }
+        int ManagerSkillBonus { get; }
+        int FirstWatchBonus { get; }
+        int CrewPilotModifier { get; }
+        int PilotSkillBonus { get; }
+        int NavigatorSkillBonus { get; }
+        bool HasDisciplineOfficer { get; }
+        int DisciplineSkillBonus { get; }
+        int MaintainSkillBonus { get; }
+
+        List<Assists> GetAssistance(DutyType duty);
     }
 }

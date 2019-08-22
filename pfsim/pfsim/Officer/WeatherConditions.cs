@@ -11,6 +11,7 @@
         HeavySeas,
         Storms,
         Gales,
-        Hurricane
+        Hurricane,
+        Fog
     }
 }

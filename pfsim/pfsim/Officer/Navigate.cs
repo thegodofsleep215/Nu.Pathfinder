@@ -14,6 +14,7 @@
         {
             var dc = status.NavigateDc + status.CommandModifier + status.WeatherModifier;
             status.NavigationResult = (DiceRoller.D20(1) + crew.NavigatorSkillBonus) - dc;
+
             if (status.NavigationResult >= 0)
             {
                 status.ActionResults.Add("On course.");

@@ -1,4 +1,6 @@
-﻿namespace pfsim.Officer
+﻿using System.Collections.Generic;
+
+namespace pfsim.Officer
 {
     public class Crew : IShip
     {
@@ -17,5 +19,12 @@
         public bool HasDisciplineOfficer { get; set; }
         public int DisciplineSkillBonus { get; set; }
         public int MaintainSkillBonus { get; set; }
+
+        public List<Assists> GetAssistance(DutyType duty)
+        {
+            List<Assists> retval = new List<Assists>();
+
+            return retval;
+        }
     }
 }
