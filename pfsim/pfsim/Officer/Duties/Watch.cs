@@ -12,7 +12,7 @@ namespace pfsim.Officer
     /// </summary>
     public class Watch : IDuty
     {
-        public void PerformDuty(IShip crew, ref MiniGameStatus status)
+        public void PerformDuty(IShip crew, DailyInput input, ref MiniGameStatus status)
         {
             var dc = 10 + status.WeatherModifier + status.CommandModifier;
             var assistBonus = PerformAssists(crew.GetAssistance(DutyType.Watch), status);
@@ -35,4 +35,5 @@ namespace pfsim.Officer
             return retval;
         }
     }
+
 }

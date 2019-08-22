@@ -11,5 +11,9 @@
   "NavigatorSkillBonus": 5,
   "HasDisciplineOfficer": false,
   "DisciplineSkillBonus": 5,
-  "MaintainSkillBonus": 5
+  "MaintainSkillBonus": 5,
+  "CookSkillBonus":5,
+  "HealerBonus":5,
+  "HasHealer":true,
+  "HealModifier":5
 }

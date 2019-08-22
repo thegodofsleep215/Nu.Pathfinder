@@ -49,7 +49,6 @@ namespace pfsim.Officer
                         return -3;
                 case WeatherConditions.Hurricane:
                     return -10;
-                    break;
                 case WeatherConditions.Rain:
                     return -2;
                 case WeatherConditions.Storms:

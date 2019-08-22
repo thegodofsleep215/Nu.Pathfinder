@@ -12,7 +12,7 @@ namespace pfsim.Officer
     /// </summary>
     public class Command : IDuty
     {
-        public void PerformDuty(IShip crew, ref MiniGameStatus status)
+        public void PerformDuty(IShip crew, DailyInput input, ref MiniGameStatus status)
         {
             var dc = 5 + crew.ShipDc + (crew.CrewSize / 10);
             var assistBonus = PerformAssists(crew.GetAssistance(DutyType.Command));

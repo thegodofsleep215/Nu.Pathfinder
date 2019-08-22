@@ -16,15 +16,23 @@ namespace pfsim.ActionContainers
         }
 
         [TypedCommand("omg", "Rolls one day of the officer mini game.")]
-        public string OmgRoll(string crew)
+        public string OmgRoll(string crew, int crewMorale, int wellbeing, int sailingModifier, int navigateDc, int disciplineModifier, int healModifier)
         {
             var crews = LoadAssets();
             if (!crews.ContainsKey(crew))
             {
                 return "Crew not found.";
             }
-            var mgs = new MiniGameStatus();
-            var game = new OfficerEngine(crews[crew], mgs);
+            var input = new DailyInput
+            {
+                CrewMorale = crewMorale,
+                Wellbeing = wellbeing,
+                SailingModifier = sailingModifier,
+                NavigateDc = navigateDc,
+                DisciplineModifier = disciplineModifier,
+                HealModifier = healModifier
+            };
+            var game = new OfficerEngine(crews[crew], input);
             var result = game.Run();
             return string.Join(Environment.NewLine, result);
         }

@@ -5,13 +5,13 @@ namespace pfsim.Officer
     public class OfficerEngine
     {
         private readonly Crew crew;
-        private MiniGameStatus mgs;
+        private readonly DailyInput input;
         private readonly Queue<IDuty> gameQueue;
 
-        public OfficerEngine(Crew crew, MiniGameStatus mgs)
+        public OfficerEngine(Crew crew, DailyInput input)
         {
             this.crew = crew;
-            this.mgs = mgs;
+            this.input = input;
             gameQueue = new Queue<IDuty>();
             gameQueue.Enqueue(new Command());
             gameQueue.Enqueue(new Manage());
@@ -20,14 +20,17 @@ namespace pfsim.Officer
             gameQueue.Enqueue(new Navigate());
             gameQueue.Enqueue(new Discipline());
             gameQueue.Enqueue(new Maintain());
+            gameQueue.Enqueue(new Cook());
+            gameQueue.Enqueue(new Heal());
         }
 
         public List<string> Run()
         {
+            var mgs = new MiniGameStatus();
             while(gameQueue.Count > 0)
             {
                 var duty = gameQueue.Dequeue();
-                duty.PerformDuty(crew, ref mgs);
+                duty.PerformDuty(crew, input, ref mgs);
             }
             return mgs.ActionResults;
         }
