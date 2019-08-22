@@ -70,7 +70,6 @@
     <Compile Include="Officer\Duties\Pilot.cs" />
     <Compile Include="Officer\Duties\Watch.cs" />
     <Compile Include="Officer\DutyType.cs" />
-    <Compile Include="Officer\Configuration\IShip.cs" />
     <Compile Include="Officer\Events\DailyEvent.cs" />
     <Compile Include="Officer\Events\EpicCookingFailureEvent.cs" />
     <Compile Include="Officer\Events\EventProcessor.cs" />

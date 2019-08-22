@@ -179,29 +179,6 @@ namespace pfsim.Officer
             return retval;
         }
 
-        public IShip ProduceShipForV1Engine()
-        {
-            Crew ship = new Crew();
-
-            ship.CommanderSkillBonus = CommanderSkillBonus;
-            ship.CrewName = Name;
-            ship.CrewPilotModifier = CrewPilotModifier;
-            ship.CrewSize = CrewSize;
-            ship.DisciplineSkillBonus = DisciplineSkillBonus;
-            ship.FirstWatchBonus = FirstWatchBonus;
-            ship.HasDisciplineOfficer = HasDisciplineOfficer;
-            ship.MaintainSkillBonus = MaintainSkillBonus;
-            ship.ManagerSkillBonus = ManagerSkillBonus;
-            ship.NavigatorSkillBonus = NavigatorSkillBonus;
-            ship.PilotSkillBonus = PilotSkillBonus;
-            ship.ShipDc = ShipDc;
-            ship.ShipPilotingBonus = ShipPilotingBonus;
-            ship.ShipQuality = ShipQuality;
-            ship.ShipSize = ShipSize;
-
-            return ship;
-        }
-
         public int CommanderSkillBonus
         {
             get
