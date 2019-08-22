@@ -1,4 +1,6 @@
-﻿namespace pfsim.Officer
+﻿using System.Collections.Generic;
+
+namespace pfsim.Officer
 {
     /// <summary>
     /// 
@@ -18,7 +20,8 @@
         public void PerformDuty(IShip crew, ref MiniGameStatus status)
         {
             var dc = 5 + crew.ShipDc + status.CommandModifier + status.ManageModifier + status.WeatherModifier;
-            status.MaintainResult = DiceRoller.D20(1) + crew.MaintainSkillBonus - dc;
+            var assistBonus = PerformAssists(crew.GetAssistance(DutyType.Maintain), status.WeatherModifier);
+            status.MaintainResult = DiceRoller.D20(1) + crew.MaintainSkillBonus + assistBonus - dc;
 
             if(status.MaintainResult >= 0)
             {
@@ -45,6 +48,18 @@
                 }
                 status.ActionResults.Add($"Due to neglect the hull and propulsion of the ship each take {damage} points of damage");
             }
+        }
+        
+        private int PerformAssists(List<Assists> list, int modifier)
+        {
+            int retval = 0;
+
+            foreach (var assist in list)
+            {
+                retval += ((DiceRoller.D20(1) + assist.SkillBonus) >= (10 + modifier)) ? 2 : 0;
+            }
+
+            return retval;
         }
     }
 }

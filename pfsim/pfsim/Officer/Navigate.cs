@@ -1,4 +1,7 @@
-﻿namespace pfsim.Officer
+﻿using System;
+using System.Collections.Generic;
+
+namespace pfsim.Officer
 {
     /// <summary>
     /// Navigate – Determine the ship’s position, set the ship’s course and advise the pilot how 
@@ -13,6 +16,7 @@
         public void PerformDuty(IShip crew, ref MiniGameStatus status)
         {
             var dc = status.NavigateDc + status.CommandModifier + status.WeatherModifier;
+            var assistBonus = PerformAssists(crew.GetAssistance(DutyType.Manage));
             status.NavigationResult = (DiceRoller.D20(1) + crew.NavigatorSkillBonus) - dc;
 
             if (status.NavigationResult >= 0)
@@ -23,6 +27,18 @@
             {
                 status.ActionResults.Add("Off course.");
             }
+        }
+
+        private int PerformAssists(List<Assists> list)
+        {
+            int retval = 0;
+
+            foreach (var assist in list)
+            {
+                retval += ((DiceRoller.D20(1) + assist.SkillBonus) >= 10) ? 2 : 0;
+            }
+
+            return retval;
         }
     }
 }

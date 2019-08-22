@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace pfsim.Officer
 {
-    public class Voyage
+    public class Voyage : IVoyage
     {
         public NightStatus NightStatus { get; set; }
         public bool OpenOcean { get; set; }
@@ -26,16 +26,13 @@ namespace pfsim.Officer
                         return 1;
                     else
                         return 0;
-                    break;
                 case WeatherConditions.Fog:
                     if (duty == DutyType.Watch)
                         return -4;
                     else
                         return 0;
-                    break;
                 case WeatherConditions.Drizzle:
                     return -1;
-                    break;
                 case WeatherConditions.FairWinds:
                     if (duty == DutyType.Pilot)
                         return 2;
@@ -43,28 +40,22 @@ namespace pfsim.Officer
                         return 0;
                 case WeatherConditions.Gales:
                     return -5;
-                    break;
                 case WeatherConditions.HeavyRain:
                     return -3;
-                    break;
                 case WeatherConditions.HeavySeas:
                     if (duty == DutyType.Watch)
                         return -1;
                     else
                         return -3;
-                    break;
                 case WeatherConditions.Hurricane:
                     return -10;
                     break;
                 case WeatherConditions.Rain:
                     return -2;
-                    break;
                 case WeatherConditions.Storms:
                     return -3;
-                    break;
                 default:
                     return 0;
-                    break;
             }
         }
 

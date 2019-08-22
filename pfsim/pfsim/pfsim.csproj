@@ -55,9 +55,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActionContainers\OfficerMiniGameCommands.cs" />
+    <Compile Include="Officer\Alignment.cs" />
     <Compile Include="Officer\Assists.cs" />
     <Compile Include="Officer\BaseResponse.cs" />
     <Compile Include="Officer\CrewMember.cs" />
+    <Compile Include="Officer\DisciplineStandards.cs" />
     <Compile Include="Officer\DutyType.cs" />
     <Compile Include="Officer\IShip.cs" />
     <Compile Include="Officer\IVoyage.cs" />

@@ -41,43 +41,6 @@ namespace pfsim.Officer
         public int ShipDc { get; set; }
         public int ShipPilotingBonus { get; set; }
         public int ShipQuality { get; set; } // TODO: Place holder.
-        public int CrewQuality
-        {
-            get
-            {
-                var retval = ShipsCrew.Where(a => a.CountsAsCrew).Select(a => a.ProfessionSailorSkill).Average();
-
-                retval = Math.Floor(retval + Convert.ToDouble(AverageSwabbieQuality)) - 4;
-
-                if (retval > 4)
-                    return 4;
-                else if (retval < -4)
-                    return -4;
-                else
-                    return (int)retval;
-            }
-        }
-        public bool HasDisciplineOfficer
-        {
-            get
-            {
-                return AssignedJobs.Exists(a => a.DutyType == DutyType.Discipline);
-            }
-        }
-        public bool HasShipsDoctor
-        {
-            get
-            {
-                return AssignedJobs.Exists(a => a.DutyType == DutyType.Heal);
-            }
-        }
-        public bool HasMinimumCrew
-        {
-            get
-            {
-                return AvailableCrew - MinimumCrewSize > 0;
-            }
-        }
 
         public List<CrewMember> ShipsCrew
         {
@@ -94,6 +57,57 @@ namespace pfsim.Officer
             }
         }
         private List<CrewMember> _shipsCrew;
+
+        public Morale ShipsMorale
+        {
+            get
+            {
+                if (_shipsMorale == null)
+                    _shipsMorale = new Morale();
+
+                return _shipsMorale;
+            }
+            set
+            {
+                _shipsMorale = value;
+            }
+        }
+        private Morale _shipsMorale;
+
+        public int CrewQuality
+        {
+            get
+            {
+                var retval = ShipsCrew.Where(a => a.CountsAsCrew).Select(a => a.ProfessionSailorSkill).Average();
+
+                retval = Math.Floor(retval + Convert.ToDouble(AverageSwabbieQuality)) - 4;
+
+                if (retval > 4)
+                    return 4;
+                else if (retval < -4)
+                    return -4;
+                else
+                    return (int)retval;
+            }
+        }
+
+        public bool HasDisciplineOfficer
+        {
+            get
+            {
+                return AssignedJobs.Exists(a => a.DutyType == DutyType.Discipline);
+            }
+        }
+        public bool HasShipsDoctor
+        {
+            get
+            {
+                return AssignedJobs.Exists(a => a.DutyType == DutyType.Heal);
+            }
+        }
+        public DisciplineStandards DisciplineStandards { get; set; }
+        public Alignment ShipsAlignment { get; set; }
+
         public int Marines { get; set; }
         public int Passengers { get; set; }
         public int Swabbies { get; set; }
@@ -122,6 +136,13 @@ namespace pfsim.Officer
                     return 0;
                 else
                     return retval < -10 ? -10 : retval;
+            }
+        }
+        public bool HasMinimumCrew
+        {
+            get
+            {
+                return AvailableCrew - MinimumCrewSize > 0;
             }
         }
 
@@ -428,6 +449,9 @@ namespace pfsim.Officer
             }
         }
 
+        /// <summary>
+        /// TODO: Does the ship need a voyage?
+        /// </summary>
         public Voyage CurrentVoyage
         {
             get
