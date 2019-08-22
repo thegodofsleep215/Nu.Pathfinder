@@ -25,6 +25,7 @@ namespace pfsim.Officer
         int MaintainSkillBonus { get; }
         int CookSkillBonus { get; }
         int HealerSkillBonus { get; }
+        bool HasHealer { get; }
 
         List<Assists> GetAssistance(DutyType duty);
     }
