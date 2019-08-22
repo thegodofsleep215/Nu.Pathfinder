@@ -59,7 +59,6 @@
     <Compile Include="Officer\Configuration\CrewMember.cs" />
     <Compile Include="Officer\Configuration\CrewSkills.cs" />
     <Compile Include="Officer\Duties\Command.cs" />
-    <Compile Include="Officer\Configuration\Crew.cs" />
     <Compile Include="Officer\DailyInput.cs" />
     <Compile Include="Officer\Duties\Cook.cs" />
     <Compile Include="Officer\Duties\Discipline.cs" />
