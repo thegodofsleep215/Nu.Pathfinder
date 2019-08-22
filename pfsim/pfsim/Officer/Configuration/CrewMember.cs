@@ -65,7 +65,7 @@ namespace pfsim.Officer
         {
             get
             {
-                return Skills.Perform + WorkModifier + ExternalModifiers.Perception;
+                return Skills.Perform + WorkModifier + ExternalModifiers.Perform;
             }
         }
         public int CraftCarpentrySkill
@@ -93,7 +93,7 @@ namespace pfsim.Officer
         {
             get
             {
-                return Skills.Heal + WorkModifier + ExternalModifiers.CraftCooking;
+                return Skills.Heal + WorkModifier + ExternalModifiers.Heal;
             }
         }
         public int SurvivalSkill
