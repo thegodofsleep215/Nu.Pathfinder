@@ -81,11 +81,29 @@ namespace pfsim.Officer
         }
         private int _infamy;
 
+        public int Piracy
+        {
+            get
+            {
+                return _piracy;
+            }
+            set
+            {
+                if (value > 5)
+                    _piracy = 5;
+                else if (value < 0)
+                    _piracy = 0;
+                else
+                    _piracy = value;
+            }
+        }
+        private int _piracy;
+
         public int CrewMorale
         {
             get
             {
-                return _infamy + _wellBeing + _wealth + _shipShape;
+                return _piracy + _infamy + _wellBeing + _wealth + _shipShape;
             }
         }
 
@@ -96,11 +114,11 @@ namespace pfsim.Officer
                 var temp = CrewMorale;
                 if (temp <= 5)
                     return -4;
-                else if (temp <= 10)
+                else if (temp <= 11)
                     return -2;
-                else if (temp >= 15)
+                else if (temp >= 16)
                     return +2;
-                else if (temp >= 20)
+                else if (temp >= 21)
                     return +4;
                 else
                     return 0;
@@ -114,11 +132,11 @@ namespace pfsim.Officer
                 var temp = CrewMorale;
                 if (temp <= 5)
                     return -10;
-                else if (temp <= 10)
+                else if (temp <= 11)
                     return -5;
-                else if (temp >= 15)
+                else if (temp >= 16)
                     return +5;
-                else if (temp >= 20)
+                else if (temp >= 21)
                     return +10;
                 else
                     return 0;

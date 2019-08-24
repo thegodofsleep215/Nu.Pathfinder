@@ -110,7 +110,11 @@ namespace pfsim.Officer
         {
             get
             {
-                var retval = ShipsCrew.Where(a => a.CountsAsCrew).Select(a => a.ProfessionSailorSkill).Average();
+                double retval = 0;
+                var namedCrew = ShipsCrew.Where(a => a.CountsAsCrew).ToList();
+
+                if(namedCrew != null && namedCrew.Count > 0)
+                    retval = namedCrew.Select(a => a.ProfessionSailorSkill).Average();
 
                 retval = Math.Floor(retval + Convert.ToDouble(AverageSwabbieQuality)) - 4;
 
@@ -203,6 +207,10 @@ namespace pfsim.Officer
         {
             BaseResponse retval = new BaseResponse();
 
+            if(ShipsCrew.Count != ShipsCrew.Select(a => a.Name).Distinct().Count())
+            {
+                retval.Messages.Add("Everyone in the crew must have a different name!");
+            }
             // This is a bit of a simplification, as I can see situations where you could have different numbers of these, but for now
             // this is complex enough.
             if (AssignedJobs.Count(a => a.DutyType == DutyType.Command && !a.IsAssistant) > 1)

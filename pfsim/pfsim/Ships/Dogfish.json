@@ -58,7 +58,181 @@
         "CraftCooking": 0,
         "Heal": 0,
         "Perform": 0
-      }  
+      }
+    },
+    {
+      "Name": "Sayna",
+      "Title": "First Mate",
+      "Skills": {
+        "ProfessionSailor": 9,
+        "Diplomacy": 11,
+        "KnowledgeEngineering": 0,
+        "Intimidate": 4,
+        "Perception": 8,
+        "CraftCarpentry": 1,
+        "CraftShip": 1,
+        "CraftSails": 1,
+        "Survival": 0,
+        "ProfessionMerchant": 0,
+        "CraftCooking": 1,
+        "Heal": 2,
+        "Perform": 11
+      },
+      "Jobs": [
+        {
+          "CrewName": "Sayna",
+          "DutyType": "Command",
+          "IsAssistant": 0
+        },
+        {
+          "CrewName": "Sayna",
+          "DutyType": "Watch",
+          "IsAssistant": 0
+        }
+      ],
+      "ExternalModifiers": {
+        "ProfessionSailor": 0,
+        "Diplomacy": 0,
+        "KnowledgeEngineering": 0,
+        "Intimidate": 0,
+        "Perception": 0,
+        "CraftCarpentry": 0,
+        "CraftShip": 0,
+        "CraftSails": 0,
+        "Survival": 0,
+        "ProfessionMerchant": 0,
+        "CraftCooking": 0,
+        "Heal": 0,
+        "Perform": 0
+      }
+    },
+    {
+      "Name": "Layla",
+      "Title": "Boatswain",
+      "Skills": {
+        "ProfessionSailor": 8,
+        "Diplomacy": 3,
+        "KnowledgeEngineering": 0,
+        "Intimidate": 8,
+        "Perception": 8,
+        "CraftCarpentry": 4,
+        "CraftShip": 11,
+        "CraftSails": 4,
+        "Survival": 0,
+        "ProfessionMerchant": 0,
+        "CraftCooking": 4,
+        "Heal": 0,
+        "Perform": 0
+      },
+      "Jobs": [
+        {
+          "CrewName": "Layla",
+          "DutyType": "Discipline",
+          "IsAssistant": 0
+        },
+        {
+          "CrewName": "Layla",
+          "DutyType": "Maintain",
+          "IsAssistant": 0
+        }
+      ],
+      "ExternalModifiers": {
+        "ProfessionSailor": 0,
+        "Diplomacy": 0,
+        "KnowledgeEngineering": 0,
+        "Intimidate": 0,
+        "Perception": 0,
+        "CraftCarpentry": 0,
+        "CraftShip": 0,
+        "CraftSails": 0,
+        "Survival": 0,
+        "ProfessionMerchant": 0,
+        "CraftCooking": 0,
+        "Heal": 0,
+        "Perform": 0
+      }
+    },
+    {
+      "Name": "Audrin",
+      "Title": "Pursur",
+      "Skills": {
+        "ProfessionSailor": 0,
+        "Diplomacy": -2,
+        "KnowledgeEngineering": 0,
+        "Intimidate": -2,
+        "Perception": 8,
+        "CraftCarpentry": 2,
+        "CraftShip": 2,
+        "CraftSails": 2,
+        "Survival": 0,
+        "ProfessionMerchant": 0,
+        "CraftCooking": 2,
+        "Heal": 0,
+        "Perform": 0
+      },
+      "Jobs": [
+        {
+          "CrewName": "Audrin",
+          "DutyType": "Manage",
+          "IsAssistant": 0
+        }
+      ],
+      "ExternalModifiers": {
+        "ProfessionSailor": 0,
+        "Diplomacy": 0,
+        "KnowledgeEngineering": 0,
+        "Intimidate": 0,
+        "Perception": 8,
+        "CraftCarpentry": 0,
+        "CraftShip": 0,
+        "CraftSails": 0,
+        "Survival": 0,
+        "ProfessionMerchant": 0,
+        "CraftCooking": 0,
+        "Heal": 0,
+        "Perform": 0
+      }
+    },
+    {
+      "Name": "Fishguts",
+      "Title": "Cook",
+      "Skills": {
+        "ProfessionSailor": 8,
+        "Diplomacy": 0,
+        "KnowledgeEngineering": 0,
+        "Intimidate": 0,
+        "Perception": 8,
+        "CraftCarpentry": 0,
+        "CraftShip": 0,
+        "CraftSails": 0,
+        "Survival": 0,
+        "ProfessionMerchant": 0,
+        "CraftCooking": 8,
+        "Heal": 0,
+        "Perform": 0
+      },
+      "Jobs": [
+        {
+          "CrewName": "Fishguts",
+          "DutyType": "Cook",
+          "IsAssistant": 0
+        }
+      ],
+      "ExternalModifiers": {
+        "ProfessionSailor": 0,
+        "Diplomacy": 0,
+        "KnowledgeEngineering": 0,
+        "Intimidate": 0,
+        "Perception": 0,
+        "CraftCarpentry": 0,
+        "CraftShip": 0,
+        "CraftSails": 0,
+        "Survival": 0,
+        "ProfessionMerchant": 0,
+        "CraftCooking": 0,
+        "Heal": 0,
+        "Perform": 0
+      }
     }
   ],
   "DisciplineStandards": "Normal",

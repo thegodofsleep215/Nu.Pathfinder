@@ -26,7 +26,7 @@ namespace pfsim.Officer
             int retval = 0;
             int watch = status.WatchResults.Count;
 
-            if(list.Count <= watch)
+            if(list.Count > watch)
             {
                 var assist = list[watch - 1];
                 retval += ((DiceRoller.D20(1) + assist.SkillBonus) >= (10 + status.WeatherModifier)) ? 2 : 0;
