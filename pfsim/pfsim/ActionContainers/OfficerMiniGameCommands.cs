@@ -48,5 +48,49 @@ namespace pfsim.ActionContainers
             return charFiles.Select(cf => JsonConvert.DeserializeObject<Crew>(File.ReadAllText(cf))).ToDictionary(x => x.CrewName, x => x);
         }
 
+        [TypedCommand("omgTest", "Rolls one day of the officer mini game.")]
+        public string OmgRoll2(string crew, int crewMorale, int wellbeing, int sailingModifier, int navigateDc, int disciplineModifier, int healModifier, int weatherModifier)
+        {
+            var ship = LoadAssets2(crew);
+            if (ship.CrewName != crew)
+            {
+                return "Crew not found.";
+            }
+            var input = new DailyInput
+            {
+                CrewMorale = crewMorale,
+                Wellbeing = wellbeing,
+                SailingModifier = sailingModifier,
+                NavigateDc = navigateDc,
+                DisciplineModifier = disciplineModifier,
+                HealModifier = healModifier,
+                WeatherModifier = weatherModifier
+            };
+            var game = new OfficerEngine(ship, input);
+            var result = game.Run();
+            return string.Join(Environment.NewLine, result);
+        }
+
+        private Dictionary<string, Ship> LoadAssets2()
+        {
+            var folder = ".\\Ships";
+            if (!Directory.Exists(folder))
+            {
+                return new Dictionary<string, Ship>();
+            }
+            var charFiles = Directory.GetFiles(folder, "*.json");
+            return charFiles.Select(cf => JsonConvert.DeserializeObject<Ship>(File.ReadAllText(cf))).ToDictionary(x => x.CrewName, x => x);
+        }
+
+        private Ship LoadAssets2(string shipName)
+        {
+            var folder = ".\\Ships";
+            if (!Directory.Exists(folder))
+            {
+                return new Ship();
+            }
+            string file = Directory.GetFiles(folder, string.Format("{0}.json", shipName)).First();
+            return JsonConvert.DeserializeObject<Ship>(File.ReadAllText(file));
+        }
     }
 }

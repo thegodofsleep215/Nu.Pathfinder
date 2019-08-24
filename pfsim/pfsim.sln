@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
-VisualStudioVersion = 16.0.29201.188
+VisualStudioVersion = 16.0.29215.179
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pfsim", "pfsim\pfsim.csproj", "{4B5BAAF8-F508-4077-897F-626E851B1ADD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nu.Messaging", "Nu.Messaging\Nu.Messaging.csproj", "{8A5EE3CF-E1D9-4722-BAB4-DE9852ABD677}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nu.Messaging", "Nu.Messaging\Nu.Messaging.csproj", "{8A5EE3CF-E1D9-4722-BAB4-DE9852ABD677}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nu.Messaging.Test", "Nu.Messaging.Test\Nu.Messaging.Test.csproj", "{4548C35D-AD1F-46D7-8AB3-F661FDD1E061}"
 EndProject

@@ -1,0 +1,70 @@
+﻿{
+  "CrewName": "Dogfish",
+  "ShipSize": "Colossal",
+  "PropulsionTypes": [
+    {
+      "PropulsionType": "Sails",
+      "ShipSpeed": 90,
+      "PropulsionHitPoints": 360
+    }
+  ],
+  "HullHitPoints": 1620,
+  "CrewSize": 16,
+  "ShipDc": 10,
+  "ShipPilotingBonus": 0,
+  "ShipQuality": 0,
+  "ShipsCrew": [
+    {
+      "Name": "Gideon Sully",
+      "Title": "Captain",
+      "Skills": {
+        "ProfessionSailor": 15,
+        "Diplomacy": 1,
+        "KnowledgeEngineering": 0,
+        "Intimidate": 5,
+        "Perception": 8,
+        "CraftCarpentry": 1,
+        "CraftShip": 1,
+        "CraftSails": 1,
+        "Survival": 8,
+        "ProfessionMerchant": 0,
+        "CraftCooking": 1,
+        "Heal": 2,
+        "Perform": 0
+      },
+      "Jobs": [
+        {
+          "CrewName": "Gideon Sully",
+          "DutyType": "Pilot",
+          "IsAssistant": 0
+        },
+        {
+          "CrewName": "Gideon Sully",
+          "DutyType": "Navigate",
+          "IsAssistant": 0
+        }
+      ],
+      "ExternalModifiers": {
+        "ProfessionSailor": 0,
+        "Diplomacy": 0,
+        "KnowledgeEngineering": 0,
+        "Intimidate": 0,
+        "Perception": 0,
+        "CraftCarpentry": 0,
+        "CraftShip": 0,
+        "CraftSails": 0,
+        "Survival": 0,
+        "ProfessionMerchant": 0,
+        "CraftCooking": 0,
+        "Heal": 0,
+        "Perform": 0
+      }  
+    }
+  ],
+  "DisciplineStandards": "Normal",
+  "Alignment": "Chaotic",
+  "Marines": 0,
+  "Passengers": 0,
+  "Swabbies": 20,
+  "AverageSwabbieQuality": 4
+}

@@ -112,6 +112,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
+    <None Include="Ships\Dogfish.json" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nu.Messaging\Nu.Messaging.csproj">

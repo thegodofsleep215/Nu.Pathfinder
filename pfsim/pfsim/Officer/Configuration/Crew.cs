@@ -47,5 +47,12 @@ namespace pfsim.Officer
 
             return retval;
         }
+
+        public BaseResponse ValidateAssignedJobs()
+        {
+            BaseResponse retval = new BaseResponse();
+
+            return retval;
+        }
     }
 }

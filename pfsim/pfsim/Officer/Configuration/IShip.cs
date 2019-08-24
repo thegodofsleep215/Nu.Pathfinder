@@ -28,5 +28,7 @@ namespace pfsim.Officer
         bool HasHealer { get; }
 
         List<Assists> GetAssistance(DutyType duty);
+
+        BaseResponse ValidateAssignedJobs();
     }
 }

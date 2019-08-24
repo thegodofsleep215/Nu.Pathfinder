@@ -26,6 +26,8 @@ namespace pfsim.Officer
             }
         }
         private CrewSkills _skills;
+
+        #region Effective Skill
         public int ProfessionSailorSkill
         {
             get
@@ -110,7 +112,9 @@ namespace pfsim.Officer
                 return Skills.ProfessionMerchant + WorkModifier + ExternalModifiers.ProfessionMerchant;
             }
         }
+        #endregion
 
+        #region Job Skill
         public int CommanderSkillBonus
         {
             get
@@ -229,6 +233,7 @@ namespace pfsim.Officer
                 return CraftCookingSkill;
             }
         }
+        #endregion
 
         public List<Job> Jobs
         {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -105,7 +106,6 @@ namespace pfsim.Officer
                 _shipsMorale = value;
             }
         }
-
         public int CrewQuality
         {
             get
@@ -122,7 +122,6 @@ namespace pfsim.Officer
                     return (int)retval;
             }
         }
-
         public bool HasDisciplineOfficer
         {
             get
@@ -139,7 +138,6 @@ namespace pfsim.Officer
         }
         public DisciplineStandards DisciplineStandards { get; set; }
         public Alignment ShipsAlignment { get; set; }
-
         public int Marines { get; set; }
         public int Passengers { get; set; }
         public int Swabbies { get; set; }
@@ -262,32 +260,6 @@ namespace pfsim.Officer
             }
 
             return retval;
-        }
-
-        public IShip ProduceShipForV1Engine()
-        {
-            Crew ship = new Crew();
-
-            ship.CommanderSkillBonus = CommanderSkillBonus;
-            ship.CrewName = CrewName;
-            ship.CrewPilotModifier = CrewPilotModifier;
-            ship.CrewSize = CrewSize;
-            ship.DisciplineSkillBonus = DisciplineSkillBonus;
-            ship.FirstWatchBonus = FirstWatchBonus;
-            ship.HasDisciplineOfficer = HasDisciplineOfficer;
-            ship.MaintainSkillBonus = MaintainSkillBonus;
-            ship.ManagerSkillBonus = ManagerSkillBonus;
-            ship.NavigatorSkillBonus = NavigatorSkillBonus;
-            ship.PilotSkillBonus = PilotSkillBonus;
-            ship.ShipDc = ShipDc;
-            ship.ShipPilotingBonus = ShipPilotingBonus;
-            ship.ShipQuality = ShipQuality;
-            ship.ShipSize = ShipSize;
-            ship.CookSkillBonus = CookSkillBonus;
-            ship.HealerSkillBonus = HealerSkillBonus;
-            ship.HasHealer = HasHealer;
-
-            return ship;
         }
 
         public List<Assists> GetAssistance(DutyType duty)
@@ -527,7 +499,6 @@ namespace pfsim.Officer
                 return retval;
             }
         }
-
 
         public int CookSkillBonus
         {

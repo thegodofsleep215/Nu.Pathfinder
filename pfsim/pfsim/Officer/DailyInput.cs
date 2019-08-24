@@ -13,5 +13,7 @@
         public int Wellbeing { get; set; }
 
         public int HealModifier { get; set; }
+
+        public int WeatherModifier { get; set; }
     }
 }
