@@ -16,11 +16,13 @@ namespace pfsim.Officer
 
         public int FirstWatchBonus { get; set; }
 
+        public List<int> WatchBonuses { get; set; }
+
         public int ShipPilotingBonus { get; set; }
 
         public int ShipQuality { get; set; }
 
-        public int CrewSize { get; set; }
+        public int TotalCrew { get; set; }
 
         public int CrewPilotModifier { get; set; }
 

@@ -58,12 +58,12 @@ namespace pfsim.Officer
             }
         }
 
-        public List<string> ActionResults { get; } = new List<string>();
-
         public int WeatherModifier { get; set; }
         public int PilotResult { get; set; }
         public int NavigationResult { get; set; }
         public int MaintainResult { get; set; }
         public int CookResult { get; internal set; }
+
+        public List<string> ActionResults { get; } = new List<string>();
     }
 }

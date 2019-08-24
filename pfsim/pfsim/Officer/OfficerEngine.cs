@@ -16,6 +16,8 @@ namespace pfsim.Officer
             gameQueue.Enqueue(new Command());
             gameQueue.Enqueue(new Manage());
             gameQueue.Enqueue(new Watch());
+            gameQueue.Enqueue(new Watch());
+            // TODO: By this point, we need to make the minigame.
             gameQueue.Enqueue(new Pilot());
             gameQueue.Enqueue(new Navigate());
             gameQueue.Enqueue(new Discipline());

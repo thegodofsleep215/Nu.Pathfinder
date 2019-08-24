@@ -17,27 +17,30 @@ namespace pfsim.Officer
     {
         public void PerformDuty(IShip crew, DailyInput input, ref MiniGameStatus status)
         {
-            var dc = 5 + crew.ShipDc + (crew.CrewSize / 10) + status.CommandModifier;
+            var dc = 5 + crew.ShipDc + (crew.TotalCrew / 10) + status.CommandModifier;
             var assistBonus = PerformAssists(crew.GetAssistance(DutyType.Manage));
             status.ManageResult = (DiceRoller.D20(1) + crew.ManagerSkillBonus) - dc;
 
             if (status.ManageResult >= 0) status.ActionResults.Add("Resources managed.");
             if (status.ManageResult < 0)
             {
-                switch (DiceRoller.D4(1))
+                if (DiceRoller.D20(1) <= (crew.TotalCrew / 10 + 1))
                 {
-                    case 1:
-                        status.ActionResults.Add("Resources mismanaged resulting in the loss of a rum ration.");
-                        break;
-                    case 2:
-                        status.ActionResults.Add("Resources mismanaged resulting in the loss of a water ration.");
-                        break;
-                    case 3:
-                        status.ActionResults.Add("Resources mismanaged resulting in the loss of a food ration.");
-                        break;
-                    case 4:
-                        status.ActionResults.Add("Resources mismanaged resulting in the loss of ship's supplies.");
-                        break;
+                    switch (DiceRoller.D4(1))
+                    {
+                        case 1:
+                            status.ActionResults.Add("Resources mismanaged resulting in the loss of a rum ration.");
+                            break;
+                        case 2:
+                            status.ActionResults.Add("Resources mismanaged resulting in the loss of a water ration.");
+                            break;
+                        case 3:
+                            status.ActionResults.Add("Resources mismanaged resulting in the loss of a food ration.");
+                            break;
+                        case 4:
+                            status.ActionResults.Add("Resources mismanaged resulting in the loss of ship's supplies.");
+                            break;
+                    }
                 }
             }
             if(status.ManageResult <= -10)

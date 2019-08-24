@@ -42,6 +42,11 @@
           "CrewName": "Gideon Sully",
           "DutyType": "Navigate",
           "IsAssistant": 0
+        },
+        {
+          "CrewName": "Gideon Sully",
+          "DutyType": "Watch",
+          "IsAssistant": 0
         }
       ],
       "ExternalModifiers": {
@@ -194,6 +199,47 @@
       }
     },
     {
+      "Name": "Rooster",
+      "Title": "Surgeon",
+      "Skills": {
+        "ProfessionSailor": 0,
+        "Diplomacy": 0,
+        "KnowledgeEngineering": 0,
+        "Intimidate": 0,
+        "Perception": 0,
+        "CraftCarpentry": 0,
+        "CraftShip": 0,
+        "CraftSails": 0,
+        "Survival": 0,
+        "ProfessionMerchant": 0,
+        "CraftCooking": 0,
+        "Heal": 8,
+        "Perform": 0
+      },
+      "Jobs": [
+        {
+          "CrewName": "Rooster",
+          "DutyType": "Heal",
+          "IsAssistant": 0
+        }
+      ],
+      "ExternalModifiers": {
+        "ProfessionSailor": 0,
+        "Diplomacy": 0,
+        "KnowledgeEngineering": 0,
+        "Intimidate": 0,
+        "Perception": 0,
+        "CraftCarpentry": 0,
+        "CraftShip": 0,
+        "CraftSails": 0,
+        "Survival": 0,
+        "ProfessionMerchant": 0,
+        "CraftCooking": 0,
+        "Heal": 0,
+        "Perform": 0
+      }
+    },
+    {
       "Name": "Fishguts",
       "Title": "Cook",
       "Skills": {
@@ -239,6 +285,6 @@
   "Alignment": "Chaotic",
   "Marines": 0,
   "Passengers": 0,
-  "Swabbies": 20,
+  "Swabbies": 34,
   "AverageSwabbieQuality": 4
 }

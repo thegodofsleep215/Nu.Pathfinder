@@ -8,5 +8,6 @@ namespace pfsim.Officer
 {
     public interface IVoyage
     {
+
     }
 }

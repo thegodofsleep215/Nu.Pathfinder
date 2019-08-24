@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace pfsim.Officer
 {
@@ -14,8 +15,9 @@ namespace pfsim.Officer
     {
         public void PerformDuty(IShip crew, DailyInput input, ref MiniGameStatus status)
         {
-            var dc = 7 + (crew.CrewSize / 10) - input.Wellbeing;
-            var result = DiceRoller.D20(1) + crew.CookSkillBonus - dc;
+            var dc = 7 + (crew.TotalCrew / 10) - input.Wellbeing;
+            var assistBonus = PerformAssists(crew.GetAssistance(DutyType.Cook));
+            var result = DiceRoller.D20(1) + assistBonus + crew.CookSkillBonus - dc;
             status.CookResult = result;
             if (result >= 0)
             {
@@ -27,6 +29,18 @@ namespace pfsim.Officer
                 wm = wm > input.Wellbeing ? input.Wellbeing : wm;
                 status.ActionResults.Add($"A sorry meal has been served reducing the wellbeing score by {wm} for a day.");
             }
+        }
+
+        private int PerformAssists(List<Assists> list)
+        {
+            int retval = 0;
+
+            foreach (var assist in list)
+            {
+                retval += (DiceRoller.D20(1) + assist.SkillBonus >= 10) ? 2 : 0;
+            }
+
+            return retval;
         }
     }
 }

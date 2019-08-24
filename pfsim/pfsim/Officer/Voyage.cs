@@ -9,12 +9,23 @@ namespace pfsim.Officer
     public class Voyage : IVoyage
     {
         public NightStatus NightStatus { get; set; }
-        public bool OpenOcean { get; set; }
-        public bool ShallowWater { get; set; }
-        public bool NarrowPassage { get; set; }
+        public bool OpenOcean { get; set; }  
+        public bool ShallowWater { get; set; }  
+        public bool NarrowPassage { get; set; }  
         public int DayOfVoyage { get; set; }
         public int DaysSinceResupply { get; set; }
+        public int HullDamageSinceRefit { get; set; }
+        public int SailDamageSinceRefit { get; set; }
         public bool VariedFoodSupplies { get; set; }
+        public bool DiseaseAboardShip
+        {
+            get
+            {
+                return DiseasedCrew > 0;
+            }
+        }
+        public int DiseasedCrew { get; set; }
+        public int CrewUnfitForDuty { get; set; }
         public WeatherConditions Conditions { get; set; }
 
         public int GetWeatherModifier(DutyType duty)

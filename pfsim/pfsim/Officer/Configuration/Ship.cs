@@ -114,9 +114,9 @@ namespace pfsim.Officer
                 var namedCrew = ShipsCrew.Where(a => a.CountsAsCrew).ToList();
 
                 if(namedCrew != null && namedCrew.Count > 0)
-                    retval = namedCrew.Select(a => a.ProfessionSailorSkill).Average();
+                    retval = namedCrew.Select(a => a.ProfessionSailorSkill).Sum();
 
-                retval = Math.Floor(retval + Convert.ToDouble(AverageSwabbieQuality)) - 4;
+                retval = Math.Floor(((retval * namedCrew.Count) + (Convert.ToDouble(AverageSwabbieQuality) * Swabbies)) / (namedCrew.Count + Swabbies)) - 4;
 
                 if (retval > 4)
                     return 4;
@@ -224,6 +224,10 @@ namespace pfsim.Officer
             if (AssignedJobs.Count(a => a.DutyType == DutyType.Manage && !a.IsAssistant) > 1)
             {
                 retval.Messages.Add("Can't have two managers!");
+            }
+            if (AssignedJobs.Count(a => a.DutyType == DutyType.Watch && !a.IsAssistant) > 3)
+            {
+                retval.Messages.Add("To many helmsmen.  There are only three watches per day!");
             }
             if (AssignedJobs.Count(a => a.DutyType == DutyType.Manage && a.IsAssistant) > MaxClerks)
             {
@@ -412,19 +416,34 @@ namespace pfsim.Officer
         {
             get
             {
-                int retval = -5;
+                return WatchBonuses[0];
+            }
+        }
 
-                if (AssignedJobs.Exists(a => a.DutyType == DutyType.Watch))
+        public List<int> WatchBonuses
+        {
+            get
+            {
+                int[] watchBonuses = new int[3] { -5, -5, -5 };
+
+                var day = AssignedJobs.Where(a => a.DutyType == DutyType.Watch);
+                var i = 0;
+
+                foreach(var watch in day)
                 {
-                    string deckOfficerName = AssignedJobs.First(a => a.DutyType == DutyType.Watch).CrewName;
+                    var lookout = ShipsCrew.FirstOrDefault(a => a.Name == watch.CrewName);
 
-                    var deckOfficer = ShipsCrew.FirstOrDefault(a => a.Name == deckOfficerName);
+                    if(lookout != null)
+                    {
+                        watchBonuses[i] = lookout.WatchSkillBonus;
+                        i++;
+                    }
 
-                    if (deckOfficer != null)
-                        retval = deckOfficer.WatchSkillBonus;
+                    if (i >= 3)
+                        break;
                 }
 
-                return retval;
+                return watchBonuses.ToList();
             }
         }
 

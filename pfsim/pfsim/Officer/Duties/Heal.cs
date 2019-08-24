@@ -1,4 +1,6 @@
-﻿namespace pfsim.Officer
+﻿using System.Collections.Generic;
+
+namespace pfsim.Officer
 {
     /// Heal – Treat illness and help contain it and prevent its spread.   In practice, the normal application 
     /// of this job works much like Discipline.   No one has to take it, but if no one takes it then it is 
@@ -61,6 +63,17 @@
             }
         }
 
+        private int PerformAssists(List<Assists> list)
+        {
+            int retval = 0;
+
+            foreach (var assist in list)
+            {
+                retval += (DiceRoller.D20(1) + assist.SkillBonus >= 10) ? 2 : 0;
+            }
+
+            return retval;
+        }
     }
 
 }
