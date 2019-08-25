@@ -105,7 +105,7 @@ namespace pfsim.Officer
             {
                 _shipsMorale = value;
             }
-        }
+        }  // TODO: Should morale be part of the voyage?
         public int CrewQuality
         {
             get
@@ -321,7 +321,13 @@ namespace pfsim.Officer
                         case DutyType.Procure:
                             assistance.SkillBonus = mate.ProcureSkillBonus;
                             break;
-                        case DutyType.Repair: //TODO: Need multiple types of repair.
+                        case DutyType.RepairHull: 
+                            assistance.SkillBonus = mate.RepairSkillBonus;
+                            break;
+                        case DutyType.RepairSails:
+                            assistance.SkillBonus = mate.RepairSkillBonus;
+                            break;
+                        case DutyType.RepairSeigeEngine:
                             assistance.SkillBonus = mate.RepairSkillBonus;
                             break;
                         case DutyType.Stow:

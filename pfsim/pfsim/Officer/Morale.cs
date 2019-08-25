@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace pfsim.Officer
 {
     [Serializable]
-    public class Morale
+    public class Morale : IMorale
     {
         public int ShipShape
         {
@@ -49,7 +49,10 @@ namespace pfsim.Officer
         {
             get
             {
-                return _wellBeing;
+                if (_wellBeing - TemporaryWellbeingPenalty < 0)
+                    return 0;
+                else
+                    return _wellBeing - TemporaryWellbeingPenalty;
             }
             set
             {
@@ -103,9 +106,17 @@ namespace pfsim.Officer
         {
             get
             {
-                return _piracy + _infamy + _wellBeing + _wealth + _shipShape;
+                var retval = Piracy + Infamy + WellBeing + Wealth + ShipShape;
+
+                if (retval - TemporaryMoralePenalty < 0)
+                    return 0;
+                else
+                    return retval - TemporaryMoralePenalty;
             }
         }
+
+        public int TemporaryMoralePenalty { get; set; }
+        public int TemporaryWellbeingPenalty { get; set; }
 
         public int MoraleBonus
         {
@@ -143,9 +154,9 @@ namespace pfsim.Officer
             }
         }
 
-
-        public Morale(int infamy, int shipshape, int wealth, int wellbeing)
+        public Morale(int piracy, int infamy, int shipshape, int wealth, int wellbeing)
         {
+            _piracy = piracy;
             _wealth = wealth;
             _infamy = infamy;
             _wellBeing = wellbeing;

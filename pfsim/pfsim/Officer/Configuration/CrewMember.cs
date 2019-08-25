@@ -210,6 +210,14 @@ namespace pfsim.Officer
             }
         }
 
+        public int RepairHullSkillBonus
+        {
+            get
+            {
+                return CraftShipSkill > CraftCarpentrySkill ? CraftShipSkill : CraftCarpentrySkill;
+            }
+        }
+
         public int StowSkillBonus
         {
             get
@@ -317,7 +325,7 @@ namespace pfsim.Officer
         {
             List<string> messages = new List<string>();
 
-            if (Jobs.Count(a => a.DutyType == DutyType.Repair) > 2)
+            if (Jobs.Count(a => a.DutyType == DutyType.RepairHull || a.DutyType == DutyType.RepairSails || a.DutyType == DutyType.RepairSeigeEngine) > 2)
             {
                 messages.Add(string.Format("Not enough time in the day for {0} {1} to repair everything!", Title, Name));
             }
@@ -341,7 +349,9 @@ namespace pfsim.Officer
                                 a.DutyType == DutyType.Ministrel ||
                                 a.DutyType == DutyType.Heal ||
                                 a.DutyType == DutyType.Stow ||
-                                a.DutyType == DutyType.Repair) > 2)
+                                a.DutyType == DutyType.RepairHull || 
+                                a.DutyType == DutyType.RepairSails ||
+                                a.DutyType == DutyType.RepairSeigeEngine) > 2)
             {
                 messages.Add(string.Format("{0} {1} can't do all the work by himself!", Title, Name));
             }

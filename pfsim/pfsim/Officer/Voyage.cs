@@ -10,12 +10,14 @@ namespace pfsim.Officer
     {
         public NightStatus NightStatus { get; set; }
         public bool OpenOcean { get; set; }  
-        public bool ShallowWater { get; set; }  
+        public bool ShallowWater { get; set; }  // TODO: Would it just better to set a general DC modifier from 0 to 10?
         public bool NarrowPassage { get; set; }  
         public int DayOfVoyage { get; set; }
         public int DaysSinceResupply { get; set; }
         public int HullDamageSinceRefit { get; set; }
+        public int CurrentHullDamage { get; set; }
         public int SailDamageSinceRefit { get; set; }
+        public int CurrentSailDamage { get; set; }
         public bool VariedFoodSupplies { get; set; }
         public bool DiseaseAboardShip
         {
@@ -26,6 +28,8 @@ namespace pfsim.Officer
         }
         public int DiseasedCrew { get; set; }
         public int CrewUnfitForDuty { get; set; }
+        public int DisciplineModifier { get; set; }
+        public int NumberOfCrewPlottingMutiny { get; set; }
         public WeatherConditions Conditions { get; set; }
 
         public int GetWeatherModifier(DutyType duty)
