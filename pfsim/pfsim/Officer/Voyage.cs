@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,6 +20,7 @@ namespace pfsim.Officer
         public int SailDamageSinceRefit { get; set; }
         public int CurrentSailDamage { get; set; }
         public bool VariedFoodSupplies { get; set; }
+        [JsonIgnore]
         public bool DiseaseAboardShip
         {
             get
@@ -28,13 +30,46 @@ namespace pfsim.Officer
         }
         public int DiseasedCrew { get; set; }
         public int CrewUnfitForDuty { get; set; }
+        // Positive increases discipline problems.  Negative reduces them.
         public int DisciplineModifier { get; set; }
         public int NumberOfCrewPlottingMutiny { get; set; }
-        public WeatherConditions Conditions { get; set; }
+        public WeatherConditions WeatherConditions { get; set; }
+
+        public void AlterHullDamage(int damage)
+        {
+            if(damage > 0)
+            {
+                CurrentHullDamage += damage;
+                HullDamageSinceRefit += damage;
+            }
+            else
+            {
+                if ((CurrentHullDamage - Math.Ceiling(HullDamageSinceRefit * .1)) >= Math.Abs(damage))
+                    CurrentHullDamage += damage;
+                else
+                    CurrentHullDamage = Convert.ToInt32((Math.Ceiling(HullDamageSinceRefit * .1)));
+            }
+        }
+
+        public void AlterSailDamage(int damage)
+        {
+            if (damage > 0)
+            {
+                CurrentSailDamage += damage;
+                SailDamageSinceRefit += damage;
+            }
+            else
+            {
+                if ((CurrentSailDamage - Math.Ceiling(SailDamageSinceRefit * .1)) >= Math.Abs(damage))
+                    CurrentSailDamage += damage;
+                else
+                    CurrentSailDamage = Convert.ToInt32((Math.Ceiling(SailDamageSinceRefit * .1)));
+            }
+        }
 
         public int GetWeatherModifier(DutyType duty)
         {
-            switch (Conditions)
+            switch (WeatherConditions)
             {
                 case WeatherConditions.Clear:
                     if (duty == DutyType.Watch)
@@ -73,6 +108,7 @@ namespace pfsim.Officer
             }
         }
 
+        [JsonIgnore]
         public int NavigationDC
         {
             get
@@ -88,6 +124,7 @@ namespace pfsim.Officer
             }
         }
 
+        [JsonIgnore]
         public int PilotingModifier
         {
             get

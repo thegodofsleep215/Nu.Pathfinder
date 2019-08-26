@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -28,6 +29,7 @@ namespace pfsim.Officer
         private CrewSkills _skills;
 
         #region Effective Skill
+        [JsonIgnore]
         public int ProfessionSailorSkill
         {
             get
@@ -35,6 +37,7 @@ namespace pfsim.Officer
                 return Skills.ProfessionSailor + WorkModifier + ExternalModifiers.ProfessionSailor;
             }
         }
+        [JsonIgnore]
         public int DiplomacySkill
         {
             get
@@ -42,6 +45,7 @@ namespace pfsim.Officer
                 return Skills.Diplomacy + WorkModifier + ExternalModifiers.Diplomacy;
             }
         }
+        [JsonIgnore]
         public int KnowledgeEngineeringSkill
         {
             get
@@ -49,6 +53,7 @@ namespace pfsim.Officer
                 return Skills.KnowledgeEngineering + WorkModifier + ExternalModifiers.KnowledgeEngineering;
             }
         }
+        [JsonIgnore]
         public int IntimidateSkill
         {
             get
@@ -56,6 +61,7 @@ namespace pfsim.Officer
                 return Skills.Intimidate + WorkModifier + ExternalModifiers.Intimidate;
             }
         }
+        [JsonIgnore]
         public int PerceptionSkill
         {
             get
@@ -63,6 +69,7 @@ namespace pfsim.Officer
                 return Skills.Perception + WorkModifier + ExternalModifiers.Perception;
             }
         }
+        [JsonIgnore]
         public int PerformSkill
         {
             get
@@ -70,6 +77,7 @@ namespace pfsim.Officer
                 return Skills.Perform + WorkModifier + ExternalModifiers.Perform;
             }
         }
+        [JsonIgnore]
         public int CraftCarpentrySkill
         {
             get
@@ -77,6 +85,7 @@ namespace pfsim.Officer
                 return Skills.CraftCarpentry + WorkModifier + ExternalModifiers.CraftCarpentry;
             }
         }
+        [JsonIgnore]
         public int CraftShipSkill
         {
             get
@@ -84,6 +93,7 @@ namespace pfsim.Officer
                 return Skills.CraftShip + WorkModifier + ExternalModifiers.CraftShip;
             }
         }
+        [JsonIgnore]
         public int CraftCookingSkill
         {
             get
@@ -91,6 +101,7 @@ namespace pfsim.Officer
                 return Skills.CraftCooking + WorkModifier + ExternalModifiers.CraftCooking;
             }
         }
+        [JsonIgnore]
         public int HealSkill
         {
             get
@@ -98,6 +109,7 @@ namespace pfsim.Officer
                 return Skills.Heal + WorkModifier + ExternalModifiers.Heal;
             }
         }
+        [JsonIgnore]
         public int SurvivalSkill
         {
             get
@@ -105,6 +117,7 @@ namespace pfsim.Officer
                 return Skills.Survival + WorkModifier + ExternalModifiers.Survival;
             }
         }
+        [JsonIgnore]
         public int ProfessionMerchantSkill
         {
             get
@@ -115,6 +128,7 @@ namespace pfsim.Officer
         #endregion
 
         #region Job Skill
+        [JsonIgnore]
         public int CommanderSkillBonus
         {
             get
@@ -123,6 +137,7 @@ namespace pfsim.Officer
             }
         }
 
+        [JsonIgnore]
         public int DisciplineSkillBonus
         {
             get
@@ -131,6 +146,7 @@ namespace pfsim.Officer
             }
         }
 
+        [JsonIgnore]
         public int HealerSkillBonus
         {
             get
@@ -139,6 +155,7 @@ namespace pfsim.Officer
             }
         }
 
+        [JsonIgnore]
         public int WatchSkillBonus
         {
             get
@@ -147,6 +164,7 @@ namespace pfsim.Officer
             }
         }
 
+        [JsonIgnore]
         public int MaintainSkillBonus
         {
             get
@@ -155,6 +173,7 @@ namespace pfsim.Officer
             }
         }
 
+        [JsonIgnore]
         public int ManagerSkillBonus
         {
             get
@@ -167,6 +186,7 @@ namespace pfsim.Officer
             }
         }
 
+        [JsonIgnore]
         public int MinistrelSkillBonus
         {
             get
@@ -175,6 +195,7 @@ namespace pfsim.Officer
             }
         }
 
+        [JsonIgnore]
         public int NavigatorSkillBonus
         {
             get
@@ -183,6 +204,7 @@ namespace pfsim.Officer
             }
         }
 
+        [JsonIgnore]
         public int PilotSkillBonus
         {
             get
@@ -191,6 +213,7 @@ namespace pfsim.Officer
             }
         }
 
+        [JsonIgnore]
         public int ProcureSkillBonus
         {
             get
@@ -202,6 +225,7 @@ namespace pfsim.Officer
         /// <summary>
         /// TODO: This is a simplification.  Probably need to track other repair types separately.
         /// </summary>
+        [JsonIgnore]
         public int RepairSkillBonus
         {
             get
@@ -210,6 +234,7 @@ namespace pfsim.Officer
             }
         }
 
+        [JsonIgnore]
         public int RepairHullSkillBonus
         {
             get
@@ -218,6 +243,7 @@ namespace pfsim.Officer
             }
         }
 
+        [JsonIgnore]
         public int StowSkillBonus
         {
             get
@@ -226,6 +252,7 @@ namespace pfsim.Officer
             }
         }
 
+        [JsonIgnore]
         public int UnloadSkillBonus
         {
             get
@@ -234,6 +261,7 @@ namespace pfsim.Officer
             }
         }
 
+        [JsonIgnore]
         public int CookSkillBonus
         {
             get
@@ -259,6 +287,7 @@ namespace pfsim.Officer
         }
         private List<Job> _jobs;
 
+        [JsonIgnore]
         public bool CountsAsCrew
         {
             get
@@ -272,6 +301,7 @@ namespace pfsim.Officer
             }
         }
 
+        [JsonIgnore]
         public int NumberOfJobs
         {
             get
@@ -283,6 +313,7 @@ namespace pfsim.Officer
             }
         }
 
+        [JsonIgnore]
         public int WorkModifier
         {
             get

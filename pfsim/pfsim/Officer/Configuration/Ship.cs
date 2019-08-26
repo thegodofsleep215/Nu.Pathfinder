@@ -66,6 +66,7 @@ namespace pfsim.Officer
         }
         public int HullHitPoints { get; set; }
         public int CrewSize { get; set; }
+        [JsonIgnore]
         public int MinimumCrewSize
         {
             get
@@ -106,6 +107,7 @@ namespace pfsim.Officer
                 _shipsMorale = value;
             }
         }  // TODO: Should morale be part of the voyage?
+        [JsonIgnore]
         public int CrewQuality
         {
             get
@@ -126,6 +128,7 @@ namespace pfsim.Officer
                     return (int)retval;
             }
         }
+        [JsonIgnore]
         public bool HasDisciplineOfficer
         {
             get
@@ -133,6 +136,7 @@ namespace pfsim.Officer
                 return AssignedJobs.Exists(a => a.DutyType == DutyType.Discipline);
             }
         }
+        [JsonIgnore]
         public bool HasHealer
         {
             get
@@ -146,6 +150,7 @@ namespace pfsim.Officer
         public int Passengers { get; set; }
         public int Swabbies { get; set; }
         public decimal AverageSwabbieQuality { get; set; }
+        [JsonIgnore]
         public int TotalCrew
         {
             get
@@ -153,13 +158,15 @@ namespace pfsim.Officer
                 return ShipsCrew.Count + Swabbies + Marines + Passengers;
             }
         }
+        [JsonIgnore]
         public int AvailableCrew
         {
             get
             {
-                return ShipsCrew.Count(a => a.CountsAsCrew) + Swabbies;
+                return ShipsCrew.Count(a => a.CountsAsCrew) + Swabbies - CurrentVoyage.DiseasedCrew - CurrentVoyage.CrewUnfitForDuty;
             }
         }
+        [JsonIgnore]
         public int SkeletonCrewPenalty
         {
             get
@@ -172,6 +179,7 @@ namespace pfsim.Officer
                     return retval < -10 ? -10 : retval;
             }
         }
+        [JsonIgnore]
         public bool HasMinimumCrew
         {
             get
@@ -180,6 +188,7 @@ namespace pfsim.Officer
             }
         }
 
+        [JsonIgnore]
         public List<Job> AssignedJobs
         {
             get
@@ -227,7 +236,7 @@ namespace pfsim.Officer
             }
             if (AssignedJobs.Count(a => a.DutyType == DutyType.Watch && !a.IsAssistant) > 3)
             {
-                retval.Messages.Add("To many helmsmen.  There are only three watches per day!");
+                retval.Messages.Add("Too many helmsmen.  There are only three watches per day!");
             }
             if (AssignedJobs.Count(a => a.DutyType == DutyType.Manage && a.IsAssistant) > MaxClerks)
             {
@@ -346,6 +355,7 @@ namespace pfsim.Officer
             return assists;
         }
 
+        [JsonIgnore]
         public int CommanderSkillBonus
         {
             get
@@ -369,6 +379,7 @@ namespace pfsim.Officer
         /// <summary>
         /// In the engine, this adds to DC so the result needs to be inverse of a modification to a dice role.
         /// </summary>
+        [JsonIgnore]
         public int CrewPilotModifier
         {
             get
@@ -378,6 +389,7 @@ namespace pfsim.Officer
             }
         }
 
+        [JsonIgnore]
         public int PilotSkillBonus
         {
             get
@@ -398,6 +410,7 @@ namespace pfsim.Officer
             }
         }
 
+        [JsonIgnore]
         public int DisciplineSkillBonus
         {
             get
@@ -418,6 +431,7 @@ namespace pfsim.Officer
             }
         }
 
+        [JsonIgnore]
         public int FirstWatchBonus
         {
             get
@@ -426,6 +440,7 @@ namespace pfsim.Officer
             }
         }
 
+        [JsonIgnore]
         public List<int> WatchBonuses
         {
             get
@@ -453,6 +468,7 @@ namespace pfsim.Officer
             }
         }
 
+        [JsonIgnore]
         public int MaintainSkillBonus
         {
             get
@@ -473,6 +489,7 @@ namespace pfsim.Officer
             }
         }
 
+        [JsonIgnore]
         public int ManagerSkillBonus
         {
             get
@@ -493,6 +510,7 @@ namespace pfsim.Officer
             }
         }
 
+        [JsonIgnore]
         public int NavigatorSkillBonus
         {
             get
@@ -513,6 +531,7 @@ namespace pfsim.Officer
             }
         }
 
+        [JsonIgnore]
         public int HealerSkillBonus
         {
             get
@@ -533,6 +552,7 @@ namespace pfsim.Officer
             }
         }
 
+        [JsonIgnore]
         public int CookSkillBonus
         {
             get

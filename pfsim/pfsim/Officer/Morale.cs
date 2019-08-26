@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -102,6 +103,7 @@ namespace pfsim.Officer
         }
         private int _piracy;
 
+        [JsonIgnore]
         public int CrewMorale
         {
             get
@@ -118,6 +120,7 @@ namespace pfsim.Officer
         public int TemporaryMoralePenalty { get; set; }
         public int TemporaryWellbeingPenalty { get; set; }
 
+        [JsonIgnore]
         public int MoraleBonus
         {
             get
@@ -136,6 +139,7 @@ namespace pfsim.Officer
             }
         }
 
+        [JsonIgnore]
         public int SocialBonus
         {
             get
