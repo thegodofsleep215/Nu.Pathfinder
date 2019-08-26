@@ -15,7 +15,7 @@ namespace pfsim.Officer
     {
         public void PerformDuty(IShip crew, DailyInput input, ref MiniGameStatus status)
         {
-            var dc = 7 + (crew.TotalCrew / 10) - status.ManageModifier + input.Wellbeing;
+            var dc = 7 + (crew.TotalCrew / 10) - status.ManageModifier - input.Wellbeing;
             if (dc < 10)
                 dc = 10;
             var assistBonus = PerformAssists(crew.GetAssistance(DutyType.Cook));

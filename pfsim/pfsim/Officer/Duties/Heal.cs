@@ -43,18 +43,18 @@ namespace pfsim.Officer
     {
         public void PerformDuty(IShip crew, DailyInput input, ref MiniGameStatus status)
         {
-            var dc = 2;
-            dc += crew.HasHealer ? 0 : 4;
-            dc += status.CookResult <= -15 ? 4 : 0;
-            dc += input.Wellbeing == 2 ? 2 : 0;
-            dc += input.Wellbeing <= 1 ? 4 : 0;
-            dc += input.HealModifier;
+            var santitation = 2;
+            santitation += crew.HasHealer ? 0 : 4;
+            santitation += status.CookResult <= -15 ? 4 : 0;
+            santitation += input.Wellbeing == 2 ? 2 : 0;
+            santitation += input.Wellbeing <= 1 ? 4 : 0;
+            santitation += input.HealModifier;
 
-            var result = DiceRoller.D20(1) + crew.HealerSkillBonus - dc;
+            var result = DiceRoller.D20(1) + crew.HealerSkillBonus - santitation;
 
             if (result < 0 || !crew.HasHealer)
             {
-                var sickCount = dc >= 20 ? DiceRoller.D3(1) : 1;
+                var sickCount = santitation >= 20 ? DiceRoller.D3(1) : 1;
                 status.ActionResults.Add($"{sickCount} crew member(s) have fallen ill.");
             }
             else

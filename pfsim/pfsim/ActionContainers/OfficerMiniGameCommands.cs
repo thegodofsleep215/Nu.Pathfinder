@@ -827,7 +827,10 @@ namespace pfsim.ActionContainers
                             if (int.TryParse(value, out int temp))
                             {
                                 if (temp > 0)
+                                {
                                     ship.CurrentVoyage.AlterSailDamage(temp);
+                                    messages.Add(string.Format("Added {0} damage to sails.", temp));
+                                }
                                 else
                                     errors.Add("Add 'SailDamage' value must be a positive integer.  Use 'dm+:#'.");
                             }
@@ -849,7 +852,10 @@ namespace pfsim.ActionContainers
                             if (int.TryParse(value, out int temp))
                             {
                                 if (temp > 0)
+                                {
                                     ship.CurrentVoyage.AlterSailDamage(temp);
+                                    messages.Add(string.Format("Removed {0} damage from sails.", temp));
+                                }
                                 else
                                     errors.Add("Remove 'SailDamage' value must be a positive integer.  Use 'dm-:#'.");
                             }
