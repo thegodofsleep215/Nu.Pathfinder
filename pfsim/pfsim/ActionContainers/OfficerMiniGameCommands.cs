@@ -203,6 +203,49 @@ namespace pfsim.ActionContainers
                             errors.Add("'Morale' modifier requires value.  Use 'm:#'.");
                         }
                         break;
+                    case "M+":
+                    case "MORALE+":
+                        // Argument to set temporary morale modifier through 'TemporaryMoralePenalty'.
+                        if (value != null)
+                        {
+                            if (int.TryParse(value, out int temp))
+                            {
+                                ship.ShipsMorale.TemporaryMoralePenalty += temp;
+                                messages.Add(string.Format("Added {1} to temporary morale penalty. New value is {1}. (Positive is bad.)", temp, ship.CurrentVoyage.CommandModifier));
+                            }
+                            else
+                            {
+                                errors.Add("Adding to temporary morale penalty modifier requires value. Use 'm+:#'.");
+                            }
+                        }
+                        else
+                        {
+                            errors.Add("Adding to temporary morale penalty modifier requires value.  Use 'm+:#'.");
+                        }
+                        break;
+                    case "M-":
+                    case "MORALE-":
+                        // Argument to set temporary morale modifier through 'TemporaryMoralePenalty'.
+                        if (value != null)
+                        {
+                            if (int.TryParse(value, out int temp))
+                            {
+                                if (ship.ShipsMorale.TemporaryMoralePenalty >= temp)
+                                    ship.ShipsMorale.TemporaryMoralePenalty = 0;
+                                else
+                                    ship.ShipsMorale.TemporaryMoralePenalty -= temp;
+                                messages.Add(string.Format("Removed {1} from temporary morale penalty. New value is {1}. (Positive is bad.)", temp, ship.ShipsMorale.TemporaryMoralePenalty));
+                            }
+                            else
+                            {
+                                errors.Add("Removing temporary morale penalty value must be integer.  Use 'm-:#'.");
+                            }
+                        }
+                        else
+                        {
+                            errors.Add("Removing temporary morale penalty requires value.  Use 'm-:#'.");
+                        }
+                        break;
                     case "D":
                     case "DISCPLINE":
                         // Argument to set temporary discipline modifier through 'DisciplineModifier'.
@@ -223,9 +266,52 @@ namespace pfsim.ActionContainers
                             errors.Add("Discipline' modifier requires value.  Use 'd:#'.");
                         }
                         break;
+                    case "D+":
+                    case "DISCPLINE+":
+                        // Argument to set temporary discipline modifier through 'DisciplineModifier'.
+                        if (value != null)
+                        {
+                            if (int.TryParse(value, out int temp))
+                            {
+                                ship.CurrentVoyage.DisciplineModifier += temp;
+                                messages.Add(string.Format("Added {1} to temporary discipline penalty. New value is {1}. (Positive is bad.)", temp, ship.CurrentVoyage.DisciplineModifier));
+                            }
+                            else
+                            {
+                                errors.Add("Adding to discipline modifier requires positive integer. Use 'd+:#'.");
+                            }
+                        }
+                        else
+                        {
+                            errors.Add("Adding to discipline modifier requires value.  Use 'd+:#'.");
+                        }
+                        break;
+                    case "D-":
+                    case "DISCPLINE-":
+                        // Argument to set temporary discipline modifier through 'DisciplineModifier'.
+                        if (value != null)
+                        {
+                            if (int.TryParse(value, out int temp))
+                            {
+                                if (ship.CurrentVoyage.DisciplineModifier >= temp)
+                                    ship.CurrentVoyage.DisciplineModifier = 0;
+                                else
+                                    ship.CurrentVoyage.DisciplineModifier -= temp;
+                                messages.Add(string.Format("Removed {1} from temporary discipline penalty. New value is {1}. (Positive is bad.)", temp, ship.CurrentVoyage.DisciplineModifier));
+                            }
+                            else
+                            {
+                                errors.Add("Removing discipline modifier value must be integer.  Use 'd-:#'.");
+                            }
+                        }
+                        else
+                        {
+                            errors.Add("Removing discipline modifier requires value.  Use 'd-:#'.");
+                        }
+                        break;
                     case "C":
                     case "COMMAND":
-                        // Argument to set temporary discipline modifier through 'CommandModifier'.
+                        // Argument to set temporary command modifier through 'CommandModifier'.
                         if (value != null)
                         {
                             if (int.TryParse(value, out int temp))
@@ -245,7 +331,7 @@ namespace pfsim.ActionContainers
                         break;
                     case "C+":
                     case "COMMAND+":
-                        // Argument to set temporary discipline modifier through 'CommandModifier'.
+                        // Argument to set temporary command modifier through 'CommandModifier'.
                         if (value != null)
                         {
                             if (int.TryParse(value, out int temp))
@@ -542,7 +628,7 @@ namespace pfsim.ActionContainers
                         {
                             if (int.TryParse(value, out int temp))
                             {
-                                ship.CurrentVoyage.WeatherConditions = (WeatherConditions)temp;
+                                ship.CurrentVoyage.WeatherConditions = (WeatherConditions)temp;  // TODO: Make this safe.
                             }
                             else if (Enum.TryParse<WeatherConditions>(value, true, out WeatherConditions result))
                             {

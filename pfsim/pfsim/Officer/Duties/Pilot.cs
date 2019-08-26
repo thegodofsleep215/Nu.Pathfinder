@@ -25,7 +25,7 @@ namespace pfsim.Officer
     {
         public void PerformDuty(IShip crew, DailyInput input, ref MiniGameStatus status)
         {
-            var dc = 7 + crew.ShipDc + status.CommandModifier + status.WatchModifier
+            var dc = 7 + crew.ShipDc - status.CommandModifier + status.WatchModifier
                 + crew.CrewPilotModifier + input.SailingModifier + status.WeatherModifier;
             var assistBonus = PerformAssists(crew.GetAssistance(DutyType.Pilot), status.WeatherModifier);
             status.PilotResult = (DiceRoller.D20(1) + crew.PilotSkillBonus + assistBonus) - dc;

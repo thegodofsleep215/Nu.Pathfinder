@@ -14,7 +14,7 @@ namespace pfsim.Officer
     {
         public void PerformDuty(IShip crew, DailyInput input, ref MiniGameStatus status)
         {
-            var dc = 10 + status.WeatherModifier + status.CommandModifier;
+            var dc = 10 + status.WeatherModifier - status.CommandModifier;
             var assistBonus = PerformAssists(crew.GetAssistance(DutyType.Watch), status);
 
             int watch = status.WatchResults.Count;
