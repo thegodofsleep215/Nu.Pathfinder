@@ -279,8 +279,58 @@
         "Heal": 0,
         "Perform": 0
       }
+    },
+    {
+      "Name": "Jack Gunner",
+      "Title": "Gunner",
+      "Skills": {
+        "ProfessionSailor": 0,
+        "Diplomacy": 0,
+        "KnowledgeEngineering": 0,
+        "Intimidate": 0,
+        "Perception": 8,
+        "CraftCarpentry": 0,
+        "CraftShip": 0,
+        "CraftSails": 0,
+        "Survival": 6,
+        "ProfessionMerchant": 0,
+        "CraftCooking": 0,
+        "Heal": 6,
+        "Perform": 0
+      },
+      "Jobs": [
+        {
+          "CrewName": "Jack Gunner",
+          "DutyType": "Watch",
+          "IsAssistant": 0
+        }
+      ],
+      "ExternalModifiers": {
+        "ProfessionSailor": 0,
+        "Diplomacy": 0,
+        "KnowledgeEngineering": 0,
+        "Intimidate": 0,
+        "Perception": 0,
+        "CraftCarpentry": 0,
+        "CraftShip": 0,
+        "CraftSails": 0,
+        "Survival": 0,
+        "ProfessionMerchant": 0,
+        "CraftCooking": 0,
+        "Heal": 0,
+        "Perform": 0
+      }
     }
   ],
+  "ShipsMorale": {
+    "ShipShape": 5,
+    "Wealth": 1,
+    "WellBeing": 3,
+    "Infamy": 0,
+    "Piracy": 4,
+    "TemporaryMoralePenalty": 0,
+    "TemporaryWellbeingPenalty": 0
+  },
   "DisciplineStandards": "Normal",
   "Alignment": "Chaotic",
   "Marines": 0,

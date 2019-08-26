@@ -31,6 +31,7 @@ namespace pfsim.Officer
         public int DiseasedCrew { get; set; }
         public int CrewUnfitForDuty { get; set; }
         // Positive increases discipline problems.  Negative reduces them.
+        public int CommandModifier { get; set; }
         public int DisciplineModifier { get; set; }
         public int NumberOfCrewPlottingMutiny { get; set; }
         public WeatherConditions WeatherConditions { get; set; }

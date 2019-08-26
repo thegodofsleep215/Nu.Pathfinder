@@ -42,6 +42,8 @@ namespace pfsim.Officer
 
         public int HealerSkillBonus { get; set; }
 
+        public bool HasMinimumCrew { get; set; }
+
         // The simple ship can't track assistants.
         public List<Assists> GetAssistance(DutyType duty)
         {

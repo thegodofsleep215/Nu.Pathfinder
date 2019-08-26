@@ -27,6 +27,7 @@ namespace pfsim.Officer
         int CookSkillBonus { get; }
         int HealerSkillBonus { get; }
         bool HasHealer { get; }
+        bool HasMinimumCrew { get; }
         List<Assists> GetAssistance(DutyType duty);
 
         BaseResponse ValidateAssignedJobs();

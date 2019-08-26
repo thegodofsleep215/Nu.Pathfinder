@@ -15,7 +15,7 @@ namespace pfsim.ActionContainers
         {
         }
 
-        [TypedCommand("omg", "Rolls one day of the officer mini game.")]
+        [TypedCommand("omg", "Rolls one day of the officer mini game (Crew).")]
         public string OmgRoll(string crew, int crewMorale, int wellbeing, int sailingModifier, int navigateDc, int disciplineModifier, int healModifier)
         {
             var crews = LoadAssets();
@@ -48,8 +48,8 @@ namespace pfsim.ActionContainers
             return charFiles.Select(cf => JsonConvert.DeserializeObject<Crew>(File.ReadAllText(cf))).ToDictionary(x => x.CrewName, x => x);
         }
 
-        [TypedCommand("omgTest", "Rolls one day of the officer mini game.")]
-        public string OmgRoll2(string crew, int crewMorale, int wellbeing, int sailingModifier, int navigateDc, int disciplineModifier, int healModifier, int weatherModifier)
+        [TypedCommand("omgTest", "Rolls one day of the officer mini game (Ship).")]
+        public string OmgRoll2(string crew, int crewMorale, int wellbeing, int sailingModifier, int navigateDc, int disciplineModifier, int healModifier, int weatherModifier, int commandModifier)
         {
             var ship = LoadShip(crew);
             if (ship.CrewName != crew)
@@ -62,6 +62,7 @@ namespace pfsim.ActionContainers
                 Wellbeing = wellbeing,
                 SailingModifier = sailingModifier,
                 NavigateDc = navigateDc,
+                CommandModifier = commandModifier,
                 DisciplineModifier = disciplineModifier,
                 HealModifier = healModifier,
                 WeatherModifier = weatherModifier
@@ -72,19 +73,24 @@ namespace pfsim.ActionContainers
         }
 
         [TypedCommand("Sail", "Rolls one day of the officer mini game.")]
+        public string Sail(string crew) // Message passing system can't seem to handle array of strings. 
+        {
+            return Sail(crew, string.Empty);
+        }
+
+        [TypedCommand("Sail", "Rolls one day of the officer mini game.")]
         public string Sail(string crew, string term) // Message passing system can't seem to handle array of strings. 
         {
             var args = term.Split(','); // TODO: Until we can handle this better.
             var errors = new List<string>();
             var result = new List<string>();
-            // TODO: Persist ship between rolls.
             var ship = LoadShip(crew);
 
             if (ship.CrewName != crew)
             {
                 return "Crew not found.";
             }
-            WriteAsset(ship, string.Format("{0}.old", ship.CrewName)); // Store the current ship in case need to recover.
+            WriteAsset(ship, string.Format("{0}.old", ship.CrewName)); // Store the current ship in case need to recover from bad command.
 
             // Voyage modifiers from args (all args optional, ei state is unchanged).
             result.AddRange(ProcessOMGArguments(args, ref ship, ref errors));
@@ -92,6 +98,7 @@ namespace pfsim.ActionContainers
             {
                 CrewMorale = ship.ShipsMorale.MoraleBonus,
                 Wellbeing = ship.ShipsMorale.WellBeing,
+                CommandModifier = ship.CurrentVoyage.CommandModifier,
                 SailingModifier = ship.CurrentVoyage.PilotingModifier,
                 NavigateDc = ship.CurrentVoyage.NavigationDC,
                 DisciplineModifier = ship.CurrentVoyage.DisciplineModifier, //
@@ -147,6 +154,9 @@ namespace pfsim.ActionContainers
             List<string> messages = new List<string>();
             foreach(var arg in args)
             {
+                if (string.IsNullOrWhiteSpace(arg))
+                    continue;
+
                 string term = null;
                 string value = null;
                 if(arg.Contains(':'))
@@ -160,9 +170,11 @@ namespace pfsim.ActionContainers
                     term = arg;
                 }
                 
+                // Argument to adjust command modifier.
                 // Argument to refit.
                 // Argument to add days at sea.  TODO: Add non-voyaging option?
                 // TODO - Ship modifiers from args
+                // Adjust ship discpline level
                 // Argument to change number of swabbies in crew.
                 // Assign job?
                 // Remove job?
@@ -198,7 +210,7 @@ namespace pfsim.ActionContainers
                         {
                             if (int.TryParse(value, out int temp))
                             {
-                                messages.Add(string.Format("Disciplined penalty changed to {0}. (Positive is bad.)", temp));
+                                messages.Add(string.Format("Discipline penalty changed to {0}. (Positive is bad.)", temp));
                                 ship.CurrentVoyage.DisciplineModifier = temp;
                             }
                             else
@@ -209,6 +221,69 @@ namespace pfsim.ActionContainers
                         else
                         {
                             errors.Add("Discipline' modifier requires value.  Use 'd:#'.");
+                        }
+                        break;
+                    case "C":
+                    case "COMMAND":
+                        // Argument to set temporary discipline modifier through 'CommandModifier'.
+                        if (value != null)
+                        {
+                            if (int.TryParse(value, out int temp))
+                            {
+                                messages.Add(string.Format("Command penalty changed to {0}. (Positive is bad.)", temp));
+                                ship.CurrentVoyage.CommandModifier = temp;
+                            }
+                            else
+                            {
+                                errors.Add("'Command' modifier value must be integer.  Use 'c:#'.");
+                            }
+                        }
+                        else
+                        {
+                            errors.Add("Command' modifier requires value.  Use 'c:#'.");
+                        }
+                        break;
+                    case "C+":
+                    case "COMMAND+":
+                        // Argument to set temporary discipline modifier through 'CommandModifier'.
+                        if (value != null)
+                        {
+                            if (int.TryParse(value, out int temp))
+                            {
+                                ship.CurrentVoyage.CommandModifier += temp;
+                                messages.Add(string.Format("Added {1} to temporary command penalty. New value is {1}. (Positive is bad.)", temp, ship.CurrentVoyage.CommandModifier));
+                            }
+                            else
+                            {
+                                errors.Add("Adding to 'command' modifier requires value. Use 'c+:#'.");
+                            }
+                        }
+                        else
+                        {
+                            errors.Add("Adding to 'command' modifier requires value.  Use 'c+:#'.");
+                        }
+                        break;
+                    case "C-":
+                    case "COMMAND-":
+                        // Argument to set temporary command modifier through 'CommandModifier'.
+                        if (value != null)
+                        {
+                            if (int.TryParse(value, out int temp))
+                            {
+                                if (ship.CurrentVoyage.CommandModifier >= temp)
+                                    ship.CurrentVoyage.CommandModifier = 0;
+                                else
+                                    ship.CurrentVoyage.CommandModifier -= temp;
+                                messages.Add(string.Format("Removed {1} from temporary command penalty. New value is {1}. (Positive is bad.)", temp, ship.CurrentVoyage.CommandModifier));
+                            }
+                            else
+                            {
+                                errors.Add("Removing 'command' modifier value must be integer.  Use 'c-:#'.");
+                            }
+                        }
+                        else
+                        {
+                            errors.Add("Removing 'command' modifier requires value.  Use 'c-:#'.");
                         }
                         break;
                     case "P":
@@ -418,12 +493,13 @@ namespace pfsim.ActionContainers
                     case "DS+":
                     case "DISEASE+":
                     case "DISEASED+":
-                        // Argument to adjust available crew through 'CrewUnfitForDuty'.
+                        // Argument to adjust available crew through 'DiseasedCrew'.
                         if (value != null)
                         {
                             if (int.TryParse(value, out int temp))
                             {
                                 ship.CurrentVoyage.DiseasedCrew += temp;
+                                messages.Add(string.Format("Added {0} crew to sick bay.  Value changed to {1}.", temp, ship.CurrentVoyage.DiseasedCrew));
                             }
                             else
                             {
@@ -438,7 +514,7 @@ namespace pfsim.ActionContainers
                     case "DS-":
                     case "DISEASE-":
                     case "DISEASED-":
-                        // Argument to adjust available crew through 'CrewUnfitForDuty'.
+                        // Argument to adjust available crew through 'DiseasedCrew'.
                         if (value != null)
                         {
                             if (int.TryParse(value, out int temp))
@@ -447,6 +523,7 @@ namespace pfsim.ActionContainers
                                     ship.CurrentVoyage.DiseasedCrew = 0;
                                 else
                                     ship.CurrentVoyage.DiseasedCrew -= temp;
+                                messages.Add(string.Format("Removed {0} crew from sick bay.  Value changed to {1}.", temp, ship.CurrentVoyage.DiseasedCrew));
                             }
                             else
                             {
@@ -618,7 +695,7 @@ namespace pfsim.ActionContainers
                         {
                             if (int.TryParse(value, out int temp))
                             {
-                                if(temp < 0)
+                                if(temp > 0)
                                     ship.CurrentVoyage.AlterHullDamage(temp);
                                 else
                                     errors.Add("Add 'HullDamage' value must be a positive integer.  Use 'dm+:#'.");
@@ -641,7 +718,7 @@ namespace pfsim.ActionContainers
                         {
                             if (int.TryParse(value, out int temp))
                             {
-                                if (temp < 0)
+                                if (temp > 0)
                                     ship.CurrentVoyage.AlterHullDamage(temp);
                                 else
                                     errors.Add("Remove 'HullDamage' value must be a positive integer.  Use 'dm-:#'.");
@@ -663,7 +740,7 @@ namespace pfsim.ActionContainers
                         {
                             if (int.TryParse(value, out int temp))
                             {
-                                if (temp < 0)
+                                if (temp > 0)
                                     ship.CurrentVoyage.AlterSailDamage(temp);
                                 else
                                     errors.Add("Add 'SailDamage' value must be a positive integer.  Use 'dm+:#'.");
@@ -685,7 +762,7 @@ namespace pfsim.ActionContainers
                         {
                             if (int.TryParse(value, out int temp))
                             {
-                                if (temp < 0)
+                                if (temp > 0)
                                     ship.CurrentVoyage.AlterSailDamage(temp);
                                 else
                                     errors.Add("Remove 'SailDamage' value must be a positive integer.  Use 'dm-:#'.");

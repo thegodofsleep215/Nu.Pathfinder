@@ -25,9 +25,10 @@ namespace pfsim.Officer
             }
             else
             {
-                var wm = Math.Abs(result) / 5;
+                var wm = Math.Abs(result) / 5 + 1;
                 wm = wm > input.Wellbeing ? input.Wellbeing : wm;
                 status.ActionResults.Add($"A sorry meal has been served reducing the wellbeing score by {wm} for a day.");
+                // TODO: Raise an event listening for temporary wellbeing penalty?
             }
         }
 
