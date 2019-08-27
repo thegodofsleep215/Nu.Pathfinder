@@ -116,6 +116,9 @@
     <None Include="Ships\Dogfish.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Ships\DogfishHalfCrew.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nu.Messaging\Nu.Messaging.csproj">

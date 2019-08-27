@@ -93,14 +93,14 @@ namespace pfsim.ActionContainers
 
             // Voyage modifiers from args (all args optional, ei state is unchanged).
             var pResponse = ProcessOMGArguments(args, ref ship, ref result);
-            var input = new DailyInput
+            var input = new DailyInput  // TODO: Can we do without the daily input now?
             {
                 CrewMorale = ship.ShipsMorale.MoraleBonus,
                 Wellbeing = ship.ShipsMorale.WellBeing,
                 CommandModifier = ship.CurrentVoyage.CommandModifier,
                 SailingModifier = ship.CurrentVoyage.PilotingModifier,
                 NavigateDc = ship.CurrentVoyage.NavigationDC,
-                DisciplineModifier = ship.CurrentVoyage.DisciplineModifier, //
+                DisciplineModifier = ship.CrewDisciplineModifier, //
                 HealModifier = ship.CurrentVoyage.DiseaseAboardShip ? 4 : 0,
                 WeatherModifier = ship.CurrentVoyage.GetWeatherModifier(DutyType.Pilot) // TODO: One step at a time.
             };

@@ -58,7 +58,6 @@ namespace pfsim.Officer
             }
         }
 
-        public int WeatherModifier { get; set; }
         public int PilotResult { get; set; }
         public int NavigationResult { get; set; }
         public int MaintainResult { get; set; }

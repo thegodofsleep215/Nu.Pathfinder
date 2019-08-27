@@ -147,7 +147,7 @@ namespace pfsim.Officer
                     case NightStatus.Underweigh:
                         dc -= 5;
                         break;
-                    case NightStatus.Anchored:
+                    case NightStatus.Drifting:
                         dc -= 2;
                         break;
                 }

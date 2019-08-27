@@ -145,6 +145,28 @@ namespace pfsim.Officer
             }
         }
         public DisciplineStandards DisciplineStandards { get; set; }
+        [JsonIgnore]
+        public int CrewDisciplineModifier
+        {
+            get
+            {
+                int retval = CurrentVoyage.DisciplineModifier;
+
+                switch(DisciplineStandards)
+                {
+                    case DisciplineStandards.Lax:
+                        retval +=2;
+                        break;
+                    case DisciplineStandards.Strict:
+                        retval -=2;
+                        break;
+                    default:
+                        return 0;
+                }
+
+                return retval;
+            }
+        }
         public Alignment ShipsAlignment { get; set; }
         public int Marines { get; set; }
         public int Passengers { get; set; }
@@ -388,7 +410,7 @@ namespace pfsim.Officer
             get
             {
                 // TODO: Is the voyage better part of the 'minigame'?
-                return (SkeletonCrewPenalty + ShipPilotingBonus + CrewQuality + CurrentVoyage.PilotingModifier) * -1;
+                return (SkeletonCrewPenalty + ShipPilotingBonus + CrewQuality + CurrentVoyage.PilotingModifier);
             }
         }
 

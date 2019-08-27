@@ -14,8 +14,8 @@ namespace pfsim.Officer
     {
         public void PerformDuty(IShip crew, DailyInput input, ref MiniGameStatus status)
         {
-            var dc = 10 + status.WeatherModifier - status.CommandModifier;
-            var assistBonus = PerformAssists(crew.GetAssistance(DutyType.Watch), status);
+            var dc = 10 - input.WeatherModifier - status.CommandModifier;
+            var assistBonus = PerformAssists(crew.GetAssistance(DutyType.Watch), input.WeatherModifier, status);
 
             int watch = status.WatchResults.Count;
 
@@ -26,7 +26,7 @@ namespace pfsim.Officer
             status.ActionResults.Add($"Watch Result #{status.WatchResults.Count}: {result}");
         }
 
-        private int PerformAssists(List<Assists> list, MiniGameStatus status)
+        private int PerformAssists(List<Assists> list, int weatherModifier, MiniGameStatus status)
         {
             int retval = 0;
             int watch = status.WatchResults.Count;
@@ -34,7 +34,7 @@ namespace pfsim.Officer
             if(list.Count > watch)
             {
                 var assist = list[watch - 1];
-                retval += ((DiceRoller.D20(1) + assist.SkillBonus) >= (10 + status.WeatherModifier)) ? 2 : 0;
+                retval += ((DiceRoller.D20(1) + assist.SkillBonus) >= (10  - weatherModifier)) ? 2 : 0;
             }
 
             return retval;

@@ -19,8 +19,8 @@ namespace pfsim.Officer
     {
         public void PerformDuty(IShip crew, DailyInput input, ref MiniGameStatus status)
         {
-            var dc = 5 + crew.ShipDc - status.CommandModifier - status.ManageModifier + status.WeatherModifier;
-            var assistBonus = PerformAssists(crew.GetAssistance(DutyType.Maintain), status.WeatherModifier);
+            var dc = 5 + crew.ShipDc - status.CommandModifier - status.ManageModifier - input.WeatherModifier;
+            var assistBonus = PerformAssists(crew.GetAssistance(DutyType.Maintain), input.WeatherModifier);
             status.MaintainResult = DiceRoller.D20(1) + crew.MaintainSkillBonus + assistBonus - dc;
 
             if(status.MaintainResult >= 0)
@@ -56,7 +56,7 @@ namespace pfsim.Officer
 
             foreach (var assist in list)
             {
-                retval += ((DiceRoller.D20(1) + assist.SkillBonus) >= (10 + modifier)) ? 2 : 0;
+                retval += ((DiceRoller.D20(1) + assist.SkillBonus) >= (10 - modifier)) ? 2 : 0;
             }
 
             return retval;
