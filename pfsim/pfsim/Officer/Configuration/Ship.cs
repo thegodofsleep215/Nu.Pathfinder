@@ -9,7 +9,6 @@ namespace pfsim.Officer
     public class Ship : IShip
     {
         private List<Job> _assignedJobs;
-        private List<Propulsion> _propulsionTypes;
         private List<CrewMember> _shipsCrew;
         private Morale _shipsMorale;
 
