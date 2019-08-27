@@ -72,9 +72,12 @@
     <Compile Include="Officer\Duties\Manage.cs" />
     <Compile Include="Officer\Duties\Navigate.cs" />
     <Compile Include="Officer\Duties\Pilot.cs" />
+    <Compile Include="Officer\Duties\RepairHull.cs" />
+    <Compile Include="Officer\Duties\RepairSails.cs" />
     <Compile Include="Officer\Duties\Watch.cs" />
     <Compile Include="Officer\DutyType.cs" />
     <Compile Include="Officer\Configuration\IShip.cs" />
+    <Compile Include="Officer\ICargo.cs" />
     <Compile Include="Officer\IMorale.cs" />
     <Compile Include="Officer\IVoyage.cs" />
     <Compile Include="Officer\Job.cs" />

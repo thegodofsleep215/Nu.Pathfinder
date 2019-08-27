@@ -18,6 +18,7 @@ namespace pfsim.Officer
             gameQueue.Enqueue(new Watch());
             gameQueue.Enqueue(new Watch());
             // TODO: By this point, we need to make the minigame.
+            // TODO: Alternately, we could just take a ship, and no daily input?
             gameQueue.Enqueue(new Pilot());
             gameQueue.Enqueue(new Navigate());
             gameQueue.Enqueue(new Discipline());
