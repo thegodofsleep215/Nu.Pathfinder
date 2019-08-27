@@ -38,7 +38,7 @@ namespace pfsim.Officer
                     var duty = gameQueue.Dequeue();
                     duty.PerformDuty(ship, input, ref mgs);
                 }
-                validation.Messages.AddRange(mgs.ActionResults);
+                validation.Messages.AddRange(mgs.DutyEvents.Select(x => x.ToString()));
             }
 
             return validation;

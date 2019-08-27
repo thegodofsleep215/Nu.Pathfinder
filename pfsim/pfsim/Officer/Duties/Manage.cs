@@ -25,12 +25,8 @@ namespace pfsim.Officer
             {
                 status.DutyEvents.Add(new MismanagedSuppliesEvent {
                     SupplyType = (SupplyType)DiceRoller.D4(1),
+                    CausedConfusion = status.ManageResult <= -10
                 });
-            }
-            if (status.ManageResult <= -10)
-            {
-                status.DutyEvents.Add("The crew is upset at how the resources are being poorly managed.");
-                // TODO: Apply horribly mismanaged penalty.
             }
         }
 

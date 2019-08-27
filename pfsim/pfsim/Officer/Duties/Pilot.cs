@@ -33,11 +33,11 @@ namespace pfsim.Officer
             {
                 status.DutyEvents.Add(new PilotSuccessEvent());
             }
-            if(status.PilotResult < 0)
+            if (status.PilotResult < 0)
             {
 
-                    int damage = 0;
-                if(status.PilotResult <= -15)
+                int damage = 0;
+                if (status.PilotResult <= -15)
                 {
                     switch (ship.ShipSize)
                     {
@@ -54,7 +54,10 @@ namespace pfsim.Officer
                             damage = DiceRoller.D8(8);
                             break;
                     }
-                    status.ActionResults.Add($"Piloting failed so badly that the ship took {damage} points of damage.");
+                    status.DutyEvents.Add(new PilotFailedEvent
+                    {
+                        Damage = damage
+                    });
                 }
             }
         }

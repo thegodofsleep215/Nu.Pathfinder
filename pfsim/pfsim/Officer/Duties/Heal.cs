@@ -54,12 +54,10 @@ namespace pfsim.Officer
 
             if (result < 0 || !ship.HasHealer)
             {
+
                 var sickCount = santitation >= 20 ? DiceRoller.D3(1) : 1;
-                status.ActionResults.Add($"{sickCount} crew member(s) have fallen ill.");
-            }
-            else
-            {
-                status.ActionResults.Add("The crew is healthy.");
+                status.DutyEvents.Add(new SicknessEvent { NumberAffected = sickCount });
+
             }
         }
 

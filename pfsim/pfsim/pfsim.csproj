@@ -84,6 +84,7 @@
     <Compile Include="Officer\Events\SicknessEvent.cs" />
     <Compile Include="Officer\Events\UnrulyCrewEvent.cs" />
     <Compile Include="Officer\Configuration\IShip.cs" />
+    <Compile Include="Officer\Events\WatchResultEvent.cs" />
     <Compile Include="Officer\IMorale.cs" />
     <Compile Include="Officer\IVoyage.cs" />
     <Compile Include="Officer\Job.cs" />

@@ -23,7 +23,10 @@ namespace pfsim.Officer
             if(ship.WatchBonuses.Count > watch)
                 result = (DiceRoller.D20(1) + ship.WatchBonuses[watch] + assistBonus) - dc;
             status.WatchResults.Add(result);
-            status.ActionResults.Add($"Watch Result #{status.WatchResults.Count}: {result}");
+            status.DutyEvents.Add(new WatchResultEvent
+            {
+                Success = result >= 0
+            });
         }
 
         private int PerformAssists(List<Assists> list, int weatherModifier, MiniGameStatus status)

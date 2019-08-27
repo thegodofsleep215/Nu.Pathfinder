@@ -66,8 +66,6 @@ namespace pfsim.Officer
 
         public int CookResult { get; internal set; }
 
-        public List<string> ActionResults { get; } = new List<string>();
-
         public List<object> DutyEvents { get; } = new List<object>();
     }
 }

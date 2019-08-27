@@ -41,22 +41,14 @@ namespace pfsim.Officer
                 var dc = 10 + (ship.TotalCrew / 10) - status.CommandModifier; 
                 if (DiceRoller.D20(1) + ship.DisciplineSkillBonus < dc || !ship.HasDisciplineOfficer)
                 {
-                    status.DutyEvents.Add($"The crew is getting out of control resulting the following issues, {string.Join(", ", RollUpDisciplineIssues(tension >= 20 ? 1 : 0))}");
+                    status.DutyEvents.AddRange(RollUpDisciplineIssues(tension >= 20 ? 1 : 0));
                 }
-                else
-                {
-                    status.DutyEvents.Add("The crew is getting restless, but they were things were dealt with before they got out of control.");
-                }
-            }
-            else
-            {
-                status.DutyEvents.Add("The crew is focused on their duties today.");
             }
         }
 
-        List<string> RollUpDisciplineIssues(int modifier)
+        List<UnrulyCrewEvent> RollUpDisciplineIssues(int modifier)
         {
-            var result = new List<string>();
+            var result = new List<UnrulyCrewEvent>();
             var roll = DiceRoller.D20(1) + modifier;
             if (roll == 20)
             {
@@ -65,11 +57,19 @@ namespace pfsim.Officer
             }
             else if (roll == 21)
             {
-                result.Add($"Severe({DiceRoller.D8(1)}");
+                result.Add(new UnrulyCrewEvent
+                {
+                    Roll = DiceRoller.D8(1),
+                    IsSerious = true
+                });
             }
             else
             {
-                result.Add($"Regular({roll})");
+                result.Add(new UnrulyCrewEvent
+                {
+                    Roll = roll,
+                    IsSerious = false
+                });
             }
             return result;
         }
