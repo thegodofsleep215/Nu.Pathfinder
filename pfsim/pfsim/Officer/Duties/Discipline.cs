@@ -25,7 +25,7 @@ namespace pfsim.Officer
     /// is modified by the crew’s morale bonus.
     public class Discipline : IDuty
     {
-        public void PerformDuty(Ship ship, DailyInput input, ref MiniGameStatus status)
+        public void PerformDuty(IShip ship, DailyInput input, ref MiniGameStatus status)
         {
             var tension = 6;
             tension += (ship.HasDisciplineOfficer ? 0 : 4);
@@ -38,8 +38,8 @@ namespace pfsim.Officer
 
             if (roll < tension)
             {
-                var dc = 10 + (crew.TotalCrew / 10) - status.CommandModifier; 
-                if (DiceRoller.D20(1) + crew.DisciplineSkillBonus < dc || !crew.HasDisciplineOfficer)
+                var dc = 10 + (ship.TotalCrew / 10) - status.CommandModifier; 
+                if (DiceRoller.D20(1) + ship.DisciplineSkillBonus < dc || !ship.HasDisciplineOfficer)
                 {
                     status.DutyEvents.Add($"The crew is getting out of control resulting the following issues, {string.Join(", ", RollUpDisciplineIssues(tension >= 20 ? 1 : 0))}");
                 }

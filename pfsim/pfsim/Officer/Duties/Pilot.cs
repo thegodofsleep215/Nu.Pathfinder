@@ -23,11 +23,11 @@ namespace pfsim.Officer
     /// Colossal	8d8	
     public class Pilot : IDuty
     {
-        public void PerformDuty(Ship ship, DailyInput input, ref MiniGameStatus status)
+        public void PerformDuty(IShip ship, DailyInput input, ref MiniGameStatus status)
         {
-            var dc = 7 + crew.ShipDc - status.CommandModifier - crew.CrewPilotModifier - input.WeatherModifier + status.WatchModifier;
-            var assistBonus = PerformAssists(crew.GetAssistance(DutyType.Pilot), input.WeatherModifier);
-            status.PilotResult = (DiceRoller.D20(1) + crew.PilotSkillBonus + assistBonus) - dc;
+            var dc = 7 + ship.ShipDc - status.CommandModifier - ship.CrewPilotModifier - input.WeatherModifier + status.WatchModifier;
+            var assistBonus = PerformAssists(ship.GetAssistance(DutyType.Pilot), input.WeatherModifier);
+            status.PilotResult = (DiceRoller.D20(1) + ship.PilotSkillBonus + assistBonus) - dc;
 
             if (status.PilotResult >= 0)
             {

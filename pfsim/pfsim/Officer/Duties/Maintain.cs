@@ -17,11 +17,11 @@ namespace pfsim.Officer
     /// </summary>
     public class Maintain : IDuty
     {
-        public void PerformDuty(Ship ship, DailyInput input, ref MiniGameStatus status)
+        public void PerformDuty(IShip ship, DailyInput input, ref MiniGameStatus status)
         {
-            var dc = 5 + crew.ShipDc - status.CommandModifier - status.ManageModifier - input.WeatherModifier;
-            var assistBonus = PerformAssists(crew.GetAssistance(DutyType.Maintain), input.WeatherModifier);
-            status.MaintainResult = DiceRoller.D20(1) + crew.MaintainSkillBonus + assistBonus - dc;
+            var dc = 5 + ship.ShipDc - status.CommandModifier - status.ManageModifier - input.WeatherModifier;
+            var assistBonus = PerformAssists(ship.GetAssistance(DutyType.Maintain), input.WeatherModifier);
+            status.MaintainResult = DiceRoller.D20(1) + ship.MaintainSkillBonus + assistBonus - dc;
 
             if(status.MaintainResult < 0)
             {

@@ -48,7 +48,7 @@ namespace pfsim.Officer
     }
 
     [Serializable]
-    public class Morale : IMorale
+    public class Morale 
     {
         public Dictionary<MoralTypes, MoralStat> MoralStats { get; set; }
 
@@ -111,24 +111,6 @@ namespace pfsim.Officer
                 MoralStats[MoralTypes.Piracy].Value = value;
             }
         }
-
-        public int Piracy
-        {
-            get
-            {
-                return _piracy;
-            }
-            set
-            {
-                if (value > 5)
-                    _piracy = 5;
-                else if (value < 0)
-                    _piracy = 0;
-                else
-                    _piracy = value;
-            }
-        }
-        private int _piracy;
 
         [JsonIgnore]
         public int CrewMorale

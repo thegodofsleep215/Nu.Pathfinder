@@ -5,11 +5,11 @@ namespace pfsim.Officer
 {
     public class OfficerEngine
     {
-        private readonly IShip crew;
+        private readonly IShip ship;
         private readonly DailyInput input;
         private readonly Queue<IDuty> gameQueue;
 
-        public OfficerEngine(IShip crew, DailyInput input)
+        public OfficerEngine(IShip ship, DailyInput input)
         {
             this.ship = ship;
             this.input = input;
@@ -30,13 +30,13 @@ namespace pfsim.Officer
         public BaseResponse Run()
         {
             var mgs = new MiniGameStatus();
-            BaseResponse validation = crew.ValidateAssignedJobs();
+            BaseResponse validation = ship.ValidateAssignedJobs();
             if (validation.Success)
             {
                 while (gameQueue.Count > 0)
                 {
                     var duty = gameQueue.Dequeue();
-                    duty.PerformDuty(crew, input, ref mgs);
+                    duty.PerformDuty(ship, input, ref mgs);
                 }
                 validation.Messages.AddRange(mgs.ActionResults);
             }

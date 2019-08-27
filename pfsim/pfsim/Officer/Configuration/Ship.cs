@@ -565,12 +565,13 @@ namespace pfsim.Officer
                     var crewMembert = ShipsCrew.FirstOrDefault(a => a.Name == name);
 
                     if (crewMembert != null)
-                        retval = crewMembert.CookingSkillBonus;
+                        retval = crewMembert.CookSkillBonus;
                 }
 
                 return retval;
 
             }
+        }
 
         [JsonIgnore]
         public int HealerSkillBonus
@@ -613,33 +614,6 @@ namespace pfsim.Officer
                 return retval;
             }
         }
-
-        /// <summary>
-        /// TODO: Does the ship need a voyage?
-        /// </summary>
-        public Voyage CurrentVoyage
-        {
-            get
-            {
-                int retval = -5;
-
-                if (AssignedJobs.Exists(a => a.DutyType == DutyType.Heal))
-                {
-                    string name = AssignedJobs.First(a => a.DutyType == DutyType.Heal).CrewName;
-
-                    var crewMember = ShipsCrew.FirstOrDefault(a => a.Name == name);
-
-                    if (crewMember != null)
-                        retval = crewMember.HealSkillBonus;
-                }
-
-                return retval;
-
-            }
-
-        }
-
-
 
         public Voyage CurrentVoyage { get; private set; } = new Voyage();
 

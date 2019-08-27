@@ -45,7 +45,7 @@ namespace pfsim.ActionContainers
                 return new Dictionary<string, Ship>();
             }
             var charFiles = Directory.GetFiles(folder, "*.json");
-            return charFiles.Select(cf => JsonConvert.DeserializeObject<Ship>(File.ReadAllText(cf))).ToDictionary(x => x.Name, x => x);
+            return charFiles.Select(cf => JsonConvert.DeserializeObject<Ship>(File.ReadAllText(cf))).ToDictionary(x => x.CrewName, x => x);
         }
 
         [TypedCommand("omgTest", "Rolls one day of the officer mini game (Ship).")]
