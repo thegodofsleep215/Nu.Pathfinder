@@ -17,16 +17,20 @@ namespace pfsim.Officer
     /// </summary>
     public class Maintain : IDuty
     {
-        public void PerformDuty(Ship ship, DailyInput input, ref MiniGameStatus status)
+        public void PerformDuty(IShip crew, ref MiniGameStatus status)
         {
-            var dc = 5 + crew.ShipDc - status.CommandModifier - status.ManageModifier - input.WeatherModifier;
-            var assistBonus = PerformAssists(crew.GetAssistance(DutyType.Maintain), input.WeatherModifier);
+            var dc = 5 + crew.ShipDc + status.CommandModifier + status.ManageModifier + status.WeatherModifier;
+            var assistBonus = PerformAssists(crew.GetAssistance(DutyType.Maintain), status.WeatherModifier);
             status.MaintainResult = DiceRoller.D20(1) + crew.MaintainSkillBonus + assistBonus - dc;
 
-            if(status.MaintainResult < 0)
+            if(status.MaintainResult >= 0)
+            {
+                status.ActionResults.Add("This ship is shipshape!");
+            }
+            else
             {
                 int damage;
-                switch (ship.ShipSize)
+                switch (crew.ShipSize)
                 {
                     default:
                     case ShipSize.Large:
@@ -42,7 +46,7 @@ namespace pfsim.Officer
                         damage = DiceRoller.D6(1);
                         break;
                 }
-                status.DutyEvents.Add(new PoorMaintenanceEvent { Damage = damage });
+                status.ActionResults.Add($"Due to neglect the hull and propulsion of the ship each take {damage} points of damage");
             }
         }
         
@@ -52,7 +56,7 @@ namespace pfsim.Officer
 
             foreach (var assist in list)
             {
-                retval += ((DiceRoller.D20(1) + assist.SkillBonus) >= (10 - modifier)) ? 2 : 0;
+                retval += ((DiceRoller.D20(1) + assist.SkillBonus) >= (10 + modifier)) ? 2 : 0;
             }
 
             return retval;

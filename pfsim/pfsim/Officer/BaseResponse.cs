@@ -8,13 +8,7 @@ namespace pfsim.Officer
 {
     public class BaseResponse
     {
-        public bool Success
-        {
-            get
-            {
-                return Messages.Count == 0;
-            }
-        }
+        public bool Success { get; set; } = false;
 
         public List<string> Messages { get; private set; } = new List<string>();
     }

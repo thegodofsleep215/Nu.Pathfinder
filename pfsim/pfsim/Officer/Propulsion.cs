@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace pfsim.Officer
 {
+    [Serializable]
     public class Propulsion
     {
         public PropulsionType PropulsionType { get; set; }

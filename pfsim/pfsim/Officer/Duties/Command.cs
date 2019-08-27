@@ -1,4 +1,7 @@
-﻿namespace pfsim.Officer
+﻿using System;
+using System.Collections.Generic;
+
+namespace pfsim.Officer
 {
     /// <summary>
     /// Command – Issue instructions to crew.  Always first check of day.  DC is 5 + Ship’s difficulty modifier + 1 / 10 crew.
@@ -11,8 +14,22 @@
     {
         public void PerformDuty(Ship ship, DailyInput input, ref MiniGameStatus status)
         {
-            var dc = 5 + ship.ShipDc + (ship.CrewSize / 10);
-            status.CommandResult = (DiceRoller.D20(1) + ship.CommanderSkillBonus) - dc;
+            var dc = 5 + crew.ShipDc + (crew.TotalCrew / 10) + input.CommandModifier;
+            var assistBonus = PerformAssists(crew.GetAssistance(DutyType.Command));
+            status.CommandResult = (DiceRoller.D20(1) + crew.CommanderSkillBonus + assistBonus) - dc;
+            status.ActionResults.Add($"Command result: {status.CommandResult}");
+        }
+
+        private int PerformAssists(List<Assists> list)
+        {
+            int retval = 0;
+
+            foreach(var assist in list)
+            {
+                retval += (DiceRoller.D20(1) + assist.SkillBonus >= 10) ? 2 : 0;
+            }
+
+            return retval;
         }
     }
 }

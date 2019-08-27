@@ -55,7 +55,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActionContainers\OfficerMiniGameCommands.cs" />
+    <Compile Include="Officer\Alignment.cs" />
+    <Compile Include="Officer\Assists.cs" />
     <Compile Include="Officer\BaseResponse.cs" />
+    <Compile Include="Officer\DisciplineStandards.cs" />
     <Compile Include="Officer\Configuration\CrewMember.cs" />
     <Compile Include="Officer\Configuration\CrewSkills.cs" />
     <Compile Include="Officer\Duties\Command.cs" />
@@ -80,6 +83,9 @@
     <Compile Include="Officer\Events\PoorMaintenanceEvent.cs" />
     <Compile Include="Officer\Events\SicknessEvent.cs" />
     <Compile Include="Officer\Events\UnrulyCrewEvent.cs" />
+    <Compile Include="Officer\Configuration\IShip.cs" />
+    <Compile Include="Officer\IMorale.cs" />
+    <Compile Include="Officer\IVoyage.cs" />
     <Compile Include="Officer\Job.cs" />
     <Compile Include="Officer\MiniGameStatus.cs" />
     <Compile Include="Commands\AddCombatants.cs" />
@@ -107,7 +113,6 @@
     <Compile Include="Officer\Configuration\ShipType.cs" />
     <Compile Include="Officer\SupplyType.cs" />
     <Compile Include="Officer\Voyage.cs" />
-    <Compile Include="Officer\Weather.cs" />
     <Compile Include="Officer\WeatherConditions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -118,6 +123,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
+    <None Include="Ships\Dogfish.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Ships\DogfishHalfCrew.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nu.Messaging\Nu.Messaging.csproj">

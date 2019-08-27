@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace pfsim.Officer
 {
-    public class MiniGameStatus
+    public class MiniGameStatus : IVoyage
     {
         public int CommandResult { get; set; }
 
@@ -28,17 +28,36 @@ namespace pfsim.Officer
             }
         }
 
-        public int WatchResult { get; set; }
+        public List<int> WatchResults
+        {
+            get
+            {
+                if (_watchResults == null)
+                    _watchResults = new List<int>();
+
+                return _watchResults;
+            }
+            set
+            {
+                _watchResults = value;
+            }
+        }
+        private List<int> _watchResults;
 
         public int WatchModifier
         {
             get
             {
-                return WatchResult < 0 ? -2 : 0;
+                int retval = 0;
+                foreach (var result in WatchResults)
+                {
+                    retval += result < 0 ? -2 : 0;
+                }
+
+                return retval;
             }
         }
 
-        public int WeatherModifier { get; set; }
         public int PilotResult { get; set; }
 
         public int NavigationResult { get; set; }
@@ -46,6 +65,8 @@ namespace pfsim.Officer
         public int MaintainResult { get; set; }
 
         public int CookResult { get; internal set; }
+
+        public List<string> ActionResults { get; } = new List<string>();
 
         public List<object> DutyEvents { get; } = new List<object>();
     }

@@ -1,4 +1,7 @@
-﻿namespace pfsim.Officer
+﻿using System;
+using System.Collections.Generic;
+
+namespace pfsim.Officer
 {
     /// <summary>
     /// Manage – Allocate resources, tools and supplies from the ship’s stock in order to perform the ship’s daily
@@ -14,8 +17,9 @@
     {
         public void PerformDuty(Ship ship, DailyInput input, ref MiniGameStatus status)
         {
-            var dc = 5 + ship.ShipDc + (ship.CrewSize / 10) + status.CommandModifier;
-            status.ManageResult = (DiceRoller.D20(1) + ship.ManagerSkillBonus) - dc;
+            var dc = 5 + crew.ShipDc + (crew.TotalCrew / 10) - status.CommandModifier;
+            var assistBonus = PerformAssists(crew.GetAssistance(DutyType.Manage));
+            status.ManageResult = (DiceRoller.D20(1) + crew.ManagerSkillBonus) - dc;
 
             if (status.ManageResult < 0)
             {
@@ -28,6 +32,18 @@
                 status.DutyEvents.Add("The crew is upset at how the resources are being poorly managed.");
                 // TODO: Apply horribly mismanaged penalty.
             }
+        }
+
+        private int PerformAssists(List<Assists> list)
+        {
+            int retval = 0;
+
+            foreach (var assist in list)
+            {
+                retval += ((DiceRoller.D20(1) + assist.SkillBonus) >= 10) ? 2 : 0;
+            }
+
+            return retval;
         }
     }
 }

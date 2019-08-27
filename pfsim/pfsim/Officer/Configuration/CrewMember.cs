@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -46,6 +47,7 @@ namespace pfsim.Officer
 
         public int MaintainSkillBonus => CraftCarpentrySkill > CraftShipSkill ? CraftCarpentrySkill : CraftShipSkill;
 
+        [JsonIgnore]
         public int ManagerSkillBonus
         {
             get
@@ -81,6 +83,7 @@ namespace pfsim.Officer
             }
         }
 
+        [JsonIgnore]
         public int NumberOfJobs
         {
             get
@@ -92,6 +95,7 @@ namespace pfsim.Officer
             }
         }
 
+        [JsonIgnore]
         public int WorkModifier
         {
             get
@@ -120,7 +124,7 @@ namespace pfsim.Officer
         {
             List<string> messages = new List<string>();
 
-            if(Jobs.Count(a => a.DutyType == DutyType.Repair) > 2)
+            if (Jobs.Count(a => a.DutyType == DutyType.RepairHull || a.DutyType == DutyType.RepairSails || a.DutyType == DutyType.RepairSeigeEngine) > 2)
             {
                 messages.Add(string.Format("Not enough time in the day for {0} {1} to repair everything!", Title, Name));
             }
@@ -140,11 +144,13 @@ namespace pfsim.Officer
             {
                 messages.Add(string.Format("Not enough time in the day for {0} {1} to catch all the fish!", Title, Name));
             }
-            if (Jobs.Count(a => a.DutyType == DutyType.Procure || 
+            if (Jobs.Count(a => a.DutyType == DutyType.Procure ||
                                 a.DutyType == DutyType.Ministrel ||
                                 a.DutyType == DutyType.Heal ||
                                 a.DutyType == DutyType.Stow ||
-                                a.DutyType == DutyType.Repair) > 2)
+                                a.DutyType == DutyType.RepairHull || 
+                                a.DutyType == DutyType.RepairSails ||
+                                a.DutyType == DutyType.RepairSeigeEngine) > 2)
             {
                 messages.Add(string.Format("{0} {1} can't do all the work by himself!", Title, Name));
             }

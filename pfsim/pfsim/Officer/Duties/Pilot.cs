@@ -1,4 +1,6 @@
-﻿namespace pfsim.Officer
+﻿using System.Collections.Generic;
+
+namespace pfsim.Officer
 {
     /// <summary>
     /// Pilot – Steer the ship and maintain course.   DC is 7 + ship’s DC modifier, plus any relevant
@@ -23,9 +25,9 @@
     {
         public void PerformDuty(Ship ship, DailyInput input, ref MiniGameStatus status)
         {
-            var dc = 7 + ship.ShipDc + status.CommandModifier + status.WatchModifier
-                + ship.CrewPilotModifier + input.SailingModifier;
-            status.PilotResult = (DiceRoller.D20(1) + ship.PilotSkillBonus) - dc;
+            var dc = 7 + crew.ShipDc - status.CommandModifier - crew.CrewPilotModifier - input.WeatherModifier + status.WatchModifier;
+            var assistBonus = PerformAssists(crew.GetAssistance(DutyType.Pilot), input.WeatherModifier);
+            status.PilotResult = (DiceRoller.D20(1) + crew.PilotSkillBonus + assistBonus) - dc;
 
             if (status.PilotResult >= 0)
             {
@@ -52,12 +54,21 @@
                             damage = DiceRoller.D8(8);
                             break;
                     }
+                    status.ActionResults.Add($"Piloting failed so badly that the ship took {damage} points of damage.");
                 }
-                status.DutyEvents.Add(new PilotFailedEvent
-                {
-                    Damage = damage
-                });
             }
+        }
+
+        private int PerformAssists(List<Assists> list, int modifier)
+        {
+            int retval = 0;
+
+            foreach (var assist in list)
+            {
+                retval += ((DiceRoller.D20(1) + assist.SkillBonus) >= (10 - modifier)) ? 2 : 0;
+            }
+
+            return retval;
         }
     }
 }

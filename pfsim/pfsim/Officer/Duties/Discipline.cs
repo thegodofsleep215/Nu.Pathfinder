@@ -38,8 +38,8 @@ namespace pfsim.Officer
 
             if (roll < tension)
             {
-                var dc = 10 + (ship.CrewSize / 10) + status.CommandModifier;
-                if (DiceRoller.D20(1) + ship.DisciplineSkillBonus < dc || !ship.HasDisciplineOfficer)
+                var dc = 10 + (crew.TotalCrew / 10) - status.CommandModifier; 
+                if (DiceRoller.D20(1) + crew.DisciplineSkillBonus < dc || !crew.HasDisciplineOfficer)
                 {
                     status.DutyEvents.Add($"The crew is getting out of control resulting the following issues, {string.Join(", ", RollUpDisciplineIssues(tension >= 20 ? 1 : 0))}");
                 }
@@ -73,6 +73,5 @@ namespace pfsim.Officer
             }
             return result;
         }
-
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace pfsim.Officer
+﻿using System.Collections.Generic;
+
+namespace pfsim.Officer
 {
     /// Heal – Treat illness and help contain it and prevent its spread.   In practice, the normal application 
     /// of this job works much like Discipline.   No one has to take it, but if no one takes it then it is 
@@ -41,22 +43,37 @@
     {
         public void PerformDuty(Ship ship, DailyInput input, ref MiniGameStatus status)
         {
-            var dc = 2;
-            dc += ship.HasShipsDoctor ? 0 : 4;
-            dc += status.CookResult <= -15 ? 4 : 0;
-            dc += input.Wellbeing == 2 ? 2 : 0;
-            dc += input.Wellbeing <= 1 ? 4 : 0;
-            dc += input.HealModifier;
+            var santitation = 2;
+            santitation += crew.HasHealer ? 0 : 4;
+            santitation += status.CookResult <= -15 ? 4 : 0;
+            santitation += input.Wellbeing == 2 ? 2 : 0;
+            santitation += input.Wellbeing <= 1 ? 4 : 0;
+            santitation += input.HealModifier;
 
-            var result = DiceRoller.D20(1) + ship.HealSkillBonus - dc;
+            var result = DiceRoller.D20(1) + crew.HealerSkillBonus - santitation;
 
             if (result < 0 || !ship.HasShipsDoctor)
             {
-                var sickCount = dc >= 20 ? DiceRoller.D3(1) : 1;
-                status.DutyEvents.Add(new SicknessEvent { NumberAffected = sickCount });
+                var sickCount = santitation >= 20 ? DiceRoller.D3(1) : 1;
+                status.ActionResults.Add($"{sickCount} crew member(s) have fallen ill.");
+            }
+            else
+            {
+                status.ActionResults.Add("The crew is healthy.");
             }
         }
 
+        private int PerformAssists(List<Assists> list)
+        {
+            int retval = 0;
+
+            foreach (var assist in list)
+            {
+                retval += (DiceRoller.D20(1) + assist.SkillBonus >= 10) ? 2 : 0;
+            }
+
+            return retval;
+        }
     }
 
 }

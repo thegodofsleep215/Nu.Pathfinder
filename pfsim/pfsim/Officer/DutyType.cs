@@ -19,7 +19,9 @@ namespace pfsim.Officer
         Heal,
         Stow,
         Unload,
-        Repair,
+        RepairHull,
+        RepairSails,
+        RepairSeigeEngine,
         Procure,
         Ministrel,
         Drill

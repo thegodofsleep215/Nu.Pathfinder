@@ -5,11 +5,11 @@ namespace pfsim.Officer
 {
     public class OfficerEngine
     {
-        private readonly Ship ship;
+        private readonly IShip crew;
         private readonly DailyInput input;
         private readonly Queue<IDuty> gameQueue;
 
-        public OfficerEngine(Ship ship, DailyInput input)
+        public OfficerEngine(IShip crew, DailyInput input)
         {
             this.ship = ship;
             this.input = input;
@@ -17,6 +17,8 @@ namespace pfsim.Officer
             gameQueue.Enqueue(new Command());
             gameQueue.Enqueue(new Manage());
             gameQueue.Enqueue(new Watch());
+            gameQueue.Enqueue(new Watch());
+            // TODO: By this point, we need to make the minigame.
             gameQueue.Enqueue(new Pilot());
             gameQueue.Enqueue(new Navigate());
             gameQueue.Enqueue(new Discipline());
@@ -25,15 +27,21 @@ namespace pfsim.Officer
             gameQueue.Enqueue(new Heal());
         }
 
-        public List<string> Run()
+        public BaseResponse Run()
         {
             var mgs = new MiniGameStatus();
-            while(gameQueue.Count > 0)
+            BaseResponse validation = crew.ValidateAssignedJobs();
+            if (validation.Success)
             {
-                var duty = gameQueue.Dequeue();
-                duty.PerformDuty(ship, input, ref mgs);
+                while (gameQueue.Count > 0)
+                {
+                    var duty = gameQueue.Dequeue();
+                    duty.PerformDuty(crew, input, ref mgs);
+                }
+                validation.Messages.AddRange(mgs.ActionResults);
             }
-            return mgs.DutyEvents.Select(x => x.ToString()).ToList(); // This won't do anything yet
+
+            return validation;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -47,7 +48,7 @@ namespace pfsim.Officer
     }
 
     [Serializable]
-    public class Morale
+    public class Morale : IMorale
     {
         public Dictionary<MoralTypes, MoralStat> MoralStats { get; set; }
 
@@ -111,6 +112,25 @@ namespace pfsim.Officer
             }
         }
 
+        public int Piracy
+        {
+            get
+            {
+                return _piracy;
+            }
+            set
+            {
+                if (value > 5)
+                    _piracy = 5;
+                else if (value < 0)
+                    _piracy = 0;
+                else
+                    _piracy = value;
+            }
+        }
+        private int _piracy;
+
+        [JsonIgnore]
         public int CrewMorale
         {
             get
@@ -119,6 +139,10 @@ namespace pfsim.Officer
             }
         }
 
+        public int TemporaryMoralePenalty { get; set; }
+        public int TemporaryWellbeingPenalty { get; set; }
+
+        [JsonIgnore]
         public int MoraleBonus
         {
             get
@@ -126,17 +150,18 @@ namespace pfsim.Officer
                 var temp = CrewMorale;
                 if (temp <= 5)
                     return -4;
-                else if (temp <= 10)
+                else if (temp <= 11)
                     return -2;
-                else if (temp >= 15)
+                else if (temp >= 16)
                     return +2;
-                else if (temp >= 20)
+                else if (temp >= 21)
                     return +4;
                 else
                     return 0;
             }
         }
 
+        [JsonIgnore]
         public int SocialBonus
         {
             get
@@ -144,11 +169,11 @@ namespace pfsim.Officer
                 var temp = CrewMorale;
                 if (temp <= 5)
                     return -10;
-                else if (temp <= 10)
+                else if (temp <= 11)
                     return -5;
-                else if (temp >= 15)
+                else if (temp >= 16)
                     return +5;
-                else if (temp >= 20)
+                else if (temp >= 21)
                     return +10;
                 else
                     return 0;
