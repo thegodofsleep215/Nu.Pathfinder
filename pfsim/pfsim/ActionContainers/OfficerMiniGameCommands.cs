@@ -34,7 +34,7 @@ namespace pfsim.ActionContainers
             };
             var game = new OfficerEngine(crews[crew], input);
             var result = game.Run();
-            return string.Join(Environment.NewLine, result);
+            return string.Join(Environment.NewLine, result.Messages);
         }
 
         private Dictionary<string, Crew> LoadAssets()
@@ -69,7 +69,7 @@ namespace pfsim.ActionContainers
             };
             var game = new OfficerEngine(ship, input);
             var result = game.Run();
-            return string.Join(Environment.NewLine, result);
+            return string.Join(Environment.NewLine, result.Messages);
         }
 
         [TypedCommand("Sail", "Rolls one day of the officer mini game.")]
@@ -82,7 +82,6 @@ namespace pfsim.ActionContainers
         public string Sail(string crew, string term) // Message passing system can't seem to handle array of strings. 
         {
             var args = term.Split(','); // TODO: Until we can handle this better.
-            var errors = new List<string>();
             var result = new List<string>();
             var ship = LoadShip(crew);
 
@@ -93,7 +92,7 @@ namespace pfsim.ActionContainers
             WriteAsset(ship, string.Format("{0}.old", ship.CrewName)); // Store the current ship in case need to recover from bad command.
 
             // Voyage modifiers from args (all args optional, ei state is unchanged).
-            result.AddRange(ProcessOMGArguments(args, ref ship, ref errors));
+            var pResponse = ProcessOMGArguments(args, ref ship, ref result);
             var input = new DailyInput
             {
                 CrewMorale = ship.ShipsMorale.MoraleBonus,
@@ -105,18 +104,29 @@ namespace pfsim.ActionContainers
                 HealModifier = ship.CurrentVoyage.DiseaseAboardShip ? 4 : 0,
                 WeatherModifier = ship.CurrentVoyage.GetWeatherModifier(DutyType.Pilot) // TODO: One step at a time.
             };
-            if (errors.Count == 0)
+            if (pResponse.Success)
             {
                 var game = new OfficerEngine(ship, input);
-                result.AddRange(game.Run());
-                var response = WriteAsset(ship);  
-                if (!response.Success) 
-                    result.AddRange(response.Messages);
+                var gResponse = game.Run(); // Distinguish between successful and unsuccessful game.
+                
+                if (gResponse.Success)
+                {
+                    var sResponse = WriteAsset(ship);
+                    if (!sResponse.Success)
+                        result.AddRange(sResponse.Messages);
+                }
+                else
+                {
+                    gResponse.Messages.Insert(0, "Game not run because of the following errors in ship configuration:");
+                }
+
+                result.AddRange(gResponse.Messages);
                 return string.Join(Environment.NewLine, result);
             }
             else
             {
-                return string.Join(Environment.NewLine, errors);
+                pResponse.Messages.Insert(0, "Game not run because of errors in parsing the parameters.");
+                return string.Join(Environment.NewLine, pResponse.Messages);
             }
         }
 
@@ -124,7 +134,6 @@ namespace pfsim.ActionContainers
         public string AdjustShip(string crew, string term) // Message passing system can't seem to handle array of strings. 
         {
             var args = term.Split(','); // TODO: Until we can handle this better.
-            var errors = new List<string>();
             var result = new List<string>();
 
             var ship = LoadShip(crew);
@@ -136,22 +145,23 @@ namespace pfsim.ActionContainers
             WriteAsset(ship, string.Format("{0}.old", ship.CrewName)); // Store the current ship in case need to recover.
 
             // Voyage modifiers from args (all args optional, ei state is unchanged).
-            result.AddRange(ProcessOMGArguments(args, ref ship, ref errors));
+            var pResponse = ProcessOMGArguments(args, ref ship, ref result);
 
-            if (errors.Count == 0)
+            if (pResponse.Success)
             {
-                var response = WriteAsset(ship);
-                if (!response.Success)
-                    errors.AddRange(response.Messages);
+                var sResponse = WriteAsset(ship);
+                if (!sResponse.Success)
+                    result.AddRange(sResponse.Messages);
                 return string.Join(Environment.NewLine, result);
             }
 
-            return string.Join(Environment.NewLine, errors);
+            return string.Join(Environment.NewLine, pResponse.Messages);
         }
 
-        private List<string> ProcessOMGArguments(string[] args, ref Ship ship, ref List<string> errors)
+        private BaseResponse ProcessOMGArguments(string[] args, ref Ship ship, ref List<string> messages)
         {
-            List<string> messages = new List<string>();
+            BaseResponse retval = new BaseResponse();
+
             foreach(var arg in args)
             {
                 if (string.IsNullOrWhiteSpace(arg))
@@ -170,9 +180,8 @@ namespace pfsim.ActionContainers
                     term = arg;
                 }
                 
-                // Argument to adjust command modifier.
                 // Argument to refit.
-                // Argument to add days at sea.  TODO: Add non-voyaging option?
+                // TODO: Add non-voyaging option?
                 // TODO - Ship modifiers from args
                 // Adjust ship discpline level
                 // Argument to change number of swabbies in crew.
@@ -180,7 +189,6 @@ namespace pfsim.ActionContainers
                 // Remove job?
                 // Kill named crew member?
                 // Load named crew member from file?
-                // TODO - Command that only processes arguments and doesn't run minigame.
                 switch (term.ToUpper())
                 {
                     case "M":
@@ -195,12 +203,12 @@ namespace pfsim.ActionContainers
                             }
                             else
                             {
-                                errors.Add("'Morale' modifier value must be integer.  Use 'm:#'.");
+                                retval.Messages.Add("'Morale' modifier value must be integer.  Use 'm:#'.");
                             }
                         }
                         else
                         {
-                            errors.Add("'Morale' modifier requires value.  Use 'm:#'.");
+                            retval.Messages.Add("'Morale' modifier requires value.  Use 'm:#'.");
                         }
                         break;
                     case "M+":
@@ -215,12 +223,12 @@ namespace pfsim.ActionContainers
                             }
                             else
                             {
-                                errors.Add("Adding to temporary morale penalty modifier requires value. Use 'm+:#'.");
+                                retval.Messages.Add("Adding to temporary morale penalty modifier requires value. Use 'm+:#'.");
                             }
                         }
                         else
                         {
-                            errors.Add("Adding to temporary morale penalty modifier requires value.  Use 'm+:#'.");
+                            retval.Messages.Add("Adding to temporary morale penalty modifier requires value.  Use 'm+:#'.");
                         }
                         break;
                     case "M-":
@@ -238,12 +246,12 @@ namespace pfsim.ActionContainers
                             }
                             else
                             {
-                                errors.Add("Removing temporary morale penalty value must be integer.  Use 'm-:#'.");
+                                retval.Messages.Add("Removing temporary morale penalty value must be integer.  Use 'm-:#'.");
                             }
                         }
                         else
                         {
-                            errors.Add("Removing temporary morale penalty requires value.  Use 'm-:#'.");
+                            retval.Messages.Add("Removing temporary morale penalty requires value.  Use 'm-:#'.");
                         }
                         break;
                     case "D":
@@ -258,12 +266,12 @@ namespace pfsim.ActionContainers
                             }
                             else
                             {
-                                errors.Add("'Discipline' modifier value must be integer.  Use 'd:#'.");
+                                retval.Messages.Add("'Discipline' modifier value must be integer.  Use 'd:#'.");
                             }
                         }
                         else
                         {
-                            errors.Add("Discipline' modifier requires value.  Use 'd:#'.");
+                            retval.Messages.Add("Discipline' modifier requires value.  Use 'd:#'.");
                         }
                         break;
                     case "D+":
@@ -278,12 +286,12 @@ namespace pfsim.ActionContainers
                             }
                             else
                             {
-                                errors.Add("Adding to discipline modifier requires positive integer. Use 'd+:#'.");
+                                retval.Messages.Add("Adding to discipline modifier requires positive integer. Use 'd+:#'.");
                             }
                         }
                         else
                         {
-                            errors.Add("Adding to discipline modifier requires value.  Use 'd+:#'.");
+                            retval.Messages.Add("Adding to discipline modifier requires value.  Use 'd+:#'.");
                         }
                         break;
                     case "D-":
@@ -301,12 +309,12 @@ namespace pfsim.ActionContainers
                             }
                             else
                             {
-                                errors.Add("Removing discipline modifier value must be integer.  Use 'd-:#'.");
+                                retval.Messages.Add("Removing discipline modifier value must be integer.  Use 'd-:#'.");
                             }
                         }
                         else
                         {
-                            errors.Add("Removing discipline modifier requires value.  Use 'd-:#'.");
+                            retval.Messages.Add("Removing discipline modifier requires value.  Use 'd-:#'.");
                         }
                         break;
                     case "C":
@@ -321,12 +329,12 @@ namespace pfsim.ActionContainers
                             }
                             else
                             {
-                                errors.Add("'Command' modifier value must be integer.  Use 'c:#'.");
+                                retval.Messages.Add("'Command' modifier value must be integer.  Use 'c:#'.");
                             }
                         }
                         else
                         {
-                            errors.Add("Command' modifier requires value.  Use 'c:#'.");
+                            retval.Messages.Add("Command' modifier requires value.  Use 'c:#'.");
                         }
                         break;
                     case "C+":
@@ -341,12 +349,12 @@ namespace pfsim.ActionContainers
                             }
                             else
                             {
-                                errors.Add("Adding to 'command' modifier requires value. Use 'c+:#'.");
+                                retval.Messages.Add("Adding to 'command' modifier requires value. Use 'c+:#'.");
                             }
                         }
                         else
                         {
-                            errors.Add("Adding to 'command' modifier requires value.  Use 'c+:#'.");
+                            retval.Messages.Add("Adding to 'command' modifier requires value.  Use 'c+:#'.");
                         }
                         break;
                     case "C-":
@@ -364,12 +372,12 @@ namespace pfsim.ActionContainers
                             }
                             else
                             {
-                                errors.Add("Removing 'command' modifier value must be integer.  Use 'c-:#'.");
+                                retval.Messages.Add("Removing 'command' modifier value must be integer.  Use 'c-:#'.");
                             }
                         }
                         else
                         {
-                            errors.Add("Removing 'command' modifier requires value.  Use 'c-:#'.");
+                            retval.Messages.Add("Removing 'command' modifier requires value.  Use 'c-:#'.");
                         }
                         break;
                     case "P":
@@ -384,12 +392,12 @@ namespace pfsim.ActionContainers
                             }
                             else
                             {
-                                errors.Add("'Piracy' value must be integer.  Use 'p:#'.");
+                                retval.Messages.Add("'Piracy' value must be integer.  Use 'p:#'.");
                             }
                         }
                         else
                         {
-                            errors.Add("Piracy' value requires value.  Use 'p:#'.");
+                            retval.Messages.Add("Piracy' value requires value.  Use 'p:#'.");
                         }
                         break;
                     case "W":
@@ -405,12 +413,12 @@ namespace pfsim.ActionContainers
                             }
                             else
                             {
-                                errors.Add("'Wellbeing' value must be integer.  Use 'w:#'.");
+                                retval.Messages.Add("'Wellbeing' value must be integer.  Use 'w:#'.");
                             }
                         }
                         else
                         {
-                            errors.Add("Wellbeing' value requires value.  Use 'w:#'.");
+                            retval.Messages.Add("Wellbeing' value requires value.  Use 'w:#'.");
                         }
                         break;
                     case "WP":
@@ -426,12 +434,12 @@ namespace pfsim.ActionContainers
                             }
                             else
                             {
-                                errors.Add("'Wellbeing' modifier must be integer.  Use 'wp:#'.");
+                                retval.Messages.Add("'Wellbeing' modifier must be integer.  Use 'wp:#'.");
                             }
                         }
                         else
                         {
-                            errors.Add("Wellbeing' modifier requires value.  Use 'wp:#'.");
+                            retval.Messages.Add("Wellbeing' modifier requires value.  Use 'wp:#'.");
                         }
                         break;
                     case "WT":
@@ -447,12 +455,12 @@ namespace pfsim.ActionContainers
                             }
                             else
                             {
-                                errors.Add("'Wealth' value must be integer.  Use 'wt:#'.");
+                                retval.Messages.Add("'Wealth' value must be integer.  Use 'wt:#'.");
                             }
                         }
                         else
                         {
-                            errors.Add("'Wealth' value requires value.  Use 'wt:#'.");
+                            retval.Messages.Add("'Wealth' value requires value.  Use 'wt:#'.");
                         }
                         break;
                     case "I":
@@ -467,12 +475,12 @@ namespace pfsim.ActionContainers
                             }
                             else
                             {
-                                errors.Add("'Infamy' value must be integer.  Use 'i:#'.");
+                                retval.Messages.Add("'Infamy' value must be integer.  Use 'i:#'.");
                             }
                         }
                         else
                         {
-                            errors.Add("'Infamy' value requires value.  Use 'i:#'.");
+                            retval.Messages.Add("'Infamy' value requires value.  Use 'i:#'.");
                         }
                         break;
                     case "SS":
@@ -487,12 +495,12 @@ namespace pfsim.ActionContainers
                             }
                             else
                             {
-                                errors.Add("'ShipShape' value must be integer.  Use 'ss:#'.");
+                                retval.Messages.Add("'ShipShape' value must be integer.  Use 'ss:#'.");
                             }
                         }
                         else
                         {
-                            errors.Add("'ShipShape' value requires value.  Use 'ss:#'.");
+                            retval.Messages.Add("'ShipShape' value requires value.  Use 'ss:#'.");
                         }
                         break;
                     case "U":
@@ -507,12 +515,12 @@ namespace pfsim.ActionContainers
                             }
                             else
                             {
-                                errors.Add("'Unfit' crew value must be integer.  Use 'u:#'.");
+                                retval.Messages.Add("'Unfit' crew value must be integer.  Use 'u:#'.");
                             }
                         }
                         else
                         {
-                            errors.Add("'Unfit' crew requires value.  Use 'u:#'.");
+                            retval.Messages.Add("'Unfit' crew requires value.  Use 'u:#'.");
                         }
                         break;
                     case "U+":
@@ -527,12 +535,12 @@ namespace pfsim.ActionContainers
                             }
                             else
                             {
-                                errors.Add("'Unfit' crew modifier must be integer.  Use 'u:#'.");
+                                retval.Messages.Add("'Unfit' crew modifier must be integer.  Use 'u:#'.");
                             }
                         }
                         else
                         {
-                            errors.Add("'Unfit' crew modifier requires value.  Use 'u:#'.");
+                            retval.Messages.Add("'Unfit' crew modifier requires value.  Use 'u:#'.");
                         }
                         break;
                     case "U-":
@@ -547,12 +555,12 @@ namespace pfsim.ActionContainers
                             }
                             else
                             {
-                                errors.Add("'Unfit' crew modifier must be integer.  Use 'u:#'.");
+                                retval.Messages.Add("'Unfit' crew modifier must be integer.  Use 'u:#'.");
                             }
                         }
                         else
                         {
-                            errors.Add("'Unfit' crew modifier requires value.  Use 'u:#'.");
+                            retval.Messages.Add("'Unfit' crew modifier requires value.  Use 'u:#'.");
                         }
                         break;
                     case "DS":
@@ -568,12 +576,12 @@ namespace pfsim.ActionContainers
                             }
                             else
                             {
-                                errors.Add("'Diseased' crew value must be integer.  Use 'ds:#'.");
+                                retval.Messages.Add("'Diseased' crew value must be integer.  Use 'ds:#'.");
                             }
                         }
                         else
                         {
-                            errors.Add("'Diseased' crew requires value.  Use 'ds:#'.");
+                            retval.Messages.Add("'Diseased' crew requires value.  Use 'ds:#'.");
                         }
                         break;
                     case "DS+":
@@ -589,12 +597,12 @@ namespace pfsim.ActionContainers
                             }
                             else
                             {
-                                errors.Add("Add 'Diseased' crew value must be integer.  Use 'ds+:#'.");
+                                retval.Messages.Add("Add 'Diseased' crew value must be integer.  Use 'ds+:#'.");
                             }
                         }
                         else
                         {
-                            errors.Add("Add 'Diseased' crew requires value.  Use 'ds+:#'.");
+                            retval.Messages.Add("Add 'Diseased' crew requires value.  Use 'ds+:#'.");
                         }
                         break;
                     case "DS-":
@@ -613,12 +621,12 @@ namespace pfsim.ActionContainers
                             }
                             else
                             {
-                                errors.Add("Remove 'Diseased' crew value must be integer.  Use 'ds+:#'.");
+                                retval.Messages.Add("Remove 'Diseased' crew value must be integer.  Use 'ds+:#'.");
                             }
                         }
                         else
                         {
-                            errors.Add("Remove 'Diseased' crew requires value.  Use 'ds+:#'.");
+                            retval.Messages.Add("Remove 'Diseased' crew requires value.  Use 'ds+:#'.");
                         }
                         break;
                     case "WE":
@@ -636,12 +644,12 @@ namespace pfsim.ActionContainers
                             }
                             else
                             {
-                                errors.Add("Unrecognized weather condition. Use 'wt:#' or spell out condition such as 'wt:calm'.");
+                                retval.Messages.Add("Unrecognized weather condition. Use 'wt:#' or spell out condition such as 'wt:calm'.");
                             }
                         }
                         else
                         {
-                            errors.Add("'Weather' requires value.  Use 'wt:#' or spell out condition such as 'wt:calm'.");
+                            retval.Messages.Add("'Weather' requires value.  Use 'wt:#' or spell out condition such as 'wt:calm'.");
                         }
                         break;
                     case "NP":
@@ -660,13 +668,13 @@ namespace pfsim.ActionContainers
                                     ship.CurrentVoyage.NarrowPassage = true;
                                     break;
                                 default:
-                                    errors.Add("Unrecognized value for 'NarrowPassage'.  Use np+ or np-.");
+                                    retval.Messages.Add("Unrecognized value for 'NarrowPassage'.  Use np+ or np-.");
                                     break;
                             }
                         }
                         else
                         {
-                            errors.Add("Got 'NarrowPassage' parameter, but not value.  Use np+ or np-.");
+                            retval.Messages.Add("Got 'NarrowPassage' parameter, but not value.  Use np+ or np-.");
                         }
                         break;
                     case "NP+":
@@ -696,13 +704,13 @@ namespace pfsim.ActionContainers
                                     ship.CurrentVoyage.ShallowWater = true;
                                     break;
                                 default:
-                                    errors.Add("Unrecognized value for 'ShallowWater'.  Use sw+ or sw-.");
+                                    retval.Messages.Add("Unrecognized value for 'ShallowWater'.  Use sw+ or sw-.");
                                     break;
                             }
                         }
                         else
                         {
-                            errors.Add("Got 'ShallowWater' parameter, but not value.  Use sw+ or sw-.");
+                            retval.Messages.Add("Got 'ShallowWater' parameter, but not value.  Use sw+ or sw-.");
                         }
                         break;
                     case "SW+":
@@ -730,13 +738,13 @@ namespace pfsim.ActionContainers
                                     ship.CurrentVoyage.OpenOcean = true;
                                     break;
                                 default:
-                                    errors.Add("Unrecognized value for 'OpenOcean'.  Use o+ or o-.");
+                                    retval.Messages.Add("Unrecognized value for 'OpenOcean'.  Use o+ or o-.");
                                     break;
                             }
                         }
                         else
                         {
-                            errors.Add("Got 'OpenOcean' parameter, but not value.  Use o+ or o-.");
+                            retval.Messages.Add("Got 'OpenOcean' parameter, but not value.  Use o+ or o-.");
                         }
                         break;
                     case "O+":
@@ -765,12 +773,12 @@ namespace pfsim.ActionContainers
                             }
                             else
                             {
-                                errors.Add("Unrecognized night status. Use 'NS:#' or spell out condition such as 'NS:Underweigh'.");
+                                retval.Messages.Add("Unrecognized night status. Use 'NS:#' or spell out condition such as 'NS:Underweigh'.");
                             }
                         }
                         else
                         {
-                            errors.Add("'NightStatus' requires value.  Use 'NS:#' or spell out condition such as 'NS:Underweigh'.");
+                            retval.Messages.Add("'NightStatus' requires value.  Use 'NS:#' or spell out condition such as 'NS:Underweigh'.");
                         }
                         break;
                     case "DM+":
@@ -784,16 +792,16 @@ namespace pfsim.ActionContainers
                                 if(temp > 0)
                                     ship.CurrentVoyage.AlterHullDamage(temp);
                                 else
-                                    errors.Add("Add 'HullDamage' value must be a positive integer.  Use 'dm+:#'.");
+                                    retval.Messages.Add("Add 'HullDamage' value must be a positive integer.  Use 'dm+:#'.");
                             }
                             else
                             {
-                                errors.Add("Add 'HullDamage' value must be a positive integer.  Use 'dm+:#'.");
+                                retval.Messages.Add("Add 'HullDamage' value must be a positive integer.  Use 'dm+:#'.");
                             }
                         }
                         else
                         {
-                            errors.Add("Add 'Diseased' crew requires value.  Use 'dm+:#'.");
+                            retval.Messages.Add("Add 'Diseased' crew requires value.  Use 'dm+:#'.");
                         }
                         break;
                     case "DM-":
@@ -807,16 +815,16 @@ namespace pfsim.ActionContainers
                                 if (temp > 0)
                                     ship.CurrentVoyage.AlterHullDamage(temp);
                                 else
-                                    errors.Add("Remove 'HullDamage' value must be a positive integer.  Use 'dm-:#'.");
+                                    retval.Messages.Add("Remove 'HullDamage' value must be a positive integer.  Use 'dm-:#'.");
                             }
                             else
                             {
-                                errors.Add("Remove 'HullDamage' value must be a positive integer.  Use 'dm-:#'.");
+                                retval.Messages.Add("Remove 'HullDamage' value must be a positive integer.  Use 'dm-:#'.");
                             }
                         }
                         else
                         {
-                            errors.Add("Remove 'HullDamage' requires value.  Use 'dm-:#'.");
+                            retval.Messages.Add("Remove 'HullDamage' requires value.  Use 'dm-:#'.");
                         }
                         break;
                     case "S+":
@@ -832,16 +840,16 @@ namespace pfsim.ActionContainers
                                     messages.Add(string.Format("Added {0} damage to sails.", temp));
                                 }
                                 else
-                                    errors.Add("Add 'SailDamage' value must be a positive integer.  Use 'dm+:#'.");
+                                    retval.Messages.Add("Add 'SailDamage' value must be a positive integer.  Use 'dm+:#'.");
                             }
                             else
                             {
-                                errors.Add("Add 'SailDamage' value must be a positive integer.  Use 'dm+:#'.");
+                                retval.Messages.Add("Add 'SailDamage' value must be a positive integer.  Use 'dm+:#'.");
                             }
                         }
                         else
                         {
-                            errors.Add("Add 'SailDamage' value requires value.  Use 'dm+:#'.");
+                            retval.Messages.Add("Add 'SailDamage' value requires value.  Use 'dm+:#'.");
                         }
                         break;
                     case "S-":
@@ -857,16 +865,16 @@ namespace pfsim.ActionContainers
                                     messages.Add(string.Format("Removed {0} damage from sails.", temp));
                                 }
                                 else
-                                    errors.Add("Remove 'SailDamage' value must be a positive integer.  Use 'dm-:#'.");
+                                    retval.Messages.Add("Remove 'SailDamage' value must be a positive integer.  Use 'dm-:#'.");
                             }
                             else
                             {
-                                errors.Add("Remove 'SailDamage' value must be a positive integer.  Use 'dm-:#'.");
+                                retval.Messages.Add("Remove 'SailDamage' value must be a positive integer.  Use 'dm-:#'.");
                             }
                         }
                         else
                         {
-                            errors.Add("Remove 'SailDamage' requires value.  Use 'dm-:#'.");
+                            retval.Messages.Add("Remove 'SailDamage' requires value.  Use 'dm-:#'.");
                         }
                         break;
                     case "HARBOR":
@@ -877,20 +885,48 @@ namespace pfsim.ActionContainers
                         ship.CurrentVoyage.DaysSinceResupply = 0;
                         ship.CurrentVoyage.VariedFoodSupplies = true;
                         break;
-                    default:
-                        if(value != null)
+                    case "T+":
+                    case "TIME+":
+                        // Argument to add days to the journey.
+                        if (value != null)
                         {
-                            errors.Add(string.Format("Unrecognized argument '{0}:{1}'", term, value));
+                            if(int.TryParse(value, out int temp))
+                            {
+                                if (temp > 0)
+                                {
+                                    ship.CurrentVoyage.AddDaysOfVoyage(temp);
+;                                   messages.Add(string.Format("Extended voyage by {0} days.", temp));
+                                }
+                                else
+                                    retval.Messages.Add("Adding days to voyage requires positive integer.  Use 't+:#'.");
+                            }
+                            else
+                            {
+                                retval.Messages.Add("Adding days to voyage requires positive integer.  Use 't+:#'.");
+                            }
                         }
                         else
                         {
-                            errors.Add(string.Format("Unrecognized argument '{0}'", term));
+                            retval.Messages.Add("Adding days to voyage requires value.  Use 't+:#'.");
+                        }
+                        break;
+                    default:
+                        if(value != null)
+                        {
+                            retval.Messages.Add(string.Format("Unrecognized argument '{0}:{1}'", term, value));
+                        }
+                        else
+                        {
+                            retval.Messages.Add(string.Format("Unrecognized argument '{0}'", term));
                         }
                         break;
                 }
             }
 
-            return messages;
+            if (retval.Messages.Count == 0)
+                retval.Success = true;
+
+            return retval;
         }
 
         private Dictionary<string, Ship> LoadShips()
@@ -930,6 +966,7 @@ namespace pfsim.ActionContainers
                 }
 
                 File.WriteAllText(string.Format("{0}\\{1}.json", folder, filename), contents);
+                retval.Success = true;
             }
             catch (Exception ex)
             {

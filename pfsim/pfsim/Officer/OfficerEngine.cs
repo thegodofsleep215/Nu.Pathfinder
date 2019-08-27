@@ -26,7 +26,7 @@ namespace pfsim.Officer
             gameQueue.Enqueue(new Heal());
         }
 
-        public List<string> Run()
+        public BaseResponse Run()
         {
             var mgs = new MiniGameStatus();
             BaseResponse validation = crew.ValidateAssignedJobs();
@@ -37,12 +37,10 @@ namespace pfsim.Officer
                     var duty = gameQueue.Dequeue();
                     duty.PerformDuty(crew, input, ref mgs);
                 }
-                return mgs.ActionResults;
+                validation.Messages.AddRange(mgs.ActionResults);
             }
-            else
-            {
-                return validation.Messages;
-            }
+
+            return validation;
         }
     }
 }

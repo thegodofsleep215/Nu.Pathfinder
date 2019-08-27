@@ -162,18 +162,18 @@
       "Title": "Pursur",
       "Skills": {
         "ProfessionSailor": 0,
-        "Diplomacy": -2,
+        "Diplomacy": 3,
         "KnowledgeEngineering": 0,
-        "Intimidate": -2,
+        "Intimidate": -1,
         "Perception": 8,
         "CraftCarpentry": 2,
         "CraftShip": 2,
         "CraftSails": 2,
-        "Survival": 0,
+        "Survival": 1,
         "ProfessionMerchant": 0,
         "CraftCooking": 2,
-        "Heal": 0,
-        "Perform": 0
+        "Heal": 1,
+        "Perform": -1
       },
       "Jobs": [
         {
@@ -187,7 +187,7 @@
         "Diplomacy": 0,
         "KnowledgeEngineering": 0,
         "Intimidate": 0,
-        "Perception": 8,
+        "Perception": 0,
         "CraftCarpentry": 0,
         "CraftShip": 0,
         "CraftSails": 0,
@@ -336,5 +336,24 @@
   "Marines": 0,
   "Passengers": 0,
   "Swabbies": 34,
-  "AverageSwabbieQuality": 4
+  "AverageSwabbieQuality": 4,
+  "CurrentVoyage": {
+    "NightStatus": "Underweigh",
+    "OpenOcean": false,
+    "ShallowWater": false,
+    "NarrowPassage": true,
+    "DayOfVoyage": 0,
+    "DaysSinceResupply": 0,
+    "HullDamageSinceRefit": 0,
+    "CurrentHullDamage": 0,
+    "SailDamageSinceRefit": 0,
+    "CurrentSailDamage": 0,
+    "VariedFoodSupplies": true,
+    "DiseasedCrew": 0,
+    "CrewUnfitForDuty": 0,
+    "CommandModifier": 0,
+    "DisciplineModifier": 0,
+    "NumberOfCrewPlottingMutiny": 0,
+    "WeatherConditions": "Clear"
+  }
 }

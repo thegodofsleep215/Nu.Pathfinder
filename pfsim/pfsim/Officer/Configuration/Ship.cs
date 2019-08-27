@@ -280,6 +280,9 @@ namespace pfsim.Officer
                 retval.Messages.AddRange(matey.ValidateJobs());
             }
 
+            if (retval.Messages.Count == 0)
+                retval.Success = true;
+
             return retval;
         }
 

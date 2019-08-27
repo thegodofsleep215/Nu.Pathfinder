@@ -55,7 +55,7 @@ namespace pfsim.Officer
                             damage = DiceRoller.D8(8);
                             break;
                     }
-                    status.ActionResults.Add($"Piloting faled so bad that the ship took {damage} points of damage.");
+                    status.ActionResults.Add($"Piloting failed so badly that the ship took {damage} points of damage.");
                 }
             }
         }

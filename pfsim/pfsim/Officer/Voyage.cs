@@ -30,8 +30,9 @@ namespace pfsim.Officer
         }
         public int DiseasedCrew { get; set; }
         public int CrewUnfitForDuty { get; set; }
-        // Positive increases discipline problems.  Negative reduces them.
+        // Positive increases command problems.  Negative reduces them.
         public int CommandModifier { get; set; }
+        // Positive increases discipline problems.  Negative reduces them.
         public int DisciplineModifier { get; set; }
         public int NumberOfCrewPlottingMutiny { get; set; }
         public WeatherConditions WeatherConditions { get; set; }
@@ -66,6 +67,12 @@ namespace pfsim.Officer
                 else
                     CurrentSailDamage = Convert.ToInt32((Math.Ceiling(SailDamageSinceRefit * .1)));
             }
+        }
+
+        internal void AddDaysOfVoyage(int days)
+        {
+            DaysSinceResupply += days;
+            DayOfVoyage += days;
         }
 
         public int GetWeatherModifier(DutyType duty)

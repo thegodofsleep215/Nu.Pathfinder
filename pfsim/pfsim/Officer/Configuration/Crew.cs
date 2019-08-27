@@ -55,7 +55,7 @@ namespace pfsim.Officer
         public BaseResponse ValidateAssignedJobs()
         {
             BaseResponse retval = new BaseResponse();
-
+            retval.Success = true;
             return retval;
         }
     }
