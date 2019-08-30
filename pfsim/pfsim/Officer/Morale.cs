@@ -7,113 +7,117 @@ using System.Threading.Tasks;
 
 namespace pfsim.Officer
 {
-    [Serializable]
-    public class Morale : IMorale
+    public enum MoralTypes
     {
-        public int ShipShape
+        Piracy,
+        Infamy,
+        Shipshape,
+        Wellbeing,
+        Wealth
+    }
+
+    public class MoralStat
+    {
+        public int Value
         {
             get
             {
-                return _shipShape;
+                var result = TemporaryModifiers.Sum() + _value;
+                if (result > 5)
+                    return 5;
+                else if (result < 0)
+                    return 0;
+                return result;
             }
             set
             {
                 if (value > 5)
-                    _shipShape = 5;
+                    _value = 5;
                 else if (value < 0)
-                    _shipShape = 0;
+                    _value = 0;
                 else
-                    _shipShape = value;
+                    _value = value;
+
             }
         }
-        private int _shipShape;
+        private int _value;
+
+        public List<int> TemporaryModifiers { get; set; } = new List<int>();
+
+
+    }
+
+    [Serializable]
+    public class Morale 
+    {
+        public Dictionary<MoralTypes, MoralStat> MoralStats { get; set; }
+
+        public int ShipShape
+        {
+            get
+            {
+                return MoralStats[MoralTypes.Shipshape].Value;
+            }
+            set
+            {
+                MoralStats[MoralTypes.Shipshape].Value = value;
+            }
+        }
 
         public int Wealth
         {
             get
             {
-                return _wealth;
+                return MoralStats[MoralTypes.Wealth].Value;
             }
             set
             {
-                if (value > 5)
-                    _wealth = 5;
-                else if (value < 0)
-                    _wealth = 0;
-                else
-                    _wealth = value;
+                MoralStats[MoralTypes.Wealth].Value = value;
             }
         }
-        private int _wealth;
 
         public int WellBeing
         {
             get
             {
-                if (_wellBeing - TemporaryWellbeingPenalty < 0)
-                    return 0;
-                else
-                    return _wellBeing - TemporaryWellbeingPenalty;
+                return MoralStats[MoralTypes.Wellbeing].Value;
             }
             set
             {
-                if (value > 5)
-                    _wellBeing = 5;
-                else if (value < 0)
-                    _wellBeing = 0;
-                else
-                    _wellBeing = value;
+                MoralStats[MoralTypes.Wellbeing].Value = value;
             }
         }
-        private int _wellBeing;
 
         public int Infamy
         {
             get
             {
-                return _infamy;
+                return MoralStats[MoralTypes.Infamy].Value;
             }
             set
             {
-                if (value > 5)
-                    _infamy = 5;
-                else if (value < 0)
-                    _infamy = 0;
-                else
-                    _infamy = value;
+                MoralStats[MoralTypes.Infamy].Value = value;
             }
         }
-        private int _infamy;
 
         public int Piracy
         {
             get
             {
-                return _piracy;
+                return MoralStats[MoralTypes.Piracy].Value;
             }
             set
             {
-                if (value > 5)
-                    _piracy = 5;
-                else if (value < 0)
-                    _piracy = 0;
-                else
-                    _piracy = value;
+                MoralStats[MoralTypes.Piracy].Value = value;
             }
         }
-        private int _piracy;
 
         [JsonIgnore]
         public int CrewMorale
         {
             get
             {
-                var retval = Piracy + Infamy + WellBeing + Wealth + ShipShape;
-
-                if (retval - TemporaryMoralePenalty < 0)
-                    return 0;
-                else
-                    return retval - TemporaryMoralePenalty;
+                return MoralStats.Values.Sum(x => x.Value);
             }
         }
 
@@ -158,17 +162,41 @@ namespace pfsim.Officer
             }
         }
 
-        public Morale(int piracy, int infamy, int shipshape, int wealth, int wellbeing)
+
+        public Morale(int infamy, int shipshape, int wealth, int wellbeing, int piracy)
         {
-            _piracy = piracy;
-            _wealth = wealth;
-            _infamy = infamy;
-            _wellBeing = wellbeing;
-            _shipShape = shipshape;
+            MoralStats = new Dictionary<MoralTypes, MoralStat>
+            {
+                {MoralTypes.Shipshape, new MoralStat{ Value = shipshape } },
+                {MoralTypes.Wellbeing, new MoralStat{ Value = wellbeing } },
+                {MoralTypes.Wealth, new MoralStat{ Value = wealth } },
+                {MoralTypes.Infamy, new MoralStat{ Value = infamy } },
+                {MoralTypes.Piracy, new MoralStat{ Value = piracy } }
+            };
+
         }
 
         public Morale()
         {
+            MoralStats = new Dictionary<MoralTypes, MoralStat>
+            {
+                {MoralTypes.Shipshape, new MoralStat() },
+                {MoralTypes.Wellbeing, new MoralStat() },
+                {MoralTypes.Wealth, new MoralStat() },
+                {MoralTypes.Infamy, new MoralStat() },
+                {MoralTypes.Piracy, new MoralStat() }
+            };
         }
+
+        public void ClearTemporaryModifiers()
+        {
+            MoralStats.Values.ToList().ForEach(x => x.TemporaryModifiers.Clear());
+        }
+
+        public void AddTemporaryModifier(MoralTypes moralType, int value)
+        {
+            MoralStats[moralType].TemporaryModifiers.Add(value);
+        }
+
     }
 }

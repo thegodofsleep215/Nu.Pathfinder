@@ -62,7 +62,6 @@
     <Compile Include="Officer\Configuration\CrewMember.cs" />
     <Compile Include="Officer\Configuration\CrewSkills.cs" />
     <Compile Include="Officer\Duties\Command.cs" />
-    <Compile Include="Officer\Configuration\Crew.cs" />
     <Compile Include="Officer\DailyInput.cs" />
     <Compile Include="Officer\Duties\Cook.cs" />
     <Compile Include="Officer\Duties\Discipline.cs" />
@@ -76,8 +75,18 @@
     <Compile Include="Officer\Duties\RepairSails.cs" />
     <Compile Include="Officer\Duties\Watch.cs" />
     <Compile Include="Officer\DutyType.cs" />
+    <Compile Include="Officer\Events\DailyEvent.cs" />
+    <Compile Include="Officer\Events\EpicCookingFailureEvent.cs" />
+    <Compile Include="Officer\Events\EventProcessor.cs" />
+    <Compile Include="Officer\Events\MismanagedSuppliesEvent.cs" />
+    <Compile Include="Officer\Events\OffCourseEvent.cs" />
+    <Compile Include="Officer\Events\PilotFailedEvent.cs" />
+    <Compile Include="Officer\Events\PilotSuccessEvent.cs" />
+    <Compile Include="Officer\Events\PoorMaintenanceEvent.cs" />
+    <Compile Include="Officer\Events\SicknessEvent.cs" />
+    <Compile Include="Officer\Events\UnrulyCrewEvent.cs" />
     <Compile Include="Officer\Configuration\IShip.cs" />
-    <Compile Include="Officer\ICargo.cs" />
+    <Compile Include="Officer\Events\WatchResultEvent.cs" />
     <Compile Include="Officer\IMorale.cs" />
     <Compile Include="Officer\IVoyage.cs" />
     <Compile Include="Officer\Job.cs" />
@@ -105,6 +114,7 @@
     <Compile Include="Officer\Configuration\Ship.cs" />
     <Compile Include="Officer\Configuration\ShipSize.cs" />
     <Compile Include="Officer\Configuration\ShipType.cs" />
+    <Compile Include="Officer\SupplyType.cs" />
     <Compile Include="Officer\Voyage.cs" />
     <Compile Include="Officer\WeatherConditions.cs" />
     <Compile Include="Program.cs" />

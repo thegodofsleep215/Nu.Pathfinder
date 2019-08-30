@@ -59,10 +59,13 @@ namespace pfsim.Officer
         }
 
         public int PilotResult { get; set; }
+
         public int NavigationResult { get; set; }
+
         public int MaintainResult { get; set; }
+
         public int CookResult { get; internal set; }
 
-        public List<string> ActionResults { get; } = new List<string>();
+        public List<object> DutyEvents { get; } = new List<object>();
     }
 }

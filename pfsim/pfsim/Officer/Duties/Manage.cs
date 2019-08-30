@@ -15,37 +15,18 @@ namespace pfsim.Officer
     /// </summary>
     public class Manage : IDuty
     {
-        public void PerformDuty(IShip crew, DailyInput input, ref MiniGameStatus status)
+        public void PerformDuty(IShip ship, DailyInput input, ref MiniGameStatus status)
         {
-            var dc = 5 + crew.ShipDc + (crew.TotalCrew / 10) - status.CommandModifier;
-            var assistBonus = PerformAssists(crew.GetAssistance(DutyType.Manage));
-            status.ManageResult = (DiceRoller.D20(1) + crew.ManagerSkillBonus) - dc;
+            var dc = 5 + ship.ShipDc + (ship.TotalCrew / 10) - status.CommandModifier;
+            var assistBonus = PerformAssists(ship.GetAssistance(DutyType.Manage));
+            status.ManageResult = (DiceRoller.D20(1) + ship.ManagerSkillBonus) - dc;
 
-            if (status.ManageResult >= 0) status.ActionResults.Add("Resources managed.");
             if (status.ManageResult < 0)
             {
-                if (DiceRoller.D20(1) <= (crew.TotalCrew / 10 + 1))
-                {
-                    switch (DiceRoller.D4(1))
-                    {
-                        case 1:
-                            status.ActionResults.Add("Resources mismanaged resulting in the loss of a rum ration.");
-                            break;
-                        case 2:
-                            status.ActionResults.Add("Resources mismanaged resulting in the loss of a water ration.");
-                            break;
-                        case 3:
-                            status.ActionResults.Add("Resources mismanaged resulting in the loss of a food ration.");
-                            break;
-                        case 4:
-                            status.ActionResults.Add("Resources mismanaged resulting in the loss of ship's supplies.");
-                            break;
-                    }
-                }
-            }
-            if(status.ManageResult <= -10)
-            {
-                status.ActionResults.Add("The crew is upset at how the resources are being poorly managed."); 
+                status.DutyEvents.Add(new MismanagedSuppliesEvent {
+                    SupplyType = (SupplyType)DiceRoller.D4(1),
+                    CausedConfusion = status.ManageResult <= -10
+                });
             }
         }
 

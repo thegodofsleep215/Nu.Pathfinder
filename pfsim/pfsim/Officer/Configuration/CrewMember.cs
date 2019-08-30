@@ -12,166 +12,58 @@ namespace pfsim.Officer
     {
         public string Name { get; set; }
         public string Title { get; set; }
-        public CrewSkills Skills
-        {
-            get
-            {
-                if (_skills == null)
-                    _skills = new CrewSkills();
-
-                return _skills;
-            }
-            set
-            {
-                _skills = value;
-            }
-        }
-        private CrewSkills _skills;
-
-        #region Effective Skill
-        [JsonIgnore]
-        public int ProfessionSailorSkill
-        {
-            get
-            {
-                return Skills.ProfessionSailor + WorkModifier + ExternalModifiers.ProfessionSailor;
-            }
-        }
-        [JsonIgnore]
-        public int DiplomacySkill
-        {
-            get
-            {
-                return Skills.Diplomacy + WorkModifier + ExternalModifiers.Diplomacy;
-            }
-        }
-        [JsonIgnore]
-        public int KnowledgeEngineeringSkill
-        {
-            get
-            {
-                return Skills.KnowledgeEngineering + WorkModifier + ExternalModifiers.KnowledgeEngineering;
-            }
-        }
-        [JsonIgnore]
-        public int IntimidateSkill
-        {
-            get
-            {
-                return Skills.Intimidate + WorkModifier + ExternalModifiers.Intimidate;
-            }
-        }
-        [JsonIgnore]
-        public int PerceptionSkill
-        {
-            get
-            {
-                return Skills.Perception + WorkModifier + ExternalModifiers.Perception;
-            }
-        }
-        [JsonIgnore]
-        public int PerformSkill
-        {
-            get
-            {
-                return Skills.Perform + WorkModifier + ExternalModifiers.Perform;
-            }
-        }
-        [JsonIgnore]
-        public int CraftCarpentrySkill
-        {
-            get
-            {
-                return Skills.CraftCarpentry + WorkModifier + ExternalModifiers.CraftCarpentry;
-            }
-        }
-        [JsonIgnore]
-        public int CraftShipSkill
-        {
-            get
-            {
-                return Skills.CraftShip + WorkModifier + ExternalModifiers.CraftShip;
-            }
-        }
-        [JsonIgnore]
-        public int CraftCookingSkill
-        {
-            get
-            {
-                return Skills.CraftCooking + WorkModifier + ExternalModifiers.CraftCooking;
-            }
-        }
-        [JsonIgnore]
-        public int HealSkill
-        {
-            get
-            {
-                return Skills.Heal + WorkModifier + ExternalModifiers.Heal;
-            }
-        }
-        [JsonIgnore]
-        public int SurvivalSkill
-        {
-            get
-            {
-                return Skills.Survival + WorkModifier + ExternalModifiers.Survival;
-            }
-        }
-        [JsonIgnore]
-        public int ProfessionMerchantSkill
-        {
-            get
-            {
-                return Skills.ProfessionMerchant + WorkModifier + ExternalModifiers.ProfessionMerchant;
-            }
-        }
-        #endregion
-
-        #region Job Skill
-        [JsonIgnore]
-        public int CommanderSkillBonus
-        {
-            get
-            {
-                return ProfessionSailorSkill > DiplomacySkill ? ProfessionSailorSkill : DiplomacySkill;
-            }
-        }
+        public CrewSkills Skills { get; set; } = new CrewSkills();
 
         [JsonIgnore]
-        public int DisciplineSkillBonus
-        {
-            get
-            {
-                return IntimidateSkill;
-            }
-        }
+        public int PerformSkill => Skills.Perform + WorkModifier + ExternalModifiers.Perform;
 
         [JsonIgnore]
-        public int HealerSkillBonus
-        {
-            get
-            {
-                return HealSkill;
-            }
-        }
+        public int ProfessionSailorSkill => Skills.ProfessionSailor + WorkModifier + ExternalModifiers.ProfessionSailor;
 
         [JsonIgnore]
-        public int WatchSkillBonus
-        {
-            get
-            {
-                return PerceptionSkill;
-            }
-        }
+        public int DiplomacySkill => Skills.Diplomacy + WorkModifier + ExternalModifiers.Diplomacy;
 
         [JsonIgnore]
-        public int MaintainSkillBonus
-        {
-            get
-            {
-                return CraftCarpentrySkill > CraftShipSkill ? CraftCarpentrySkill : CraftShipSkill;
-            }
-        }
+        public int KnowledgeEngineeringSkill => Skills.KnowledgeEngineering + WorkModifier + ExternalModifiers.KnowledgeEngineering;
+
+        [JsonIgnore]
+        public int IntimidateSkill => Skills.Intimidate + WorkModifier + ExternalModifiers.Intimidate;
+
+        [JsonIgnore]
+        public int PerceptionSkill => Skills.Perception + WorkModifier + ExternalModifiers.Perception;
+
+        [JsonIgnore]
+        public int CraftCarpentrySkill => Skills.CraftCarpentry + WorkModifier + ExternalModifiers.CraftCarpentry;
+
+        [JsonIgnore]
+        public int CraftShipSkill => Skills.CraftShip + WorkModifier + ExternalModifiers.CraftShip;
+
+        [JsonIgnore]
+        public int CraftCookingSkill => Skills.CraftCooking + WorkModifier + ExternalModifiers.CraftCooking;
+
+        [JsonIgnore]
+        public int HealSkill => Skills.Heal + WorkModifier + ExternalModifiers.Heal;
+
+        public int SurvivalSkill { get; set; }
+
+        public int ProfessionMerchantSkill { get; set; }
+
+        [JsonIgnore]
+        public int CommanderSkillBonus => ProfessionSailorSkill > DiplomacySkill ? ProfessionSailorSkill : DiplomacySkill;
+
+        [JsonIgnore]
+        public int CrewPilotModifier => ProfessionSailorSkill;
+
+        public int CrewSize { get; set; }
+
+        [JsonIgnore]
+        public int DisciplineSkillBonus => IntimidateSkill;
+
+        [JsonIgnore]
+        public int WatchSkillBonus => PerceptionSkill;
+
+        [JsonIgnore]
+        public int MaintainSkillBonus => CraftCarpentrySkill > CraftShipSkill ? CraftCarpentrySkill : CraftShipSkill;
 
         [JsonIgnore]
         public int ManagerSkillBonus
@@ -187,114 +79,48 @@ namespace pfsim.Officer
         }
 
         [JsonIgnore]
-        public int MinistrelSkillBonus
-        {
-            get
-            {
-                return PerformSkill;
-            }
-        }
+        public int NavigatorSkillBonus => ProfessionSailorSkill > SurvivalSkill ? ProfessionSailorSkill : SurvivalSkill;
 
         [JsonIgnore]
-        public int NavigatorSkillBonus
-        {
-            get
-            {
-                return ProfessionSailorSkill > SurvivalSkill ? ProfessionSailorSkill : SurvivalSkill;
-            }
-        }
+        public int PilotSkillBonus => ProfessionSailorSkill;
 
         [JsonIgnore]
-        public int PilotSkillBonus
-        {
-            get
-            {
-                return ProfessionSailorSkill;
-            }
-        }
+        public int CookSkillBonus => CraftCookingSkill;
 
         [JsonIgnore]
-        public int ProcureSkillBonus
-        {
-            get
-            {
-                return SurvivalSkill;
-            }
-        }
+        public int HealerSkillBonus => HealSkill;
+
+        [JsonIgnore]
+        public int MinistrelSkillBonus => PerformSkill;
+
+        [JsonIgnore]
+        public int ProcureSkillBonus => SurvivalSkill;
 
         /// <summary>
         /// TODO: This is a simplification.  Probably need to track other repair types separately.
         /// </summary>
         [JsonIgnore]
-        public int RepairSkillBonus
-        {
-            get
-            {
-                return CraftShipSkill > CraftCarpentrySkill ? CraftShipSkill : CraftCarpentrySkill;
-            }
-        }
+        public int RepairSkillBonus => CraftShipSkill > CraftCarpentrySkill ? CraftShipSkill : CraftCarpentrySkill;
 
         [JsonIgnore]
-        public int RepairHullSkillBonus
-        {
-            get
-            {
-                return CraftShipSkill > CraftCarpentrySkill ? CraftShipSkill : CraftCarpentrySkill;
-            }
-        }
+        public int RepairHullSkillBonus => CraftShipSkill > CraftCarpentrySkill ? CraftShipSkill : CraftCarpentrySkill;
 
         [JsonIgnore]
-        public int StowSkillBonus
-        {
-            get
-            {
-                return ProfessionSailorSkill > KnowledgeEngineeringSkill ? ProfessionSailorSkill : KnowledgeEngineeringSkill;
-            }
-        }
+        public int StowSkillBonus => ProfessionSailorSkill > KnowledgeEngineeringSkill ? ProfessionSailorSkill : KnowledgeEngineeringSkill;
 
         [JsonIgnore]
-        public int UnloadSkillBonus
-        {
-            get
-            {
-                return ProfessionSailorSkill > KnowledgeEngineeringSkill ? ProfessionSailorSkill : KnowledgeEngineeringSkill;
-            }
-        }
+        public int UnloadSkillBonus => ProfessionSailorSkill > KnowledgeEngineeringSkill ? ProfessionSailorSkill : KnowledgeEngineeringSkill;
 
-        [JsonIgnore]
-        public int CookSkillBonus
-        {
-            get
-            {
-                return CraftCookingSkill;
-            }
-        }
-        #endregion
-
-        public List<Job> Jobs
-        {
-            get
-            {
-                if (_jobs == null)
-                    _jobs = new List<Job>();
-
-                return _jobs;
-            }
-            set
-            {
-                _jobs = value;
-            }
-        }
-        private List<Job> _jobs;
+        public List<Job> Jobs { get; set; } = new List<Job>();
 
         [JsonIgnore]
         public bool CountsAsCrew
         {
             get
             {
-                if (_jobs.Count == 0)
+                if (Jobs.Count == 0)
                     return true;
-                else if (_jobs.Count(a => !a.IsAssistant || a.DutyType == DutyType.Ministrel) > 0)
+                else if (Jobs.Count(a => !a.IsAssistant || a.DutyType == DutyType.Ministrel) > 0)
                     return false;
                 else
                     return Jobs.Count == 1;
@@ -306,10 +132,10 @@ namespace pfsim.Officer
         {
             get
             {
-                if (_jobs.Exists(a => a.DutyType == DutyType.Pilot) && _jobs.Exists(a => a.DutyType == DutyType.Watch))
-                    return _jobs.Count - 1;
+                if (Jobs.Exists(a => a.DutyType == DutyType.Pilot) && Jobs.Exists(a => a.DutyType == DutyType.Watch))
+                    return Jobs.Count - 1;
                 else
-                    return _jobs.Count;
+                    return Jobs.Count;
             }
         }
 
@@ -330,21 +156,7 @@ namespace pfsim.Officer
             }
         }
 
-        public CrewSkills ExternalModifiers
-        {
-            get
-            {
-                if (_externalModifiers == null)
-                    _externalModifiers = new CrewSkills();
-
-                return _externalModifiers;
-            }
-            set
-            {
-                _externalModifiers = value;
-            }
-        }
-        private CrewSkills _externalModifiers;
+        public CrewSkills ExternalModifiers { get; set; } = new CrewSkills();
 
         public void AddJob(Job job)
         {
@@ -380,7 +192,7 @@ namespace pfsim.Officer
                                 a.DutyType == DutyType.Ministrel ||
                                 a.DutyType == DutyType.Heal ||
                                 a.DutyType == DutyType.Stow ||
-                                a.DutyType == DutyType.RepairHull || 
+                                a.DutyType == DutyType.RepairHull ||
                                 a.DutyType == DutyType.RepairSails ||
                                 a.DutyType == DutyType.RepairSeigeEngine) > 2)
             {

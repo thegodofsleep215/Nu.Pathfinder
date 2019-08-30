@@ -12,12 +12,11 @@ namespace pfsim.Officer
     /// </summary>
     public class Command : IDuty
     {
-        public void PerformDuty(IShip crew, DailyInput input, ref MiniGameStatus status)
+        public void PerformDuty(IShip ship, DailyInput input, ref MiniGameStatus status)
         {
-            var dc = 5 + crew.ShipDc + (crew.TotalCrew / 10) + input.CommandModifier;
-            var assistBonus = PerformAssists(crew.GetAssistance(DutyType.Command));
-            status.CommandResult = (DiceRoller.D20(1) + crew.CommanderSkillBonus + assistBonus) - dc;
-            status.ActionResults.Add($"Command result: {status.CommandResult}");
+            var dc = 5 + ship.ShipDc + (ship.TotalCrew / 10) + input.CommandModifier;
+            var assistBonus = PerformAssists(ship.GetAssistance(DutyType.Command));
+            status.CommandResult = (DiceRoller.D20(1) + ship.CommanderSkillBonus + assistBonus) - dc;
         }
 
         private int PerformAssists(List<Assists> list)

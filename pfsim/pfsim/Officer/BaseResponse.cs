@@ -10,16 +10,6 @@ namespace pfsim.Officer
     {
         public bool Success { get; set; } = false;
 
-        public List<string> Messages
-        {
-            get
-            {
-                if (_messages == null)
-                    _messages = new List<string>();
-
-                return _messages;
-            }
-        }
-        private List<string> _messages;
+        public List<string> Messages { get; private set; } = new List<string>();
     }
 }

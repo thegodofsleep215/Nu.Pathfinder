@@ -23,23 +23,23 @@ namespace pfsim.Officer
     /// Colossal	8d8	
     public class Pilot : IDuty
     {
-        public void PerformDuty(IShip crew, DailyInput input, ref MiniGameStatus status)
+        public void PerformDuty(IShip ship, DailyInput input, ref MiniGameStatus status)
         {
-            var dc = 7 + crew.ShipDc - status.CommandModifier - crew.CrewPilotModifier - input.WeatherModifier + status.WatchModifier;
-            var assistBonus = PerformAssists(crew.GetAssistance(DutyType.Pilot), input.WeatherModifier);
-            status.PilotResult = (DiceRoller.D20(1) + crew.PilotSkillBonus + assistBonus) - dc;
+            var dc = 7 + ship.ShipDc - status.CommandModifier - ship.CrewPilotModifier - input.WeatherModifier + status.WatchModifier;
+            var assistBonus = PerformAssists(ship.GetAssistance(DutyType.Pilot), input.WeatherModifier);
+            status.PilotResult = (DiceRoller.D20(1) + ship.PilotSkillBonus + assistBonus) - dc;
 
             if (status.PilotResult >= 0)
             {
-                status.ActionResults.Add("Piloting successful.");
+                status.DutyEvents.Add(new PilotSuccessEvent());
             }
-            else
+            if (status.PilotResult < 0)
             {
-                status.ActionResults.Add("Piloting failed, progress halved.");
-                if(status.PilotResult <= -15)
+
+                int damage = 0;
+                if (status.PilotResult <= -15)
                 {
-                    int damage = 0;
-                    switch (crew.ShipSize)
+                    switch (ship.ShipSize)
                     {
                         case ShipSize.Large:
                             damage = DiceRoller.D8(3);
@@ -54,7 +54,10 @@ namespace pfsim.Officer
                             damage = DiceRoller.D8(8);
                             break;
                     }
-                    status.ActionResults.Add($"Piloting failed so badly that the ship took {damage} points of damage.");
+                    status.DutyEvents.Add(new PilotFailedEvent
+                    {
+                        Damage = damage
+                    });
                 }
             }
         }

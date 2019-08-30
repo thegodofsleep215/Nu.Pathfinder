@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace pfsim.Officer
 {
@@ -11,7 +9,6 @@ namespace pfsim.Officer
     public class Ship : IShip
     {
         private List<Job> _assignedJobs;
-        private List<Propulsion> _propulsionTypes;
         private List<CrewMember> _shipsCrew;
         private Morale _shipsMorale;
 
@@ -49,24 +46,17 @@ namespace pfsim.Officer
 
         public string CrewName { get; set; }
         public ShipType ShipType { get; set; }
-        public ShipSize ShipSize { get; set; }
-        public List<Propulsion> PropulsionTypes
-        {
-            get
-            {
-                if (_propulsionTypes == null)
-                    _propulsionTypes = new List<Propulsion>();
 
-                return _propulsionTypes;
-            }
-            set
-            {
-                _propulsionTypes = value;
-            }
-        }
+        public ShipSize ShipSize { get; set; }
+
+        public Morale CrewMorale { get; set; } = new Morale();
+
+        public List<Propulsion> PropulsionTypes { get; set; } = new List<Propulsion>();
+
         public int HullHitPoints { get; set; }
+
         public int CrewSize { get; set; }
-        [JsonIgnore]
+
         public int MinimumCrewSize
         {
             get
@@ -74,7 +64,9 @@ namespace pfsim.Officer
                 return CrewSize / 2;
             }
         }
+
         public int ShipDc { get; set; }
+
         public int ShipPilotingBonus { get; set; }
         public int ShipQuality { get; set; } // TODO: Place holder.
 
@@ -169,8 +161,11 @@ namespace pfsim.Officer
         }
         public Alignment ShipsAlignment { get; set; }
         public int Marines { get; set; }
+
         public int Passengers { get; set; }
+
         public int Swabbies { get; set; }
+
         public decimal AverageSwabbieQuality { get; set; }
         [JsonIgnore]
         public int TotalCrew
@@ -556,6 +551,27 @@ namespace pfsim.Officer
             }
         }
 
+        public int CookingSkillBonus
+        {
+            get
+            {
+                int retval = -5;
+
+                if (AssignedJobs.Exists(a => a.DutyType == DutyType.Cook))
+                {
+                    string name = AssignedJobs.First(a => a.DutyType == DutyType.Cook).CrewName;
+
+                    var crewMembert = ShipsCrew.FirstOrDefault(a => a.Name == name);
+
+                    if (crewMembert != null)
+                        retval = crewMembert.CookSkillBonus;
+                }
+
+                return retval;
+
+            }
+        }
+
         [JsonIgnore]
         public int HealerSkillBonus
         {
@@ -598,20 +614,7 @@ namespace pfsim.Officer
             }
         }
 
-        /// <summary>
-        /// TODO: Does the ship need a voyage?
-        /// </summary>
-        public Voyage CurrentVoyage
-        {
-            get
-            {
-                if (_currentVoyage == null)
-                    _currentVoyage = new Voyage();
-
-                return _currentVoyage;
-            }
-        }
-        private Voyage _currentVoyage;
+        public Voyage CurrentVoyage { get; private set; } = new Voyage();
 
         public Ship()
         {

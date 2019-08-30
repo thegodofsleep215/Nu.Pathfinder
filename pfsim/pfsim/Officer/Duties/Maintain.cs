@@ -17,20 +17,16 @@ namespace pfsim.Officer
     /// </summary>
     public class Maintain : IDuty
     {
-        public void PerformDuty(IShip crew, DailyInput input, ref MiniGameStatus status)
+        public void PerformDuty(IShip ship, DailyInput input, ref MiniGameStatus status)
         {
-            var dc = 5 + crew.ShipDc - status.CommandModifier - status.ManageModifier - input.WeatherModifier;
-            var assistBonus = PerformAssists(crew.GetAssistance(DutyType.Maintain), input.WeatherModifier);
-            status.MaintainResult = DiceRoller.D20(1) + crew.MaintainSkillBonus + assistBonus - dc;
+            var dc = 5 + ship.ShipDc - status.CommandModifier - status.ManageModifier - input.WeatherModifier;
+            var assistBonus = PerformAssists(ship.GetAssistance(DutyType.Maintain), input.WeatherModifier);
+            status.MaintainResult = DiceRoller.D20(1) + ship.MaintainSkillBonus + assistBonus - dc;
 
-            if(status.MaintainResult >= 0)
-            {
-                status.ActionResults.Add("This ship is shipshape!");
-            }
-            else
+            if(status.MaintainResult < 0)
             {
                 int damage;
-                switch (crew.ShipSize)
+                switch (ship.ShipSize)
                 {
                     default:
                     case ShipSize.Large:
@@ -46,7 +42,7 @@ namespace pfsim.Officer
                         damage = DiceRoller.D6(1);
                         break;
                 }
-                status.ActionResults.Add($"Due to neglect the hull and propulsion of the ship each take {damage} points of damage");
+                status.DutyEvents.Add(new PoorMaintenanceEvent { Damage = damage });
             }
         }
         

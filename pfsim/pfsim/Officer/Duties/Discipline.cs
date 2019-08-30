@@ -25,10 +25,10 @@ namespace pfsim.Officer
     /// is modified by the crew’s morale bonus.
     public class Discipline : IDuty
     {
-        public void PerformDuty(IShip crew, DailyInput input, ref MiniGameStatus status)
+        public void PerformDuty(IShip ship, DailyInput input, ref MiniGameStatus status)
         {
             var tension = 6;
-            tension += (crew.HasDisciplineOfficer ? 0 : 4);
+            tension += (ship.HasDisciplineOfficer ? 0 : 4);
             tension += status.CommandResult <= -15 ? 4 : 0;
             tension += status.ManageResult <= -10 ? 2 : 0;
             tension += input.DisciplineModifier;
@@ -38,25 +38,17 @@ namespace pfsim.Officer
 
             if (roll < tension)
             {
-                var dc = 10 + (crew.TotalCrew / 10) - status.CommandModifier; 
-                if (DiceRoller.D20(1) + crew.DisciplineSkillBonus < dc || !crew.HasDisciplineOfficer)
+                var dc = 10 + (ship.TotalCrew / 10) - status.CommandModifier; 
+                if (DiceRoller.D20(1) + ship.DisciplineSkillBonus < dc || !ship.HasDisciplineOfficer)
                 {
-                    status.ActionResults.Add($"The crew is getting out of control resulting the following issues, {string.Join(", ", RollUpDisciplineIssues(tension >= 20 ? 1 : 0))}");
+                    status.DutyEvents.AddRange(RollUpDisciplineIssues(tension >= 20 ? 1 : 0));
                 }
-                else
-                {
-                    status.ActionResults.Add("The crew is getting restless, but they were things were dealt with before they got out of control.");
-                }
-            }
-            else
-            {
-                status.ActionResults.Add("The crew is focused on their duties today.");
             }
         }
 
-        List<string> RollUpDisciplineIssues(int modifier)
+        List<UnrulyCrewEvent> RollUpDisciplineIssues(int modifier)
         {
-            var result = new List<string>();
+            var result = new List<UnrulyCrewEvent>();
             var roll = DiceRoller.D20(1) + modifier;
             if (roll == 20)
             {
@@ -65,11 +57,19 @@ namespace pfsim.Officer
             }
             else if (roll == 21)
             {
-                result.Add($"Severe({DiceRoller.D8(1)}");
+                result.Add(new UnrulyCrewEvent
+                {
+                    Roll = DiceRoller.D8(1),
+                    IsSerious = true
+                });
             }
             else
             {
-                result.Add($"Regular({roll})");
+                result.Add(new UnrulyCrewEvent
+                {
+                    Roll = roll,
+                    IsSerious = false
+                });
             }
             return result;
         }
