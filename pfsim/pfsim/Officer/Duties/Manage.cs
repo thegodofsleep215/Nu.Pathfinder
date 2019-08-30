@@ -19,14 +19,23 @@ namespace pfsim.Officer
         {
             var dc = 5 + ship.ShipDc + (ship.TotalCrew / 10) - status.CommandModifier;
             var assistBonus = PerformAssists(ship.GetAssistance(DutyType.Manage));
-            status.ManageResult = (DiceRoller.D20(1) + ship.ManagerSkillBonus) - dc;
+            status.ManageResult = (DiceRoller.D20(1) + ship.ManagerSkillBonus + assistBonus) - dc;
 
             if (status.ManageResult < 0)
             {
-                status.DutyEvents.Add(new MismanagedSuppliesEvent {
-                    SupplyType = (SupplyType)DiceRoller.D4(1),
-                    CausedConfusion = status.ManageResult <= -10
-                });
+                var e = new MismanagedSuppliesEvent();
+                if (DiceRoller.D20(1) <= (ship.TotalCrew / 10 + 1))  // Possibly replace this random balancer with finer granularity in the future.
+                {
+                    e.SupplyType = (SupplyType)DiceRoller.D4(1);
+                }
+
+                if(status.ManageResult <= -10)
+                {
+                    e.CausedConfusion = true;
+                }
+
+                if(e.CausedConfusion || e.SupplyType.HasValue)
+                    status.DutyEvents.Add(e);
             }
         }
 

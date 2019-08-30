@@ -35,7 +35,6 @@ namespace pfsim.Officer
             }
             if (status.PilotResult < 0)
             {
-
                 int damage = 0;
                 if (status.PilotResult <= -15)
                 {
