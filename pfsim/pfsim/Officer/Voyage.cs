@@ -69,7 +69,7 @@ namespace pfsim.Officer
             }
         }
 
-        internal void AddDaysOfVoyage(int days)
+        internal void AddDaysToVoyage(int days)
         {
             DaysSinceResupply += days;
             DayOfVoyage += days;

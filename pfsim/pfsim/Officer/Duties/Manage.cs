@@ -15,7 +15,7 @@ namespace pfsim.Officer
     /// </summary>
     public class Manage : IDuty
     {
-        public void PerformDuty(IShip ship, DailyInput input, ref MiniGameStatus status)
+        public void PerformDuty(Ship ship, ref MiniGameStatus status)
         {
             var dc = 5 + ship.ShipDc + (ship.TotalCrew / 10) - status.CommandModifier;
             var assistBonus = PerformAssists(ship.GetAssistance(DutyType.Manage));

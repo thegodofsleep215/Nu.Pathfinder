@@ -8,8 +8,11 @@
 
         public override string ToString()
         {
-            var conf = CausedConfusion ? "It was so based it caused confustion amongst the crew." : "";
-            return $"Supplies were miss managed Lost 1 {SupplyType}.{conf}";
+            var conf = CausedConfusion ? " The crew is upset at how badly the ship is being managed!" : "";
+            if (SupplyType.HasValue)
+                return $"Supplies were mismanaged - Lost 1 {SupplyType}.{conf}";
+            else
+                return conf.Trim();
         }
     }
 

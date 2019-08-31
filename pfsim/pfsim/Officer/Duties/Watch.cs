@@ -12,10 +12,11 @@ namespace pfsim.Officer
     /// </summary>
     public class Watch : IDuty
     {
-        public void PerformDuty(IShip ship, DailyInput input, ref MiniGameStatus status)
+        public void PerformDuty(Ship ship, ref MiniGameStatus status)
         {
-            var dc = 10 - input.WeatherModifier - status.CommandModifier;
-            var assistBonus = PerformAssists(ship.GetAssistance(DutyType.Watch), input.WeatherModifier, status);
+            var weatherModifier = ship.CurrentVoyage.GetWeatherModifier(DutyType.Watch);
+            var dc = 10 - weatherModifier - status.CommandModifier;
+            var assistBonus = PerformAssists(ship.GetAssistance(DutyType.Watch), weatherModifier, status);
 
             int watch = status.WatchResults.Count;
 

@@ -41,23 +41,23 @@ namespace pfsim.Officer
     /// If disease is indicated, that character acquires a serious infection 1d4 days after receiving the injury.  
     public class Heal : IDuty
     {
-        public void PerformDuty(IShip ship, DailyInput input, ref MiniGameStatus status)
+        public void PerformDuty(Ship ship, ref MiniGameStatus status)
         {
             var santitation = 2;
             santitation += ship.HasHealer ? 0 : 4;
             santitation += status.CookResult <= -15 ? 4 : 0;
-            santitation += input.Wellbeing == 2 ? 2 : 0;
-            santitation += input.Wellbeing <= 1 ? 4 : 0;
-            santitation += input.HealModifier;
+            santitation += ship.ShipsMorale.WellBeing == 2 ? 2 : 0;
+            santitation += ship.ShipsMorale.WellBeing <= 1 ? 4 : 0;
+            santitation += ship.CurrentVoyage.DiseaseAboardShip ? 4 : 0;
 
-            var result = DiceRoller.D20(1) + ship.HealerSkillBonus - santitation;
+            var assistBonus = PerformAssists(ship.GetAssistance(DutyType.Heal));
+            var result = DiceRoller.D20(1) + ship.HealerSkillBonus + assistBonus - santitation;
 
             if (result < 0 || !ship.HasHealer)
             {
 
                 var sickCount = santitation >= 20 ? DiceRoller.D3(1) : 1;
                 status.DutyEvents.Add(new SicknessEvent { NumberAffected = sickCount });
-
             }
         }
 

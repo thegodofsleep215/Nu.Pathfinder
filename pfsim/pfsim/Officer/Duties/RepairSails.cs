@@ -8,7 +8,7 @@ namespace pfsim.Officer.Duties
 {
     public class RepairSails : IDuty
     {
-        public void PerformDuty(IShip crew, DailyInput input, ref MiniGameStatus status)
+        public void PerformDuty(Ship crew, ref MiniGameStatus status)
         {
            
         }

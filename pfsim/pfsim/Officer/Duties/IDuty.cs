@@ -2,6 +2,6 @@
 {
     public interface IDuty
     {
-        void PerformDuty(IShip ship, DailyInput input, ref MiniGameStatus status);
+        void PerformDuty(Ship ship, ref MiniGameStatus status);
     }
 }

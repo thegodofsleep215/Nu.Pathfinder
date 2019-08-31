@@ -6,7 +6,7 @@ using System.Linq;
 namespace pfsim.Officer
 {
     [Serializable]
-    public class Ship : IShip
+    public class Ship
     {
         private List<Job> _assignedJobs;
         private List<CrewMember> _shipsCrew;
@@ -98,7 +98,7 @@ namespace pfsim.Officer
             {
                 _shipsMorale = value;
             }
-        }  // TODO: Should morale be part of the voyage?
+        }  
         [JsonIgnore]
         public int CrewQuality
         {
@@ -152,8 +152,16 @@ namespace pfsim.Officer
                     case DisciplineStandards.Strict:
                         retval -=2;
                         break;
-                    default:
-                        return 0;
+                }
+
+                switch(ShipsAlignment)
+                {
+                    case Alignment.Chaotic:
+                        retval += 2;
+                        break;
+                    case Alignment.Lawful:
+                        retval -= 2;
+                        break;
                 }
 
                 return retval;
@@ -229,7 +237,7 @@ namespace pfsim.Officer
             return _assignedJobs;
         }
 
-        public BaseResponse ValidateAssignedJobs()
+        public BaseResponse ValidateAssignedJobs(bool sailing = true)
         {
             BaseResponse retval = new BaseResponse();
 
@@ -249,7 +257,7 @@ namespace pfsim.Officer
             }
             if (AssignedJobs.Count(a => a.DutyType == DutyType.Manage && !a.IsAssistant) > 1)
             {
-                retval.Messages.Add("Can't have two managers!");
+                retval.Messages.Add("Can't have two pursurs!");
             }
             if (AssignedJobs.Count(a => a.DutyType == DutyType.Watch && !a.IsAssistant) > 3)
             {
@@ -261,7 +269,7 @@ namespace pfsim.Officer
             }
             if (AssignedJobs.Count(a => a.DutyType == DutyType.Pilot && !a.IsAssistant) > 1)
             {
-                retval.Messages.Add("Can't have two pilots!");
+                retval.Messages.Add("Can't have two masters!");
             }
             if (AssignedJobs.Count(a => a.DutyType == DutyType.Pilot && a.IsAssistant) > MaxPilotAssistants)
             {
@@ -269,11 +277,11 @@ namespace pfsim.Officer
             }
             if (AssignedJobs.Count(a => a.DutyType == DutyType.Navigate && !a.IsAssistant) > 1)
             {
-                retval.Messages.Add("Too many Master's Mates!");
+                retval.Messages.Add("Too many navigators!");
             }
             if (AssignedJobs.Count(a => a.DutyType == DutyType.Navigate && a.IsAssistant) > 1)
             {
-                retval.Messages.Add("Too many navigator's mates!");
+                retval.Messages.Add("Too many quartermasters!");
             }
             if (AssignedJobs.Count(a => a.DutyType == DutyType.Cook && !a.IsAssistant) > 1)
             {
@@ -404,7 +412,6 @@ namespace pfsim.Officer
         {
             get
             {
-                // TODO: Is the voyage better part of the 'minigame'?
                 return (SkeletonCrewPenalty + ShipPilotingBonus + CrewQuality + CurrentVoyage.PilotingModifier);
             }
         }
@@ -614,8 +621,17 @@ namespace pfsim.Officer
             }
         }
 
+        public void AddDaysToVoyage(int days)
+        {
+            CurrentVoyage.AddDaysToVoyage(days);
+        }
+
         public Voyage CurrentVoyage { get; private set; } = new Voyage();
 
+        public int CargoPoints { get; set; }
+
+        public CargoHold ShipsCargo { get; private set; } = new CargoHold();
+        
         public Ship()
         {
 

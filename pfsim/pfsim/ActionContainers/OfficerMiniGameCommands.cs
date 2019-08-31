@@ -15,61 +15,16 @@ namespace pfsim.ActionContainers
         {
         }
 
-        [TypedCommand("omg", "Rolls one day of the officer mini game (Crew).")]
-        public string OmgRoll(string crew, int crewMorale, int wellbeing, int sailingModifier, int navigateDc, int disciplineModifier, int healModifier)
+        [TypedCommand("omg", "Rolls one day of the officer mini game.")]
+        public string omg(string crew) // Message passing system can't seem to handle array of strings. 
         {
-            var crews = LoadAssets();
-            if (!crews.ContainsKey(crew))
-            {
-                return "Crew not found.";
-            }
-            var input = new DailyInput
-            {
-                CrewMorale = crewMorale,
-                Wellbeing = wellbeing,
-                SailingModifier = sailingModifier,
-                NavigateDc = navigateDc,
-                DisciplineModifier = disciplineModifier,
-                HealModifier = healModifier
-            };
-            var game = new OfficerEngine(crews[crew], input);
-            var result = game.Run();
-            return string.Join(Environment.NewLine, result.Messages);
+            return Sail(crew, string.Empty);
         }
 
-        private Dictionary<string, Ship> LoadAssets()
+        [TypedCommand("omg", "Rolls one day of the officer mini game.")]
+        public string omg(string crew, string term) // Message passing system can't seem to handle array of strings. 
         {
-            var folder = ".\\Crews";
-            if (!Directory.Exists(folder))
-            {
-                return new Dictionary<string, Ship>();
-            }
-            var charFiles = Directory.GetFiles(folder, "*.json");
-            return charFiles.Select(cf => JsonConvert.DeserializeObject<Ship>(File.ReadAllText(cf))).ToDictionary(x => x.CrewName, x => x);
-        }
-
-        [TypedCommand("omgTest", "Rolls one day of the officer mini game (Ship).")]
-        public string OmgRoll2(string crew, int crewMorale, int wellbeing, int sailingModifier, int navigateDc, int disciplineModifier, int healModifier, int weatherModifier, int commandModifier)
-        {
-            var ship = LoadShip(crew);
-            if (ship.CrewName != crew)
-            {
-                return "Crew not found.";
-            }
-            var input = new DailyInput
-            {
-                CrewMorale = crewMorale,
-                Wellbeing = wellbeing,
-                SailingModifier = sailingModifier,
-                NavigateDc = navigateDc,
-                CommandModifier = commandModifier,
-                DisciplineModifier = disciplineModifier,
-                HealModifier = healModifier,
-                WeatherModifier = weatherModifier
-            };
-            var game = new OfficerEngine(ship, input);
-            var result = game.Run();
-            return string.Join(Environment.NewLine, result.Messages);
+            return Sail(crew, term);
         }
 
         [TypedCommand("Sail", "Rolls one day of the officer mini game.")]
@@ -93,22 +48,12 @@ namespace pfsim.ActionContainers
 
             // Voyage modifiers from args (all args optional, ei state is unchanged).
             var pResponse = ProcessOMGArguments(args, ref ship, ref result);
-            var input = new DailyInput  // TODO: Can we do without the daily input now?
-            {
-                CrewMorale = ship.ShipsMorale.MoraleBonus,
-                Wellbeing = ship.ShipsMorale.WellBeing,
-                CommandModifier = ship.CurrentVoyage.CommandModifier,
-                SailingModifier = ship.CurrentVoyage.PilotingModifier,
-                NavigateDc = ship.CurrentVoyage.NavigationDC,
-                DisciplineModifier = ship.CrewDisciplineModifier, //
-                HealModifier = ship.CurrentVoyage.DiseaseAboardShip ? 4 : 0,
-                WeatherModifier = ship.CurrentVoyage.GetWeatherModifier(DutyType.Pilot) // TODO: One step at a time.
-            };
+
             if (pResponse.Success)
             {
-                var game = new OfficerEngine(ship, input);
+                var game = new SailingEngine(ship);
                 var gResponse = game.Run(); // Distinguish between successful and unsuccessful game.
-                
+
                 if (gResponse.Success)
                 {
                     var sResponse = WriteAsset(ship);
@@ -158,6 +103,54 @@ namespace pfsim.ActionContainers
             return string.Join(Environment.NewLine, pResponse.Messages);
         }
 
+        [TypedCommand("Rest", "Rolls one day of the officer mini game, but doesn't sail the boat anywhere.")]
+        public string Anchor(string crew)
+        {
+            return Anchor(crew, string.Empty);
+        }
+
+        [TypedCommand("Rest", "Rolls one day of the officer mini game, but doesn't sail the boat anywhere.")]
+        public string Anchor(string crew, string term)
+        {
+            var args = term.Split(','); // TODO: Until we can handle this better.
+            var result = new List<string>();
+            var ship = LoadShip(crew);
+
+            if (ship.CrewName != crew)
+            {
+                return "Crew not found.";
+            }
+            WriteAsset(ship, string.Format("{0}.old", ship.CrewName)); // Store the current ship in case need to recover from bad command.
+
+            // Voyage modifiers from args (all args optional, ei state is unchanged).
+            var pResponse = ProcessOMGArguments(args, ref ship, ref result);
+
+            if (pResponse.Success)
+            {
+                var game = new AnchoredEngine(ship);
+                var gResponse = game.Run(); // Distinguish between successful and unsuccessful game.
+
+                if (gResponse.Success)
+                {
+                    var sResponse = WriteAsset(ship);
+                    if (!sResponse.Success)
+                        result.AddRange(sResponse.Messages);
+                }
+                else
+                {
+                    gResponse.Messages.Insert(0, "Game not run because of the following errors in ship configuration:");
+                }
+
+                result.AddRange(gResponse.Messages);
+                return string.Join(Environment.NewLine, result);
+            }
+            else
+            {
+                pResponse.Messages.Insert(0, "Game not run because of errors in parsing the parameters.");
+                return string.Join(Environment.NewLine, pResponse.Messages);
+            }
+        }
+
         private BaseResponse ProcessOMGArguments(string[] args, ref Ship ship, ref List<string> messages)
         {
             BaseResponse retval = new BaseResponse();
@@ -181,9 +174,7 @@ namespace pfsim.ActionContainers
                 }
                 
                 // Argument to refit.
-                // TODO: Add non-voyaging option?
                 // TODO - Ship modifiers from args
-                // Adjust ship discpline level
                 // Argument to change number of swabbies in crew.
                 // Assign job?
                 // Remove job?
@@ -430,7 +421,8 @@ namespace pfsim.ActionContainers
                             if (int.TryParse(value, out int temp))
                             {
                                 messages.Add(string.Format("Wellbeing penalty changed to {0}.", temp));
-                                ship.ShipsMorale.WellBeing = temp;
+                                ship.ShipsMorale.ClearTemporaryModifiers(MoralTypes.Wellbeing);
+                                ship.ShipsMorale.AddTemporaryModifier(MoralTypes.Wellbeing, temp);
                             }
                             else
                             {
@@ -894,7 +886,7 @@ namespace pfsim.ActionContainers
                             {
                                 if (temp > 0)
                                 {
-                                    ship.CurrentVoyage.AddDaysOfVoyage(temp);
+                                    ship.AddDaysToVoyage(temp);
 ;                                   messages.Add(string.Format("Extended voyage by {0} days.", temp));
                                 }
                                 else
@@ -908,6 +900,30 @@ namespace pfsim.ActionContainers
                         else
                         {
                             retval.Messages.Add("Adding days to voyage requires value.  Use 't+:#'.");
+                        }
+                        break;
+                    case "WHIP":
+                    case "DL":
+                    case "DISCIPLINESTANDARDS":
+                        // Adjust ship discipline standards
+                        if (value != null)
+                        {
+                            if (int.TryParse(value, out int temp))
+                            {
+                                ship.DisciplineStandards = (DisciplineStandards)temp;
+                            }
+                            else if (Enum.TryParse<DisciplineStandards>(value, true, out DisciplineStandards result))
+                            {
+                                ship.DisciplineStandards = result;
+                            }
+                            else
+                            {
+                                retval.Messages.Add("Unrecognized discipline standard. Use 'whip:#' or spell out condition such as 'whip:Strict'.");
+                            }
+                        }
+                        else
+                        {
+                            retval.Messages.Add("'Discipline Standard' requires value.  Use 'whip:#' or spell out condition such as 'whip:Strict'.");
                         }
                         break;
                     default:
@@ -929,6 +945,17 @@ namespace pfsim.ActionContainers
             return retval;
         }
 
+        private Dictionary<string, Ship> LoadAssets()
+        {
+            var folder = ".\\Crews";
+            if (!Directory.Exists(folder))
+            {
+                return new Dictionary<string, Ship>();
+            }
+            var charFiles = Directory.GetFiles(folder, "*.json");
+            return charFiles.Select(cf => JsonConvert.DeserializeObject<Ship>(File.ReadAllText(cf))).ToDictionary(x => x.CrewName, x => x);
+        }
+
         private Dictionary<string, Ship> LoadShips()
         {
             var folder = ".\\Ships";
@@ -937,7 +964,9 @@ namespace pfsim.ActionContainers
                 return new Dictionary<string, Ship>();
             }
             var charFiles = Directory.GetFiles(folder, "*.json");
-            return charFiles.Select(cf => JsonConvert.DeserializeObject<Ship>(File.ReadAllText(cf))).ToDictionary(x => x.CrewName, x => x);
+            JsonSerializerSettings settings = new JsonSerializerSettings();
+            settings.TypeNameHandling = TypeNameHandling.Auto;
+            return charFiles.Select(cf => JsonConvert.DeserializeObject<Ship>(File.ReadAllText(cf), settings)).ToDictionary(x => x.CrewName, x => x);
         }
 
         private Ship LoadShip(string shipName)
@@ -948,7 +977,9 @@ namespace pfsim.ActionContainers
                 return new Ship();
             }
             string file = Directory.GetFiles(folder, string.Format("{0}.json", shipName)).First();
-            return JsonConvert.DeserializeObject<Ship>(File.ReadAllText(file));
+            JsonSerializerSettings settings = new JsonSerializerSettings();
+            settings.TypeNameHandling = TypeNameHandling.Auto;
+            return JsonConvert.DeserializeObject<Ship>(File.ReadAllText(file), settings);
         }
 
         private BaseResponse WriteAsset(Ship ship, string filename = null)
@@ -958,7 +989,9 @@ namespace pfsim.ActionContainers
                 filename = ship.CrewName;
             try
             {
-                string contents = JsonConvert.SerializeObject(ship, Formatting.Indented);
+                JsonSerializerSettings settings = new JsonSerializerSettings();
+                settings.TypeNameHandling = TypeNameHandling.Auto;
+                string contents = JsonConvert.SerializeObject(ship, Formatting.Indented, settings);
                 var folder = ".\\Ships";
                 if (!Directory.Exists(folder))
                 {
