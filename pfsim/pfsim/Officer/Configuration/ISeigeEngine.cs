@@ -2,6 +2,6 @@
 {
     public interface IAmmunition
     {
-        SeigeEngineType SeigeEngineType { get; set; }
+        SiegeEngineType SeigeEngineType { get; set; }
     }
 }

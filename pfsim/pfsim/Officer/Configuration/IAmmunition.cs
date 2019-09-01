@@ -2,6 +2,6 @@
 {
     internal interface ISeigeEngine
     {
-        SeigeEngineType SeigeEngineType { get; set; }
+        SiegeEngineType SeigeEngineType { get; set; }
     }
 }

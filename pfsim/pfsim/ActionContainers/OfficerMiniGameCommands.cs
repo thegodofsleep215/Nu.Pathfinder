@@ -34,6 +34,24 @@ namespace pfsim.ActionContainers
         }
 
         [TypedCommand("Sail", "Rolls one day of the officer mini game.")]
+        public string Sail(string crew, string term1, string term2) // Message passing system can't seem to handle array of strings. 
+        {
+            return Sail(crew, term1 + term2);
+        }
+
+        [TypedCommand("Sail", "Rolls one day of the officer mini game.")]
+        public string Sail(string crew, string term1, string term2, string term3) // Message passing system can't seem to handle array of strings. 
+        {
+            return Sail(crew, term1 + term2 + term3);
+        }
+
+        [TypedCommand("Sail", "Rolls one day of the officer mini game.")]
+        public string Sail(string crew, string term1, string term2, string term3, string term4) // Message passing system can't seem to handle array of strings. 
+        {
+            return Sail(crew, term1 + term2 + term3 + term4);
+        }
+
+        [TypedCommand("Sail", "Rolls one day of the officer mini game.")]
         public string Sail(string crew, string term) // Message passing system can't seem to handle array of strings. 
         {
             var args = term.Split(','); // TODO: Until we can handle this better.
@@ -73,6 +91,24 @@ namespace pfsim.ActionContainers
                 pResponse.Messages.Insert(0, "Game not run because of errors in parsing the parameters.");
                 return string.Join(Environment.NewLine, pResponse.Messages);
             }
+        }
+
+        [TypedCommand("AdjustShip", "Sets new parameters on the named ship, but does not advance the officer minigame.")]
+        public string AdjustShip(string crew, string term1, string term2)
+        {
+            return AdjustShip(crew, term1 + term2);
+        }
+
+        [TypedCommand("AdjustShip", "Sets new parameters on the named ship, but does not advance the officer minigame.")]
+        public string AdjustShip(string crew, string term1, string term2, string term3)
+        {
+            return AdjustShip(crew, term1 + term2 + term3);
+        }
+
+        [TypedCommand("AdjustShip", "Sets new parameters on the named ship, but does not advance the officer minigame.")]
+        public string AdjustShip(string crew, string term1, string term2, string term3, string term4)
+        {
+            return AdjustShip(crew, term1 + term2 + term3 + term4);
         }
 
         [TypedCommand("AdjustShip", "Sets new parameters on the named ship, but does not advance the officer minigame.")]
@@ -151,6 +187,25 @@ namespace pfsim.ActionContainers
             }
         }
 
+        [TypedCommand("Plunder", "Testing: Makes some example plunder.")]
+        public string Plunder()
+        {
+            return Plunder(DiceRoller.D6(3));
+        }
+
+        [TypedCommand("Plunder", "Testing: Makes some example plunder.")]
+        public string Plunder(int amount)
+        {
+            List<string> plunder = new List<string>();
+
+            for(int i = 0; i < amount; i++)
+            {
+                plunder.Add(CargoFactory.Instance.ProduceCargo(CargoType.Plunder).ToString());
+            }
+
+            return string.Join(Environment.NewLine, plunder);
+        }
+
         private BaseResponse ProcessOMGArguments(string[] args, ref Ship ship, ref List<string> messages)
         {
             BaseResponse retval = new BaseResponse();
@@ -160,24 +215,22 @@ namespace pfsim.ActionContainers
                 if (string.IsNullOrWhiteSpace(arg))
                     continue;
 
+                string[] parts;
                 string term = null;
                 string value = null;
                 if(arg.Contains(':'))
                 {
-                    var parts = arg.Split(':');
+                    parts = arg.Split(':');
                     term = parts[0].Trim();
                     value = parts[1].Trim();
                 }
                 else
                 {
+                    parts = new string[1] { arg };
                     term = arg;
                 }
                 
                 // Argument to refit.
-                // TODO - Ship modifiers from args
-                // Argument to change number of swabbies in crew.
-                // Assign job?
-                // Remove job?
                 // Kill named crew member?
                 // Load named crew member from file?
                 switch (term.ToUpper())
@@ -879,6 +932,7 @@ namespace pfsim.ActionContainers
                         break;
                     case "T+":
                     case "TIME+":
+                    case "DAYS+":
                         // Argument to add days to the journey.
                         if (value != null)
                         {
@@ -926,6 +980,211 @@ namespace pfsim.ActionContainers
                             retval.Messages.Add("'Discipline Standard' requires value.  Use 'whip:#' or spell out condition such as 'whip:Strict'.");
                         }
                         break;
+                    case "SWAB":
+                    case "SWABBIES":
+                    case "CREW":
+                        // Change the count of non-named crew.
+                        if (value != null)
+                        {
+                            if (int.TryParse(value, out int temp))
+                            {
+                                if (temp < 0)
+                                {
+                                    retval.Messages.Add("Setting count of general crew requires positive integer.  Use 'swab:#'.");
+                                }
+                                else
+                                {
+                                    ship.Swabbies = temp;
+                                    retval.Messages.Add(string.Format("Swabbie count now {0}.", temp));
+                                }
+                            }
+                            else
+                            { 
+                                retval.Messages.Add("Setting count of general crew requires positive integer.  Use 'swab:#'.");
+                            }
+                        }
+                        else
+                        {
+                            retval.Messages.Add("Setting count of general crew requires value.  Use 'swab:#'.");
+                        }
+                        break;
+                    case "SWAB+":
+                    case "SWABBIES+":
+                    case "CREW+":
+                        // Change the count of non-named crew.
+                        if (value != null)
+                        {
+                            if (int.TryParse(value, out int temp))
+                            {
+                                if (temp < 0)
+                                {
+                                    retval.Messages.Add("Increasing count of general crew requires a positive integer.  Use 'swab+:#'.");
+                                }
+                                else
+                                {
+                                    ship.Swabbies += temp;
+                                    retval.Messages.Add(string.Format("Adding {0} crew. Swabbie count now {1}.", temp, ship.Swabbies));
+                                }
+                            }
+                            else
+                            {
+                                retval.Messages.Add("Increasing count of general crew requires a positive integer.  Use 'swab+:#'.");
+                            }
+                        }
+                        else
+                        {
+                            retval.Messages.Add("Increasing count of general crew crew requires value.  Use 'swab+:#'.");
+                        }
+                        break;
+                    case "SWAB-":
+                    case "SWABBIES-":
+                    case "CREW-":
+                        // Change the count of non-named crew.
+                        if (value != null)
+                        {
+                            if (int.TryParse(value, out int temp))
+                            {
+                                if (temp < 0)
+                                {
+                                    retval.Messages.Add("Reducing count of general crew requires a positive integer.  Use 'swab-:#'.");
+                                }
+                                else
+                                {
+                                    ship.Swabbies += temp;
+                                    retval.Messages.Add(string.Format("Removing {0} crew. Swabbie count now {1}.", temp, ship.Swabbies));
+                                }
+                            }
+                            else
+                            {
+                                retval.Messages.Add("Reducing count of general crew requires a positive integer.  Use 'swab-:#'.");
+                            }
+                        }
+                        else
+                        {
+                            retval.Messages.Add("Reducing count of general crew crew requires value.  Use 'swab-:#'.");
+                        }
+                        break;
+                    case "J":
+                    case "J+":
+                    case "JOB":
+                    case "JOB+":
+                    case "DUTY":
+                    case "DUTY+":
+                        // Four part command to assign job j:<CrewMember>:<Duty>:<Assitant>, where <assistant> is optional and assumed false.
+                        // TODO: This is going to have a problem because crew members can have names containing spaces.
+                        if (parts.Length < 3)
+                        {
+                            retval.Messages.Add("To assign job, use 'j:<CrewMember>:<Duty>:<IsAssitant>'.");
+                        }
+                        else
+                        {
+                            string crewname = parts[1];
+                            string duty = parts[2];
+                            string assistant = null;
+                            if (parts.Length > 3)
+                                assistant = parts[3];
+
+                            DutyType? foundDuty = null;
+
+                            if (int.TryParse(duty, out int temp))
+                            {
+                                if (Enum.IsDefined(typeof(DutyType), temp))
+                                    foundDuty = (DutyType)temp;
+                                else
+                                    retval.Messages.Add(string.Format("Unrecognized duty '{0}' when adding job.", duty));
+                            }
+                            else if (Enum.TryParse<DutyType>(value, true, out DutyType result))
+                            {
+                                foundDuty = result;
+                            }
+                            else
+                            {
+                                retval.Messages.Add(string.Format("Unrecognized duty '{0}' when adding job.", duty));
+                            }
+
+                            if(foundDuty.HasValue)
+                            {
+                                BaseResponse response = null;
+                                if (assistant != null)
+                                {
+                                    if(bool.TryParse(assistant, out bool result))
+                                    {
+                                        response = ship.AssignJob(crewname, foundDuty.Value, result);
+                                    }
+                                    else
+                                    {
+                                        retval.Messages.Add(string.Format("Unrecognized assistant flag '{0}' when adding job.  Use 'true', 'false', '0' or '1'.", duty));
+                                    }
+                                }
+                                else
+                                {
+                                    response = ship.AssignJob(crewname, foundDuty.Value, false);       
+                                }
+
+                                if (response != null && !response.Success)
+                                    retval.Messages.AddRange(response.Messages);
+                            }
+                        }
+                        break;
+                    case "J-":
+                    case "JOB-":
+                    case "DUTY-":
+                        // Four part command to remove job j:<CrewMember>:<Duty>:<Assitant>, where <assistant> is optional and assumed false.
+                        // TODO: This is going to have a problem because crew members can have names containing spaces.
+                        if (parts.Length < 3)
+                        {
+                            retval.Messages.Add("To remove job, use 'j-:<CrewMember>:<Duty>:<IsAssitant>'.");
+                        }
+                        else
+                        {
+                            string crewname = parts[1];
+                            string duty = parts[2];
+                            string assistant = null;
+                            if (parts.Length > 3)
+                                assistant = parts[3];
+
+                            DutyType? foundDuty = null;
+
+                            if (int.TryParse(duty, out int temp))
+                            {
+                                if(Enum.IsDefined(typeof(DutyType), temp))
+                                    foundDuty = (DutyType)temp;
+                                else
+                                    retval.Messages.Add(string.Format("Unrecognized duty '{0}' when removing job.", duty));
+                            }
+                            else if (Enum.TryParse<DutyType>(value, true, out DutyType result))
+                            {
+                                foundDuty = result;
+                            }
+                            else
+                            {
+                                retval.Messages.Add(string.Format("Unrecognized duty '{0}' when removing job.", duty));
+                            }
+
+                            if (foundDuty.HasValue)
+                            {
+                                BaseResponse response = null;
+                                if (assistant != null)
+                                {
+                                    if (bool.TryParse(assistant, out bool result))
+                                    {
+                                        response = ship.RemoveJob(crewname, foundDuty.Value, result);
+                                    }
+                                    else
+                                    {
+                                        retval.Messages.Add(string.Format("Unrecognized assistant flag '{0}' when removing job.  Use 'true', 'false', '0' or '1'.", duty));
+                                    }
+                                }
+                                else
+                                {
+                                    response = ship.RemoveJob(crewname, foundDuty.Value, false);
+                                }
+
+                                if (response != null && !response.Success)
+                                    retval.Messages.AddRange(response.Messages);
+                            }
+                        }
+                        break;
                     default:
                         if(value != null)
                         {
@@ -956,6 +1215,10 @@ namespace pfsim.ActionContainers
             return charFiles.Select(cf => JsonConvert.DeserializeObject<Ship>(File.ReadAllText(cf))).ToDictionary(x => x.CrewName, x => x);
         }
 
+        /// <summary>
+        /// IMPORTANT: Don't deserialize ships from an untrusted source.
+        /// </summary>
+        /// <returns>All the ships in a dictionary by name.</returns>
         private Dictionary<string, Ship> LoadShips()
         {
             var folder = ".\\Ships";
@@ -969,6 +1232,11 @@ namespace pfsim.ActionContainers
             return charFiles.Select(cf => JsonConvert.DeserializeObject<Ship>(File.ReadAllText(cf), settings)).ToDictionary(x => x.CrewName, x => x);
         }
 
+        /// <summary>
+        /// IMPORTANT: Don't deserialize ships from an untrusted source.
+        /// </summary>
+        /// <param name="shipName">The name of the .json file in the 'Ships' folder to load.</param>
+        /// <returns>A ship.</returns>
         private Ship LoadShip(string shipName)
         {
             var folder = ".\\Ships";

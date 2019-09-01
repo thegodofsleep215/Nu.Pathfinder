@@ -6,12 +6,14 @@ using System.Threading.Tasks;
 
 namespace pfsim.Officer
 {
-    public enum SeigeEngineType
+    public enum SiegeEngineType
     {
-        LightBallista,
-        HeavyBallista,
-        LightCatapolt,
-        HeavyCatapolt,
-        Corvus
+        LightBallista = 1,
+        HeavyBallista = 2,
+        LightCatapolt = 3,
+        HeavyCatapolt = 4,
+        Corvus = 5,
+        Springal = 6,
+        Firedrake = 7
     }
 }

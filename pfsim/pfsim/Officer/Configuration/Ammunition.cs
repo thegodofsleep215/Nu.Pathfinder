@@ -8,6 +8,6 @@ namespace pfsim.Officer
 { 
     public class Ammunition : Supplies, IAmmunition
     {
-        public SeigeEngineType SeigeEngineType { get; set; }
+        public SiegeEngineType SeigeEngineType { get; set; }
     }
 }

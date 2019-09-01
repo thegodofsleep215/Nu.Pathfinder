@@ -15,7 +15,10 @@ namespace pfsim.Officer
         {
             get
             {
-                return _cargoPointsRemaining + ((_unitSuppliesRemaining > 0) ? 1 : 0);
+                if (_unitSuppliesRemaining == UnitsSupplyPerPoint)
+                    return _cargoPointsRemaining;
+                else
+                    return _cargoPointsRemaining + ((_unitSuppliesRemaining > 0) ? 1 : 0);
             }
             set
             {
@@ -53,6 +56,18 @@ namespace pfsim.Officer
                 return _cargoPointsRemaining < 0;
             }
         }
+        [JsonIgnore]
+        public override decimal SellableValue
+        {
+            get
+            {
+                if ((CargoPoints == 0) || (UnitsSupplyPerPoint == 0))
+                    return 0;
+                else
+                    // TODO: Test this formula.
+                    return Math.Floor(Value * (_cargoPointsRemaining / CargoPoints) + Value * (_unitSuppliesRemaining / (CargoPoints * UnitsSupplyPerPoint)));
+            }
+        }
 
         public void AdjustSupplies(int amount)
         {
@@ -86,7 +101,7 @@ namespace pfsim.Officer
                 }
             }
 
-            if (CargoPoints < 1)
+            if (CargoPoints < 1 || cargo > 1)
             {
                 OnExhuastion();
             }

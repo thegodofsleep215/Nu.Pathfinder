@@ -15,5 +15,18 @@ namespace pfsim.Officer
         public bool Fragile { get; set; }
         public bool Perishable { get; set; }
         public int DaysInHold { get; set; }
+
+        public virtual decimal SellableValue
+        {
+            get
+            {
+                return Value;
+            }
+        }
+
+        public override string ToString()
+        {
+            return string.Format("{0} - {1} worth {2} gp", CargoType.ToString(), Name, SellableValue);
+        }
     }
 }

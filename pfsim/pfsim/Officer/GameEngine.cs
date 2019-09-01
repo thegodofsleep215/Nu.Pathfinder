@@ -7,17 +7,19 @@ namespace pfsim.Officer
     {
         protected readonly Ship ship;
         protected readonly Queue<IDuty> gameQueue;
+        protected readonly bool sailing;
 
-        public GameEngine(Ship ship)
+        public GameEngine(Ship ship, bool sailing = true)
         {
             this.ship = ship;
             gameQueue = new Queue<IDuty>();
+            this.sailing = sailing;
         }
 
         public BaseResponse Run()
         {
             var mgs = new MiniGameStatus();
-            BaseResponse validation = ship.ValidateAssignedJobs();
+            BaseResponse validation = ship.ValidateAssignedJobs(sailing);
             if (validation.Success)
             {
                 while (gameQueue.Count > 0)

@@ -58,10 +58,12 @@
     <Compile Include="Officer\Alignment.cs" />
     <Compile Include="Officer\Assists.cs" />
     <Compile Include="Officer\BaseResponse.cs" />
+    <Compile Include="Officer\CargoFactory.cs" />
     <Compile Include="Officer\Configuration\Ammunition.cs" />
     <Compile Include="Officer\Configuration\Cargo.cs" />
     <Compile Include="Officer\Configuration\CargoHold.cs" />
     <Compile Include="Officer\Configuration\CargoType.cs" />
+    <Compile Include="Officer\Configuration\BoatClasses.cs" />
     <Compile Include="Officer\Configuration\IPlunder.cs" />
     <Compile Include="Officer\Configuration\ISeigeEngine.cs" />
     <Compile Include="Officer\Configuration\IAmmunition.cs" />

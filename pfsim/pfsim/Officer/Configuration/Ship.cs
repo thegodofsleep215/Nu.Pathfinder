@@ -237,6 +237,69 @@ namespace pfsim.Officer
             return _assignedJobs;
         }
 
+        public BaseResponse AssignJob(string crewname, DutyType duty, bool isAssistant)
+        {
+            BaseResponse retval = new BaseResponse();
+            retval.Success = false;
+            if(ShipsCrew.Exists(a => a.Name == crewname))
+            {
+                var mate = ShipsCrew.FirstOrDefault(a => a.Name == crewname);
+
+                mate.AddJob(duty, isAssistant);
+
+                _assignedJobs = null;
+                retval.Success = true;
+
+                // TODO: Do we really want to do this now?
+                //    BaseResponse response = ValidateAssignedJobs();
+
+                //    if (response.Success)
+                //    {
+                //        retval.Success = true;
+                //    }
+                //    else
+                //    {
+                //        mate.RemoveJob(duty, isAssistant);
+                //        retval.Messages.AddRange(response.Messages);
+                //        _assignedJobs = null;
+                //    }
+            }
+            else
+            {
+                retval.Messages.Add(string.Format("Can't find crewmember '{0}'.", crewname));
+            }
+
+            return retval;
+        }
+
+        public BaseResponse RemoveJob(string crewname, DutyType duty, bool isAssistant)
+        {
+            BaseResponse retval = new BaseResponse();
+            retval.Success = false;
+            if (ShipsCrew.Exists(a => a.Name == crewname))
+            {
+                var mate = ShipsCrew.FirstOrDefault(a => a.Name == crewname);
+
+                var response = mate.RemoveJob(duty, isAssistant);
+
+                if (response)
+                {
+                    _assignedJobs = null;
+                    retval.Success = true;
+                } 
+                else
+                {
+                    retval.Messages.Add(string.Format("Crewmeber {0} already doesn't have duty {1}.", crewname, duty.ToString()));
+                }
+            }
+            else
+            {
+                retval.Messages.Add(string.Format("Can't find crewmember '{0}'.", crewname));
+            }
+
+            return retval;
+        }
+
         public BaseResponse ValidateAssignedJobs(bool sailing = true)
         {
             BaseResponse retval = new BaseResponse();

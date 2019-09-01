@@ -8,10 +8,10 @@ namespace pfsim.Officer
 {
     public enum PlunderCategory
     {
-        Bulk,
-        Commodity,
-        Trade,
-        Luxury,
-        Precious
+        Bulk = 1,
+        Commodity = 2,
+        Trade = 3,
+        Luxury = 4,
+        Precious = 5
     }
 }

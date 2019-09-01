@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace pfsim.Officer.Configuration
+namespace pfsim.Officer
 {
     public class Plunder : Cargo, IPlunder
     {
