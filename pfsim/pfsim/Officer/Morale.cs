@@ -43,8 +43,6 @@ namespace pfsim.Officer
         private int _value;
 
         public List<int> TemporaryModifiers { get; set; } = new List<int>();
-
-
     }
 
     [Serializable]
@@ -117,12 +115,12 @@ namespace pfsim.Officer
         {
             get
             {
-                return MoralStats.Values.Sum(x => x.Value);
+                return MoralStats.Values.Sum(x => x.Value) - TemporaryMoralePenalty;
             }
         }
 
+        // TODO: Hmmm.  Seems to be becoming obselete.  
         public int TemporaryMoralePenalty { get; set; }
-        public int TemporaryWellbeingPenalty { get; set; }
 
         [JsonIgnore]
         public int MoraleBonus
@@ -173,7 +171,6 @@ namespace pfsim.Officer
                 {MoralTypes.Infamy, new MoralStat{ Value = infamy } },
                 {MoralTypes.Piracy, new MoralStat{ Value = piracy } }
             };
-
         }
 
         public Morale()
@@ -191,6 +188,11 @@ namespace pfsim.Officer
         public void ClearTemporaryModifiers()
         {
             MoralStats.Values.ToList().ForEach(x => x.TemporaryModifiers.Clear());
+        }
+
+        public void ClearTemporaryModifiers(MoralTypes moralType)
+        {
+            MoralStats[moralType].TemporaryModifiers.Clear();
         }
 
         public void AddTemporaryModifier(MoralTypes moralType, int value)

@@ -7,6 +7,11 @@ namespace pfsim
     {
         private static Random rand = new Random();
 
+        public static int Roll(string expression)
+        {
+            throw new NotImplementedException();
+        }
+
         public static int Roll(int sides, int quantity)
         {
             return Enumerable.Repeat(sides + 1, quantity).Sum(x => rand.Next(1, x));

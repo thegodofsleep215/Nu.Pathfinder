@@ -13,9 +13,9 @@ namespace pfsim.Officer
     /// there is a +4 chance of medical problems the next day.You may have 1 assistant.
     public class Cook : IDuty
     {
-        public void PerformDuty(IShip ship, DailyInput input, ref MiniGameStatus status)
+        public void PerformDuty(Ship ship, ref MiniGameStatus status)
         {
-            var dc = 7 + (ship.TotalCrew / 10) - status.ManageModifier - input.Wellbeing;
+            var dc = 7 + (ship.TotalCrew / 10) - status.ManageModifier - ship.ShipsMorale.WellBeing;
             if (dc < 10)
                 dc = 10;
             var assistBonus = PerformAssists(ship.GetAssistance(DutyType.Cook));
@@ -24,7 +24,7 @@ namespace pfsim.Officer
             if(result < 0)
             {
                 var wm = Math.Abs(result) / 5 + 1;
-                wm = wm > input.Wellbeing ? input.Wellbeing : wm;
+                wm = wm > ship.ShipsMorale.WellBeing ? ship.ShipsMorale.WellBeing : wm;
                 status.DutyEvents.Add(new EpicCookingFailureEvent
                 {
                     WellbeingPenalty = wm * -1,

@@ -13,13 +13,14 @@ namespace pfsim.Officer
     /// check.  You may have 1 assistant.
     public class Navigate : IDuty
     {
-        public void PerformDuty(IShip ship, DailyInput input, ref MiniGameStatus status)
+        public void PerformDuty(Ship ship, ref MiniGameStatus status)
         {
-            var dc = input.NavigateDc - status.CommandModifier - input.WeatherModifier;
+            
+            var dc = ship.CurrentVoyage.NavigationDC - status.CommandModifier - ship.CurrentVoyage.GetWeatherModifier(DutyType.Navigate);
             var assistBonus = PerformAssists(ship.GetAssistance(DutyType.Navigate));
             status.NavigationResult = (DiceRoller.D20(1) + ship.NavigatorSkillBonus + assistBonus) - dc;
 
-            if (status.NavigationResult >= 0)
+            if (status.NavigationResult < 0)
             {
                 status.DutyEvents.Add(new OffCourseEvent());
             }

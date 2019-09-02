@@ -38,6 +38,8 @@ namespace pfsim.Officer
         Warship,
         WarGalley,
         WarGalleon,
-        Yawl
+        Yawl,
+        Carrack,
+        Caravel
     }
 }

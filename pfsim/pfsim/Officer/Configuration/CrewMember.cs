@@ -158,10 +158,37 @@ namespace pfsim.Officer
 
         public CrewSkills ExternalModifiers { get; set; } = new CrewSkills();
 
+
+        public void AddJob(DutyType duty, bool isAssistant)
+        {
+            Job job = new Job
+            {
+                CrewName = Name,
+                DutyType = duty,
+                IsAssistant = isAssistant
+            };
+
+            Jobs.Add(job);
+        }
+
         public void AddJob(Job job)
         {
             job.CrewName = Name;
             Jobs.Add(job);
+        }
+
+        public bool RemoveJob(DutyType duty, bool isAssistant)
+        {
+            var job = Jobs.FirstOrDefault(a => a.DutyType == duty && a.IsAssistant == isAssistant);
+
+            if (job != null)
+            {
+                return Jobs.Remove(job);
+            }
+            else
+            {
+                return false;
+            }
         }
 
         internal IEnumerable<string> ValidateJobs()
