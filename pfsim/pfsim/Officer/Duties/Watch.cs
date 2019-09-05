@@ -26,6 +26,7 @@ namespace pfsim.Officer
             status.WatchResults.Add(result);
             status.DutyEvents.Add(new WatchResultEvent
             {
+                Watch = watch + 1,
                 Success = result >= 0
             });
         }

@@ -14,11 +14,12 @@ namespace pfsim.Officer
     public class Navigate : IDuty
     {
         public void PerformDuty(Ship ship, ref MiniGameStatus status)
-        {
-            
+        {        
             var dc = ship.CurrentVoyage.NavigationDC - status.CommandModifier - ship.CurrentVoyage.GetWeatherModifier(DutyType.Navigate);
             var assistBonus = PerformAssists(ship.GetAssistance(DutyType.Navigate));
-            status.NavigationResult = (DiceRoller.D20(1) + ship.NavigatorSkillBonus + assistBonus) - dc;
+            var job = ship.NavigatorSkillJob;
+            status.NavigationResult = (DiceRoller.D20(1) + job.SkillBonus + assistBonus) - dc;
+            status.DutyEvents.Add(new PerformedDutyEvent(DutyType.Navigate, job.CrewName, dc, assistBonus, job.SkillBonus, status.NavigationResult));
 
             if (status.NavigationResult <= -5)
             {

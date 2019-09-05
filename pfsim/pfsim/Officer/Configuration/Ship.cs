@@ -604,11 +604,11 @@ namespace pfsim.Officer
         }
 
         [JsonIgnore]
-        public int NavigatorSkillBonus
+        public JobMessage NavigatorSkillJob
         {
             get
             {
-                int retval = -5;
+                JobMessage retval = new JobMessage() { DutyType = DutyType.Navigate, SkillBonus = -5, IsAssistant = false, CrewName = "No one" };
 
                 if (AssignedJobs.Exists(a => a.DutyType == DutyType.Navigate))
                 {
@@ -617,7 +617,10 @@ namespace pfsim.Officer
                     var navigator = ShipsCrew.FirstOrDefault(a => a.Name == navigatorName);
 
                     if (navigator != null)
-                        retval = navigator.NavigatorSkillBonus;
+                    {
+                        retval.CrewName = string.Format("{0} {1}", navigator.Title, navigator.Name).Trim();
+                        retval.SkillBonus = navigator.NavigatorSkillBonus;
+                    }
                 }
 
                 return retval;
