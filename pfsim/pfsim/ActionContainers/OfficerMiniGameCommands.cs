@@ -15,46 +15,15 @@ namespace pfsim.ActionContainers
         {
         }
 
-        [TypedCommand("omg", "Rolls one day of the officer mini game.")]
-        public string omg(string crew) // Message passing system can't seem to handle array of strings. 
+        [TypedCommand("Sail", "Rolls one day of the officer mini game.")]
+        public string Sail(string crew)
         {
-            return Sail(crew, string.Empty);
-        }
-
-        [TypedCommand("omg", "Rolls one day of the officer mini game.")]
-        public string omg(string crew, string term) // Message passing system can't seem to handle array of strings. 
-        {
-            return Sail(crew, term);
+            return Sail(crew, new List<string>());
         }
 
         [TypedCommand("Sail", "Rolls one day of the officer mini game.")]
-        public string Sail(string crew) // Message passing system can't seem to handle array of strings. 
+        public string Sail(string crew, List<string> args) // usage> Sail Dogfish [put, your, args, in, "like this"]
         {
-            return Sail(crew, string.Empty);
-        }
-
-        [TypedCommand("Sail", "Rolls one day of the officer mini game.")]
-        public string Sail(string crew, string term1, string term2) // Message passing system can't seem to handle array of strings. 
-        {
-            return Sail(crew, term1 + term2);
-        }
-
-        [TypedCommand("Sail", "Rolls one day of the officer mini game.")]
-        public string Sail(string crew, string term1, string term2, string term3) // Message passing system can't seem to handle array of strings. 
-        {
-            return Sail(crew, term1 + term2 + term3);
-        }
-
-        [TypedCommand("Sail", "Rolls one day of the officer mini game.")]
-        public string Sail(string crew, string term1, string term2, string term3, string term4) // Message passing system can't seem to handle array of strings. 
-        {
-            return Sail(crew, term1 + term2 + term3 + term4);
-        }
-
-        [TypedCommand("Sail", "Rolls one day of the officer mini game.")]
-        public string Sail(string crew, string term) // Message passing system can't seem to handle array of strings. 
-        {
-            var args = term.Split(','); // TODO: Until we can handle this better.
             var result = new List<string>();
             var ship = LoadShip(crew);
 
@@ -65,7 +34,7 @@ namespace pfsim.ActionContainers
             WriteAsset(ship, string.Format("{0}.old", ship.CrewName)); // Store the current ship in case need to recover from bad command.
 
             // Voyage modifiers from args (all args optional, ei state is unchanged).
-            var pResponse = ProcessOMGArguments(args, ref ship, ref result);
+            var pResponse = ProcessOMGArguments(args.ToArray(), ref ship, ref result);
 
             if (pResponse.Success)
             {
@@ -94,27 +63,8 @@ namespace pfsim.ActionContainers
         }
 
         [TypedCommand("AdjustShip", "Sets new parameters on the named ship, but does not advance the officer minigame.")]
-        public string AdjustShip(string crew, string term1, string term2)
+        public string AdjustShip(string crew, List<string> args) // Ueses a list formatted like> AdjustShip Dogfish [comma, seprated, "list"]
         {
-            return AdjustShip(crew, term1 + term2);
-        }
-
-        [TypedCommand("AdjustShip", "Sets new parameters on the named ship, but does not advance the officer minigame.")]
-        public string AdjustShip(string crew, string term1, string term2, string term3)
-        {
-            return AdjustShip(crew, term1 + term2 + term3);
-        }
-
-        [TypedCommand("AdjustShip", "Sets new parameters on the named ship, but does not advance the officer minigame.")]
-        public string AdjustShip(string crew, string term1, string term2, string term3, string term4)
-        {
-            return AdjustShip(crew, term1 + term2 + term3 + term4);
-        }
-
-        [TypedCommand("AdjustShip", "Sets new parameters on the named ship, but does not advance the officer minigame.")]
-        public string AdjustShip(string crew, string term) // Message passing system can't seem to handle array of strings. 
-        {
-            var args = term.Split(','); // TODO: Until we can handle this better.
             var result = new List<string>();
 
             var ship = LoadShip(crew);
@@ -126,7 +76,7 @@ namespace pfsim.ActionContainers
             WriteAsset(ship, string.Format("{0}.old", ship.CrewName)); // Store the current ship in case need to recover.
 
             // Voyage modifiers from args (all args optional, ei state is unchanged).
-            var pResponse = ProcessOMGArguments(args, ref ship, ref result);
+            var pResponse = ProcessOMGArguments(args.ToArray(), ref ship, ref result);
 
             if (pResponse.Success)
             {
@@ -142,13 +92,12 @@ namespace pfsim.ActionContainers
         [TypedCommand("Rest", "Rolls one day of the officer mini game, but doesn't sail the boat anywhere.")]
         public string Anchor(string crew)
         {
-            return Anchor(crew, string.Empty);
+            return Anchor(crew, new List<string>());
         }
 
         [TypedCommand("Rest", "Rolls one day of the officer mini game, but doesn't sail the boat anywhere.")]
-        public string Anchor(string crew, string term)
+        public string Anchor(string crew, List<string> args)
         {
-            var args = term.Split(','); // TODO: Until we can handle this better.
             var result = new List<string>();
             var ship = LoadShip(crew);
 
@@ -159,7 +108,7 @@ namespace pfsim.ActionContainers
             WriteAsset(ship, string.Format("{0}.old", ship.CrewName)); // Store the current ship in case need to recover from bad command.
 
             // Voyage modifiers from args (all args optional, ei state is unchanged).
-            var pResponse = ProcessOMGArguments(args, ref ship, ref result);
+            var pResponse = ProcessOMGArguments(args.ToArray(), ref ship, ref result);
 
             if (pResponse.Success)
             {
