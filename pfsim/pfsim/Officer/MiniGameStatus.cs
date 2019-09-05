@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace pfsim.Officer
 {
-    public class MiniGameStatus : IVoyage
+    public class MiniGameStatus 
     {
         public int CommandResult { get; set; }
 

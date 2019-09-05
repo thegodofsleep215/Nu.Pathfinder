@@ -374,16 +374,16 @@ namespace pfsim.Officer
             return retval;
         }
 
-        public List<Assists> GetAssistance(DutyType duty)
+        public List<JobMessage> GetAssistance(DutyType duty)
         {
-            List<Assists> assists = new List<Assists>();
+            List<JobMessage> assists = new List<JobMessage>();
             var jobs = AssignedJobs.Where(a => a.DutyType == duty && a.IsAssistant);
 
             foreach (var job in jobs)
             {
-                Assists assistance = new Assists();
+                JobMessage assistance = new JobMessage();
 
-                assistance.Duty = duty;
+                assistance.DutyType = duty;
 
                 var mate = ShipsCrew.FirstOrDefault(a => a.Name == job.CrewName);
 
@@ -447,11 +447,11 @@ namespace pfsim.Officer
         }
 
         [JsonIgnore]
-        public int CommanderSkillBonus
+        public JobMessage CommanderJob
         {
             get
             {
-                int retval = -5;
+                JobMessage retval = new JobMessage() { DutyType = DutyType.Command, SkillBonus = -5, IsAssistant = false, CrewName = "No one" };
 
                 if (AssignedJobs.Exists(a => a.DutyType == DutyType.Command))
                 {
@@ -460,7 +460,10 @@ namespace pfsim.Officer
                     var commander = ShipsCrew.FirstOrDefault(a => a.Name == commanderName);
 
                     if (commander != null)
-                        retval = commander.CommanderSkillBonus;
+                    {
+                        retval.CrewName = string.Format("{0} {1}", commander.Title, commander.Name).Trim();
+                        retval.SkillBonus = commander.CommanderSkillBonus;
+                    }
                 }
 
                 return retval;
@@ -480,11 +483,11 @@ namespace pfsim.Officer
         }
 
         [JsonIgnore]
-        public int PilotSkillBonus
+        public JobMessage PilotJob
         {
             get
             {
-                int retval = -5;
+                JobMessage retval = new JobMessage() { DutyType = DutyType.Pilot, SkillBonus = -5, IsAssistant = false, CrewName = "No one" };
 
                 if (AssignedJobs.Exists(a => a.DutyType == DutyType.Pilot))
                 {
@@ -493,7 +496,10 @@ namespace pfsim.Officer
                     var pilot = ShipsCrew.FirstOrDefault(a => a.Name == pilotName);
 
                     if (pilot != null)
-                        retval = pilot.PilotSkillBonus;
+                    {
+                        retval.CrewName = string.Format("{0} {1}", pilot.Title, pilot.Name).Trim();
+                        retval.SkillBonus = pilot.PilotSkillBonus;
+                    }
                 }
 
                 return retval;
@@ -518,15 +524,6 @@ namespace pfsim.Officer
                 }
 
                 return retval;
-            }
-        }
-
-        [JsonIgnore]
-        public int FirstWatchBonus
-        {
-            get
-            {
-                return WatchBonuses[0];
             }
         }
 
@@ -559,11 +556,11 @@ namespace pfsim.Officer
         }
 
         [JsonIgnore]
-        public int MaintainSkillBonus
+        public JobMessage MaintainSkillJob
         {
             get
             {
-                int retval = -5;
+                JobMessage retval = new JobMessage() { DutyType = DutyType.Maintain, SkillBonus = -5, IsAssistant = false, CrewName = "No one" };
 
                 if (AssignedJobs.Exists(a => a.DutyType == DutyType.Maintain))
                 {
@@ -572,7 +569,10 @@ namespace pfsim.Officer
                     var fixitFelix = ShipsCrew.FirstOrDefault(a => a.Name == fixitFelixName);
 
                     if (fixitFelix != null)
-                        retval = fixitFelix.MaintainSkillBonus;
+                    {
+                        retval.CrewName = string.Format("{0} {1}", fixitFelix.Title, fixitFelix.Name).Trim();
+                        retval.SkillBonus = fixitFelix.MaintainSkillBonus;
+                    }
                 }
 
                 return retval;
@@ -580,11 +580,11 @@ namespace pfsim.Officer
         }
 
         [JsonIgnore]
-        public int ManagerSkillBonus
+        public JobMessage ManagerSkillJob
         {
             get
             {
-                int retval = -5;
+                JobMessage retval = new JobMessage() { DutyType = DutyType.Manage, SkillBonus = -5, IsAssistant = false, CrewName = "No one" };
 
                 if (AssignedJobs.Exists(a => a.DutyType == DutyType.Manage))
                 {
@@ -593,7 +593,10 @@ namespace pfsim.Officer
                     var pointyHairedOne = ShipsCrew.FirstOrDefault(a => a.Name == pointyHairedOneName);
 
                     if (pointyHairedOne != null)
-                        retval = pointyHairedOne.ManagerSkillBonus;
+                    {
+                        retval.CrewName = string.Format("{0} {1}", pointyHairedOne.Title, pointyHairedOne.Name).Trim();
+                        retval.SkillBonus = pointyHairedOne.ManagerSkillBonus;
+                    }
                 }
 
                 return retval;
@@ -638,7 +641,6 @@ namespace pfsim.Officer
                 }
 
                 return retval;
-
             }
         }
 
@@ -695,6 +697,31 @@ namespace pfsim.Officer
 
         public CargoHold ShipsCargo { get; private set; } = new CargoHold();
         
+        [JsonIgnore]
+        public bool IsShipOverburdened
+        {
+            get
+            {
+                return CargoPoints < ShipsCargo.TotalCargoPointsUsed;
+            }
+        }
+
+        [JsonIgnore]
+        public decimal OverburdenedFactor
+        {
+            get
+            {
+                if (CargoPoints > ShipsCargo.TotalCargoPointsUsed)
+                    return 1;
+                else if (CargoPoints == 0 && ShipsCargo.TotalCargoPointsUsed == 0)
+                    return 1;
+                else if (CargoPoints == 0)
+                    return 1 + (((ShipsCargo.TotalCargoPointsUsed * 2) - CargoPoints + 1) / (decimal)CargoPoints + 1);
+                else
+                    return 1 + ((ShipsCargo.TotalCargoPointsUsed - CargoPoints) / (decimal)CargoPoints);
+            }
+        }
+
         public Ship()
         {
 

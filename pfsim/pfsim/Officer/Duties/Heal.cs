@@ -55,13 +55,13 @@ namespace pfsim.Officer
 
             if (result < 0 || !ship.HasHealer)
             {
-
+                // TODO: The number of sick should scale better with the size of the crew.
                 var sickCount = santitation >= 20 ? DiceRoller.D3(1) : 1;
                 status.DutyEvents.Add(new SicknessEvent { NumberAffected = sickCount });
             }
         }
 
-        private int PerformAssists(List<Assists> list)
+        private int PerformAssists(List<JobMessage> list)
         {
             int retval = 0;
 

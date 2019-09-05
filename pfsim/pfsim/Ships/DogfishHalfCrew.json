@@ -52,11 +52,6 @@
           "CrewName": "Gideon Sully",
           "DutyType": "Watch",
           "IsAssistant": 0
-        },
-        {
-          "CrewName": "Gideon Sully",
-          "DutyType": "Manage",
-          "IsAssistant": 0
         }
       ],
       "ExternalModifiers": {
@@ -143,6 +138,11 @@
         {
           "CrewName": "Audrin",
           "DutyType": "Watch",
+          "IsAssistant": 0
+        },
+        {
+          "CrewName": "Audrin",
+          "DutyType": "Manage",
           "IsAssistant": 0
         }
       ],
@@ -278,5 +278,6 @@
     "DisciplineModifier": 0,
     "NumberOfCrewPlottingMutiny": 0,
     "WeatherConditions": "Clear"
-  }
+  },
+  "CargoPoints": 129
 }

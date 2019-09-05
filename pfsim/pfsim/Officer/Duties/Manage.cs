@@ -19,7 +19,9 @@ namespace pfsim.Officer
         {
             var dc = 5 + ship.ShipDc + (ship.TotalCrew / 10) - status.CommandModifier;
             var assistBonus = PerformAssists(ship.GetAssistance(DutyType.Manage));
-            status.ManageResult = (DiceRoller.D20(1) + ship.ManagerSkillBonus + assistBonus) - dc;
+            var job = ship.ManagerSkillJob;
+            status.ManageResult = (DiceRoller.D20(1) + job.SkillBonus + assistBonus) - dc;
+            status.DutyEvents.Add(new PerformedDutyEvent(DutyType.Manage, job.CrewName, dc, assistBonus, job.SkillBonus, status.ManageResult));
 
             if (status.ManageResult < 0)
             {
@@ -39,7 +41,7 @@ namespace pfsim.Officer
             }
         }
 
-        private int PerformAssists(List<Assists> list)
+        private int PerformAssists(List<JobMessage> list)
         {
             int retval = 0;
 

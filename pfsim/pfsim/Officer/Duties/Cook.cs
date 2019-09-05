@@ -33,7 +33,7 @@ namespace pfsim.Officer
             }
         }
 
-        private int PerformAssists(List<Assists> list)
+        private int PerformAssists(List<JobMessage> list)
         {
             int retval = 0;
 

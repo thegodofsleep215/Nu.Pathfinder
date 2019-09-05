@@ -58,7 +58,7 @@ namespace pfsim.ActionContainers
             var result = new List<string>();
             var ship = LoadShip(crew);
 
-            if (ship.CrewName != crew)
+            if (string.IsNullOrEmpty(ship.CrewName))
             {
                 return "Crew not found.";
             }
@@ -119,7 +119,7 @@ namespace pfsim.ActionContainers
 
             var ship = LoadShip(crew);
 
-            if (ship.CrewName != crew)
+            if (string.IsNullOrEmpty(ship.CrewName))
             {
                 return "Crew not found.";
             }
@@ -152,7 +152,7 @@ namespace pfsim.ActionContainers
             var result = new List<string>();
             var ship = LoadShip(crew);
 
-            if (ship.CrewName != crew)
+            if (string.IsNullOrEmpty(ship.CrewName))
             {
                 return "Crew not found.";
             }
@@ -196,14 +196,49 @@ namespace pfsim.ActionContainers
         [TypedCommand("Plunder", "Testing: Makes some example plunder.")]
         public string Plunder(int amount)
         {
-            List<string> plunder = new List<string>();
+            List<Plunder> plunder = new List<Plunder>();
 
             for(int i = 0; i < amount; i++)
             {
-                plunder.Add(CargoFactory.Instance.ProduceCargo(CargoType.Plunder).ToString());
+                plunder.Add((Plunder)CargoFactory.Instance.ProduceCargo(CargoType.Plunder));
             }
 
-            return string.Join(Environment.NewLine, plunder);
+            var response = WriteAsset(plunder.ToArray());
+
+            List<string> retval = new List<string>();
+            retval.AddRange(response.Messages);
+            retval.AddRange(plunder.Select(a => a.ToString()).ToList());
+            retval.Add(string.Format("Total: {0} Plunder Points occupying {1} Cargo Points.", plunder.Count, plunder.Sum(a => a.CargoPoints)));
+
+            return string.Join(Environment.NewLine, retval);
+        }
+
+        [TypedCommand("LoadCargo", "Puts some plunder on a ship.")]
+        public string LoadCargo(string shipName, string cargoName)
+        {
+            var ship = LoadShip(shipName);
+            var cargo = LoadCargo(cargoName);
+
+            if (ship != null && !string.IsNullOrEmpty(ship.CrewName)
+                && cargo != null && cargo.Length > 0)
+            {
+                ship.ShipsCargo.AddRange(cargo);
+
+                var response = WriteAsset(ship);
+
+                if (response.Success)
+                    return "Added cargo to ship.";
+                else
+                    return string.Join(Environment.NewLine, response.Messages);
+            }
+            else if (ship != null && !string.IsNullOrEmpty(ship.CrewName))
+            {
+                return "Can't find ship.";
+            }
+            else
+            {
+                return "Can't find cargo.";
+            }
         }
 
         private BaseResponse ProcessOMGArguments(string[] args, ref Ship ship, ref List<string> messages)
@@ -1250,6 +1285,26 @@ namespace pfsim.ActionContainers
             return JsonConvert.DeserializeObject<Ship>(File.ReadAllText(file), settings);
         }
 
+        private Cargo[] LoadCargo(string fileName)
+        {
+            var folder = ".\\Cargo";
+            if (!Directory.Exists(folder))
+            {
+                return new List<Cargo>().ToArray();
+            }
+            string file = Directory.GetFiles(folder, string.Format("{0}.json", fileName)).First();
+            if(file != null)
+            {
+                JsonSerializerSettings settings = new JsonSerializerSettings();
+                settings.TypeNameHandling = TypeNameHandling.Auto;
+                return JsonConvert.DeserializeObject<Cargo[]>(File.ReadAllText(file), settings);
+            }
+            else
+            {
+                return new List<Cargo>().ToArray();
+            }
+        }
+
         private BaseResponse WriteAsset(Ship ship, string filename = null)
         {
             BaseResponse retval = new BaseResponse();
@@ -1276,5 +1331,61 @@ namespace pfsim.ActionContainers
 
             return retval;
         }
+
+        private BaseResponse WriteAsset(Cargo cargo, string filename = null)
+        {
+            return WriteAsset(new Cargo[1] { cargo }, filename);
+        }
+
+        private BaseResponse WriteAsset(Cargo[] cargo, string filename = null)
+        {
+            BaseResponse retval = new BaseResponse();
+
+            int filenumber = 1;
+
+            if (filename == null)
+                filename = string.Format("Cargo{0}.json", filenumber); 
+
+            try
+            {
+                var folder = ".\\Cargo";
+                DirectoryInfo dir = null;
+                if (!Directory.Exists(folder))
+                {
+                    dir = Directory.CreateDirectory(folder);
+                }
+                else
+                {
+                    dir = new DirectoryInfo(folder);
+                }
+
+                FileInfo[] file;
+
+                filename = string.Format("Cargo{0}.json", filenumber);
+
+                file = dir.GetFiles(filename);
+                while (file != null && file.Length > 0)
+                {
+                    filenumber++;
+                    filename = string.Format("Cargo{0}.json", filenumber);
+                    file = dir.GetFiles(filename);
+                }
+
+                JsonSerializerSettings settings = new JsonSerializerSettings();
+                settings.TypeNameHandling = TypeNameHandling.All;
+                string contents = JsonConvert.SerializeObject(cargo, Formatting.Indented, settings);
+
+                File.WriteAllText(string.Format("{0}\\{1}", folder, filename), contents);
+                retval.Messages.Add(string.Format("Stored plunder as file '{0}'.", filename));
+                retval.Success = true;
+            }
+            catch(Exception ex)
+            {
+                retval.Messages.Add(string.Format("ERROR: {0}", ex.Message));
+            }
+
+            return retval;
+        }
+        
     }
 }

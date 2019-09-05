@@ -8,7 +8,7 @@
       "PropulsionHitPoints": 360
     }
   ],
-  "HullHitPoints": 1620,
+  "HullHitPoints": 1090,
   "CrewSize": 16,
   "ShipDc": 10,
   "ShipPilotingBonus": 0,
@@ -323,13 +323,28 @@
     }
   ],
   "ShipsMorale": {
-    "ShipShape": 5,
-    "Wealth": 1,
-    "WellBeing": 3,
-    "Infamy": 0,
-    "Piracy": 4,
-    "TemporaryMoralePenalty": 0,
-    "TemporaryWellbeingPenalty": 0
+    "MoralStats": {
+      "Shipshape": {
+        "Value": 5,
+        "TemporaryModifiers": []
+      },
+      "Wellbeing": {
+        "Value": 3,
+        "TemporaryModifiers": []
+      },
+      "Wealth": {
+        "Value": 1,
+        "TemporaryModifiers": []
+      },
+      "Infamy": {
+        "Value": 0,
+        "TemporaryModifiers": []
+      },
+      "Piracy": {
+        "Value": 4,
+        "TemporaryModifiers": []
+      }
+    }
   },
   "DisciplineStandards": "Normal",
   "Alignment": "Chaotic",
@@ -355,5 +370,6 @@
     "DisciplineModifier": 0,
     "NumberOfCrewPlottingMutiny": 0,
     "WeatherConditions": "Clear"
-  }
+  },
+  "CargoPoints": 129
 }

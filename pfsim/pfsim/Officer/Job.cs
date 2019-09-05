@@ -11,6 +11,6 @@ namespace pfsim.Officer
     {
         public string CrewName { get; set; }
         public DutyType DutyType { get; set; }
-        public bool IsAssistant { get; set; }
+        public virtual bool IsAssistant { get; set; }
     }
 }

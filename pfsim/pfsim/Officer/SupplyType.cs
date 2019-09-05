@@ -7,6 +7,7 @@
         Water = 3,
         ShipSupplies = 4,
         Medicine = 5,
-        Ammunition = 6
+        Ammunition = 6,
+        Fodder = 7
     }
 }

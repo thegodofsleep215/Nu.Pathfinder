@@ -94,6 +94,7 @@
     <Compile Include="Officer\Events\EventProcessor.cs" />
     <Compile Include="Officer\Events\MismanagedSuppliesEvent.cs" />
     <Compile Include="Officer\Events\OffCourseEvent.cs" />
+    <Compile Include="Officer\Events\PerformedDutyEvent.cs" />
     <Compile Include="Officer\Events\PilotFailedEvent.cs" />
     <Compile Include="Officer\Events\PilotSuccessEvent.cs" />
     <Compile Include="Officer\Events\PoorMaintenanceEvent.cs" />
@@ -104,8 +105,6 @@
     <Compile Include="Officer\Events\UnrulyCrewEvent.cs" />
     <Compile Include="Officer\Events\WatchResultEvent.cs" />
     <Compile Include="Officer\GameEngine.cs" />
-    <Compile Include="Officer\IMorale.cs" />
-    <Compile Include="Officer\IVoyage.cs" />
     <Compile Include="Officer\Job.cs" />
     <Compile Include="Officer\MiniGameStatus.cs" />
     <Compile Include="Commands\AddCombatants.cs" />
@@ -159,6 +158,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assets\" />
+    <Folder Include="Cargo\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

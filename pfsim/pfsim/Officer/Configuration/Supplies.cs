@@ -69,8 +69,10 @@ namespace pfsim.Officer
             }
         }
 
-        public void AdjustSupplies(int amount)
+        public int AdjustSupplies(int amount)
         {
+            int missing = 0;  // TODO: Calculate how much we are short.
+
             bool subtraction = amount < 0;
             int units = Math.Abs(amount) % UnitsSupplyPerPoint;
             int cargo = Math.Abs(amount) % UnitsSupplyPerPoint;
@@ -101,10 +103,17 @@ namespace pfsim.Officer
                 }
             }
 
-            if (CargoPoints < 1 || cargo > 1)
+            if (IsExausted)
             {
-                OnExhuastion();
+                missing = _unitSuppliesRemaining * -1;
             }
+
+            if (IsExausted || cargo > 1)
+            {
+                OnExhuastion();   
+            }
+
+            return missing;
         }
    
         public void OnExhuastion()

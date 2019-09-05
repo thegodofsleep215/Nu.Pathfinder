@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace pfsim.Officer
 {
-    public class Voyage : IVoyage
+    public class Voyage
     {
         public NightStatus NightStatus { get; set; }
         public bool OpenOcean { get; set; }  

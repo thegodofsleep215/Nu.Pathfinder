@@ -30,7 +30,7 @@ namespace pfsim.Officer
             });
         }
 
-        private int PerformAssists(List<Assists> list, int weatherModifier, MiniGameStatus status)
+        private int PerformAssists(List<JobMessage> list, int weatherModifier, MiniGameStatus status)
         {
             int retval = 0;
             int watch = status.WatchResults.Count;

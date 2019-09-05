@@ -20,13 +20,17 @@ namespace pfsim.Officer
             var assistBonus = PerformAssists(ship.GetAssistance(DutyType.Navigate));
             status.NavigationResult = (DiceRoller.D20(1) + ship.NavigatorSkillBonus + assistBonus) - dc;
 
-            if (status.NavigationResult < 0)
+            if (status.NavigationResult <= -5)
             {
-                status.DutyEvents.Add(new OffCourseEvent());
+                status.DutyEvents.Add(new OffCourseEvent(true));
+            }
+            else if (status.NavigationResult < 0)
+            {
+                status.DutyEvents.Add(new OffCourseEvent(false));
             }
         }
 
-        private int PerformAssists(List<Assists> list)
+        private int PerformAssists(List<JobMessage> list)
         {
             int retval = 0;
 

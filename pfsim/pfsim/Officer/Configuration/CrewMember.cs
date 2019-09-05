@@ -44,17 +44,17 @@ namespace pfsim.Officer
         [JsonIgnore]
         public int HealSkill => Skills.Heal + WorkModifier + ExternalModifiers.Heal;
 
-        public int SurvivalSkill { get; set; }
+        [JsonIgnore]
+        public int SurvivalSkill => Skills.Survival + WorkModifier + ExternalModifiers.Survival;
 
-        public int ProfessionMerchantSkill { get; set; }
+        [JsonIgnore]
+        public int ProfessionMerchantSkill => Skills.ProfessionMerchant + WorkModifier + ExternalModifiers.ProfessionMerchant;
 
         [JsonIgnore]
         public int CommanderSkillBonus => ProfessionSailorSkill > DiplomacySkill ? ProfessionSailorSkill : DiplomacySkill;
 
         [JsonIgnore]
         public int CrewPilotModifier => ProfessionSailorSkill;
-
-        public int CrewSize { get; set; }
 
         [JsonIgnore]
         public int DisciplineSkillBonus => IntimidateSkill;
@@ -158,7 +158,6 @@ namespace pfsim.Officer
 
         public CrewSkills ExternalModifiers { get; set; } = new CrewSkills();
 
-
         public void AddJob(DutyType duty, bool isAssistant)
         {
             Job job = new Job
@@ -206,6 +205,10 @@ namespace pfsim.Officer
             if (Jobs.Count(a => a.DutyType == DutyType.Heal) > 2)
             {
                 messages.Add(string.Format("Not enough time in the day for {0} {1} to heal everyone!", Title, Name));
+            }
+            if (Jobs.Count(a => a.DutyType == DutyType.Cook) > 1)
+            {
+                messages.Add(string.Format("{0} {1} forgot that cooking twice is just cooking once, in smaller batches!", Title, Name));
             }
             if (Jobs.Count(a => a.DutyType == DutyType.Ministrel) > 2)
             {
