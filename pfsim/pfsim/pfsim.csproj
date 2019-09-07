@@ -40,6 +40,7 @@
       <HintPath>..\packages\Nu.CommandLine.1.7.0\lib\Nu.CommandLine.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
     <Reference Include="System.ServiceProcess" />
@@ -55,8 +56,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActionContainers\OfficerMiniGameCommands.cs" />
+    <Compile Include="CommandLineArgsReader.cs" />
     <Compile Include="Officer\Alignment.cs" />
-    <Compile Include="Officer\Assists.cs" />
+    <Compile Include="Officer\Events\SeaShantyEvent.cs" />
+    <Compile Include="Officer\JobMessage.cs" />
     <Compile Include="Officer\BaseResponse.cs" />
     <Compile Include="Officer\CargoFactory.cs" />
     <Compile Include="Officer\Configuration\Ammunition.cs" />
@@ -136,6 +139,7 @@
     <Compile Include="Officer\WeatherConditions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SettingsManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

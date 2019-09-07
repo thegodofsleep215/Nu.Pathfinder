@@ -19,16 +19,35 @@ namespace pfsim.Officer
         {
             var dc = 5 + ship.ShipDc + (ship.TotalCrew / 10) - status.CommandModifier;
             var assistBonus = PerformAssists(ship.GetAssistance(DutyType.Manage));
-            var job = ship.ManagerSkillJob;
+            var job = ship.ManagerJob;
             status.ManageResult = (DiceRoller.D20(1) + job.SkillBonus + assistBonus) - dc;
-            status.DutyEvents.Add(new PerformedDutyEvent(DutyType.Manage, job.CrewName, dc, assistBonus, job.SkillBonus, status.ManageResult));
+            if ((status.ManageResult < 0 && status.ManageResult >= -2) || (status.ManageResult <= -10 && status.ManageResult > -12))
+            {
+                // Use a ministrel.
+                int ministrel = status.MinistrelResults.Count;
+
+                if (ship.MinistrelBonuses.Count > ministrel)
+                {
+                    dc = 10 + (ship.TotalCrew / 10) > 15 ? 10 + (ship.TotalCrew / 10) : 15;
+                    var shanty = DiceRoller.D20(1) + ship.MinistrelBonuses[ministrel] - dc;
+                    status.MinistrelResults.Add(shanty);
+                    if (shanty >= 0)
+                    { 
+                        status.MaintainResult += 2;
+                        status.DutyEvents.Add(new SeaShantyEvent(DutyType.Manage));
+                    }
+                }
+            }
+            if(SettingsManager.Verbose)
+                status.DutyEvents.Add(new PerformedDutyEvent(DutyType.Manage, job.CrewName, dc, assistBonus, job.SkillBonus, status.ManageResult));
 
             if (status.ManageResult < 0)
-            {
+            { 
                 var e = new MismanagedSuppliesEvent();
                 if (DiceRoller.D20(1) <= (ship.TotalCrew / 10 + 1))  // Possibly replace this random balancer with finer granularity in the future.
                 {
                     e.SupplyType = (SupplyType)DiceRoller.D4(1);
+                    e.QuantityLost = 900; // Full cargo point.
                 }
 
                 if(status.ManageResult <= -10)

@@ -18,6 +18,8 @@ namespace pfsim.Officer
             {
                 switch (ShipSize)
                 {
+                    case ShipSize.Medium:
+                        return 1;
                     case ShipSize.Large:
                     case ShipSize.Huge:
                         return 3;
@@ -46,29 +48,26 @@ namespace pfsim.Officer
 
         public string CrewName { get; set; }
         public ShipType ShipType { get; set; }
-
         public ShipSize ShipSize { get; set; }
-
-        public Morale CrewMorale { get; set; } = new Morale();
-
         public List<Propulsion> PropulsionTypes { get; set; } = new List<Propulsion>();
-
         public int HullHitPoints { get; set; }
-
         public int CrewSize { get; set; }
 
+        // Below this number, the ship cannot be piloted successfully.
         public int MinimumCrewSize
         {
             get
             {
-                return CrewSize / 2;
+                if (CrewSize >= 6)
+                    return CrewSize / 2;
+                else
+                    return 1; // Allow boats to be controlled 
             }
         }
 
-        public int ShipDc { get; set; }
-
-        public int ShipPilotingBonus { get; set; }
-        public int ShipQuality { get; set; } // TODO: Place holder.
+        public int ShipDc { get; set; } // General modifier to the difficulty to sail that increases with the size of the ship.
+        public int ShipPilotingBonus { get; set; } // Bonus or penalty that the ship recieves for being especially easy to sail.
+        public int ShipQuality { get; set; } // Place holder for generic bonus.
 
         public List<CrewMember> ShipsCrew
         {
@@ -85,27 +84,27 @@ namespace pfsim.Officer
             }
         }
 
-        public Morale ShipsMorale
-        {
-            get
-            {
-                if (_shipsMorale == null)
-                    _shipsMorale = new Morale();
-
-                return _shipsMorale;
-            }
-            set
-            {
-                _shipsMorale = value;
-            }
-        }  
+        public Morale CrewMorale { get; set; } = new Morale();
+        
         [JsonIgnore]
         public int CrewQuality
         {
             get
             {
                 double retval = 0;
-                var namedCrew = ShipsCrew.Where(a => a.CountsAsCrew).ToList();
+                List<CrewMember> namedCrew;
+                // TODO: For ships boats, everyone counts as crew?
+                switch(ShipSize)
+                {
+                    case ShipSize.Medium:
+                    case ShipSize.Large:
+                    case ShipSize.Huge:
+                        namedCrew = ShipsCrew.ToList();
+                        break;
+                    default:
+                        namedCrew = ShipsCrew.Where(a => a.CountsAsCrew).ToList();
+                        break;
+                }
 
                 if(namedCrew != null && namedCrew.Count > 0)
                     retval = namedCrew.Select(a => a.ProfessionSailorSkill).Sum();
@@ -169,11 +168,8 @@ namespace pfsim.Officer
         }
         public Alignment ShipsAlignment { get; set; }
         public int Marines { get; set; }
-
         public int Passengers { get; set; }
-
         public int Swabbies { get; set; }
-
         public decimal AverageSwabbieQuality { get; set; }
         [JsonIgnore]
         public int TotalCrew
@@ -188,7 +184,15 @@ namespace pfsim.Officer
         {
             get
             {
-                return ShipsCrew.Count(a => a.CountsAsCrew) + Swabbies - CurrentVoyage.DiseasedCrew - CurrentVoyage.CrewUnfitForDuty;
+                switch(this.ShipSize)
+                {
+                    case ShipSize.Medium:
+                    case ShipSize.Large:
+                    case ShipSize.Huge:
+                        return ShipsCrew.Count + Swabbies - CurrentVoyage.DiseasedCrew - CurrentVoyage.CrewUnfitForDuty;  // Allow officers to serve as crew on boats.
+                    default:
+                        return ShipsCrew.Count(a => a.CountsAsCrew) + Swabbies - CurrentVoyage.DiseasedCrew - CurrentVoyage.CrewUnfitForDuty;
+                }
             }
         }
         [JsonIgnore]
@@ -209,7 +213,7 @@ namespace pfsim.Officer
         {
             get
             {
-                return AvailableCrew - MinimumCrewSize > 0;
+                return AvailableCrew - MinimumCrewSize >= 0;
             }
         }
 
@@ -249,20 +253,6 @@ namespace pfsim.Officer
 
                 _assignedJobs = null;
                 retval.Success = true;
-
-                // TODO: Do we really want to do this now?
-                //    BaseResponse response = ValidateAssignedJobs();
-
-                //    if (response.Success)
-                //    {
-                //        retval.Success = true;
-                //    }
-                //    else
-                //    {
-                //        mate.RemoveJob(duty, isAssistant);
-                //        retval.Messages.AddRange(response.Messages);
-                //        _assignedJobs = null;
-                //    }
             }
             else
             {
@@ -507,11 +497,11 @@ namespace pfsim.Officer
         }
 
         [JsonIgnore]
-        public int DisciplineSkillBonus
+        public JobMessage DisciplineJob
         {
             get
             {
-                int retval = -5;
+                JobMessage retval = new JobMessage() { DutyType = DutyType.Pilot, SkillBonus = -5, IsAssistant = false, CrewName = "No one" };
 
                 if (AssignedJobs.Exists(a => a.DutyType == DutyType.Discipline))
                 {
@@ -520,7 +510,10 @@ namespace pfsim.Officer
                     var bosun = ShipsCrew.FirstOrDefault(a => a.Name == bosunName);
 
                     if (bosun != null)
-                        retval = bosun.DisciplineSkillBonus;
+                    {
+                        retval.CrewName = string.Format("{0} {1}", bosun.Title, bosun.Name).Trim();
+                        retval.SkillBonus = bosun.DisciplineSkillBonus;
+                    }
                 }
 
                 return retval;
@@ -556,7 +549,32 @@ namespace pfsim.Officer
         }
 
         [JsonIgnore]
-        public JobMessage MaintainSkillJob
+        public List<int> MinistrelBonuses
+        {
+            get
+            {
+                List<int> shantyBonuses = new List<int>();
+
+                var day = AssignedJobs.Where(a => a.DutyType == DutyType.Ministrel);
+                var i = 0;
+
+                foreach (var watch in day)
+                {
+                    var ministrel = ShipsCrew.FirstOrDefault(a => a.Name == watch.CrewName);
+
+                    if (ministrel != null)
+                    {
+                        shantyBonuses[i] = ministrel.MinistrelSkillBonus;
+                        i++;
+                    }
+                }
+
+                return shantyBonuses.ToList();
+            }
+        }
+
+        [JsonIgnore]
+        public JobMessage MaintainJob
         {
             get
             {
@@ -580,7 +598,7 @@ namespace pfsim.Officer
         }
 
         [JsonIgnore]
-        public JobMessage ManagerSkillJob
+        public JobMessage ManagerJob
         {
             get
             {
@@ -604,7 +622,7 @@ namespace pfsim.Officer
         }
 
         [JsonIgnore]
-        public JobMessage NavigatorSkillJob
+        public JobMessage NavigatorJob
         {
             get
             {
@@ -627,32 +645,12 @@ namespace pfsim.Officer
             }
         }
 
-        public int CookingSkillBonus
-        {
-            get
-            {
-                int retval = -5;
-
-                if (AssignedJobs.Exists(a => a.DutyType == DutyType.Cook))
-                {
-                    string name = AssignedJobs.First(a => a.DutyType == DutyType.Cook).CrewName;
-
-                    var crewMembert = ShipsCrew.FirstOrDefault(a => a.Name == name);
-
-                    if (crewMembert != null)
-                        retval = crewMembert.CookSkillBonus;
-                }
-
-                return retval;
-            }
-        }
-
         [JsonIgnore]
-        public int HealerSkillBonus
+        public JobMessage HealerJob
         {
             get
             {
-                int retval = -5;
+                JobMessage retval = new JobMessage() { DutyType = DutyType.Heal, SkillBonus = -5, IsAssistant = false, CrewName = "No one" };
 
                 if (AssignedJobs.Exists(a => a.DutyType == DutyType.Heal))
                 {
@@ -661,7 +659,10 @@ namespace pfsim.Officer
                     var healer = ShipsCrew.FirstOrDefault(a => a.Name == healerName);
 
                     if (healer != null)
-                        retval = healer.HealerSkillBonus;
+                    {
+                        retval.CrewName = string.Format("{0} {1}", healer.Title, healer.Name).Trim();
+                        retval.SkillBonus = healer.HealerSkillBonus;
+                    }
                 }
 
                 return retval;
@@ -669,11 +670,11 @@ namespace pfsim.Officer
         }
 
         [JsonIgnore]
-        public int CookSkillBonus
+        public JobMessage CookJob
         {
             get
             {
-                int retval = -5;
+                JobMessage retval = new JobMessage() { DutyType = DutyType.Cook, SkillBonus = -5, IsAssistant = false, CrewName = "No one" };
 
                 if (AssignedJobs.Exists(a => a.DutyType == DutyType.Cook))
                 {
@@ -682,7 +683,10 @@ namespace pfsim.Officer
                     var cook = ShipsCrew.FirstOrDefault(a => a.Name == cookName);
 
                     if (cook != null)
-                        retval = cook.CookSkillBonus;
+                    {
+                        retval.CrewName = string.Format("{0} {1}", cook.Title, cook.Name).Trim();
+                        retval.SkillBonus = cook.CookSkillBonus;
+                    }
                 }
 
                 return retval;
@@ -692,6 +696,18 @@ namespace pfsim.Officer
         public void AddDaysToVoyage(int days)
         {
             CurrentVoyage.AddDaysToVoyage(days);
+            var healCount = AssignedJobs.Count(a => a.DutyType == DutyType.Heal && !a.IsAssistant);
+            var repairCount = AssignedJobs.Count(a => (a.DutyType == DutyType.Maintain && !a.IsAssistant)
+                            || (a.DutyType == DutyType.RepairHull && !a.IsAssistant)
+                            || (a.DutyType == DutyType.RepairSails && !a.IsAssistant)
+                            || (a.DutyType == DutyType.RepairSeigeEngine && !a.IsAssistant));
+
+            ShipsCargo.ConsumeSupplies(TotalCrew, days);
+            if(healCount > 0) // Note, various medical supplies can be consumed by other than treating disease.  It's best to adjust this separately.
+                ShipsCargo.ConsumeSupply(SupplyType.Medicine, (CurrentVoyage.DiseasedCrew + 1) * days);
+            if (repairCount > 0)
+                ShipsCargo.ConsumeSupply(SupplyType.ShipSupplies, repairCount * days);
+            ShipsCargo.ConsumeFodder(ShipsCargo.AnimalUnitsAboard * days);
         }
 
         public Voyage CurrentVoyage { get; private set; } = new Voyage();

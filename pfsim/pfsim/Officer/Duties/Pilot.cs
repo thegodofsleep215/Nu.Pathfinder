@@ -30,7 +30,8 @@ namespace pfsim.Officer
             var job = ship.PilotJob;
             var assistBonus = PerformAssists(ship.GetAssistance(DutyType.Pilot), weatherModifier);
             status.PilotResult = (DiceRoller.D20(1) + job.SkillBonus + assistBonus) - dc;
-            status.DutyEvents.Add(new PerformedDutyEvent(DutyType.Pilot, job.CrewName, dc, assistBonus, job.SkillBonus, status.PilotResult));
+            if(SettingsManager.Verbose)
+                status.DutyEvents.Add(new PerformedDutyEvent(DutyType.Pilot, job.CrewName, dc, assistBonus, job.SkillBonus, status.PilotResult));
 
             if (status.PilotResult >= 0)
             {
@@ -43,6 +44,9 @@ namespace pfsim.Officer
                 {
                     switch (ship.ShipSize)
                     {
+                        case ShipSize.Medium:
+                            damage = DiceRoller.D8(2);
+                            break;
                         case ShipSize.Large:
                             damage = DiceRoller.D8(3);
                             break;

@@ -96,9 +96,7 @@ namespace pfsim.Officer
         [JsonIgnore]
         public int ProcureSkillBonus => SurvivalSkill;
 
-        /// <summary>
-        /// TODO: This is a simplification.  Probably need to track other repair types separately.
-        /// </summary>
+        // TODO: RepairSail, RepairSiegeEngine
         [JsonIgnore]
         public int RepairSkillBonus => CraftShipSkill > CraftCarpentrySkill ? CraftShipSkill : CraftCarpentrySkill;
 
@@ -222,6 +220,7 @@ namespace pfsim.Officer
                                 a.DutyType == DutyType.Ministrel ||
                                 a.DutyType == DutyType.Heal ||
                                 a.DutyType == DutyType.Stow ||
+                                a.DutyType == DutyType.Unload ||
                                 a.DutyType == DutyType.RepairHull ||
                                 a.DutyType == DutyType.RepairSails ||
                                 a.DutyType == DutyType.RepairSeigeEngine) > 2)

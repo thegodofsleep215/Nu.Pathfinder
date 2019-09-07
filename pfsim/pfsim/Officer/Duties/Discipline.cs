@@ -32,14 +32,35 @@ namespace pfsim.Officer
             tension += status.CommandResult <= -15 ? 4 : 0;
             tension += status.ManageResult <= -10 ? 2 : 0;
             tension += ship.CrewDisciplineModifier;
-            tension += (ship.ShipsMorale.MoraleBonus * -1);
+            tension += (ship.CrewMorale.MoraleBonus * -1);
 
             var roll = DiceRoller.D20(1);
 
             if (roll < tension)
             {
-                var dc = 10 + (ship.TotalCrew / 10) - status.CommandModifier; 
-                if (DiceRoller.D20(1) + ship.DisciplineSkillBonus < dc || !ship.HasDisciplineOfficer)
+                var dc = 10 + (ship.TotalCrew / 10) - status.CommandModifier;
+                var job = ship.DisciplineJob;
+                var result = DiceRoller.D20(1) + job.SkillBonus - dc;
+                if(result < 0 && result >= -2)
+                {
+                    // Use a ministrel.
+                    int ministrel = status.MinistrelResults.Count;
+
+                    if (ship.MinistrelBonuses.Count > ministrel)
+                    {
+                        dc = 10 + (ship.TotalCrew / 10) > 15 ? 10 + (ship.TotalCrew / 10) : 15;
+                        var shanty = DiceRoller.D20(1) + ship.MinistrelBonuses[ministrel] - dc;
+                        status.MinistrelResults.Add(shanty);
+                        if (shanty >= 0)
+                        {
+                            result += 2;
+                            status.DutyEvents.Add(new SeaShantyEvent(DutyType.Discipline));
+                        }
+                    }
+                }
+                if(SettingsManager.Verbose)
+                    status.DutyEvents.Add(new PerformedDutyEvent(DutyType.Discipline, job.CrewName, dc, 0, job.SkillBonus, result));
+                if (result < 0 || !ship.HasDisciplineOfficer)
                 {
                     status.DutyEvents.AddRange(RollUpDisciplineIssues(tension >= 20 ? 1 : 0));
                 }

@@ -28,21 +28,9 @@ namespace pfsim.Officer
             }
         }
 
-        public List<int> WatchResults
-        {
-            get
-            {
-                if (_watchResults == null)
-                    _watchResults = new List<int>();
+        public List<int> WatchResults { get; set; } = new List<int>();
 
-                return _watchResults;
-            }
-            set
-            {
-                _watchResults = value;
-            }
-        }
-        private List<int> _watchResults;
+        public List<int> MinistrelResults { get; set; } = new List<int>();
 
         public int WatchModifier
         {

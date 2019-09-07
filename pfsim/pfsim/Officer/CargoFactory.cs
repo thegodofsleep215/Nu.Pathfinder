@@ -1211,6 +1211,10 @@ namespace pfsim.Officer
                     boat.CargoPoints = 3;
                     boat.Value = 400;
                     break;
+                case BoatClasses.Gig:
+                    boat.Name = "Gig";
+                    boat.Value = 200;
+                    break;
             }
 
             return boat;

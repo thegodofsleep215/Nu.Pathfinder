@@ -15,16 +15,21 @@ namespace pfsim.Officer
     {
         public void PerformDuty(Ship ship, ref MiniGameStatus status)
         {
-            var dc = 7 + (ship.TotalCrew / 10) - status.ManageModifier - ship.ShipsMorale.WellBeing;
+            var dc = 7 + (ship.TotalCrew / 10) - status.ManageModifier - ship.CrewMorale.WellBeing;
             if (dc < 10)
                 dc = 10;
             var assistBonus = PerformAssists(ship.GetAssistance(DutyType.Cook));
-            var result = DiceRoller.D20(1) + assistBonus + ship.CookSkillBonus - dc;
+            var job = ship.CookJob;
+            var result = DiceRoller.D20(1) + assistBonus + job.SkillBonus - dc;
             status.CookResult = result;
-            if(result < 0)
+
+            if(SettingsManager.Verbose)
+                status.DutyEvents.Add(new PerformedDutyEvent(DutyType.Cook, job.CrewName, dc, assistBonus, job.SkillBonus, status.CookResult));
+
+            if (result < 0)
             {
                 var wm = Math.Abs(result) / 5 + 1;
-                wm = wm > ship.ShipsMorale.WellBeing ? ship.ShipsMorale.WellBeing : wm;
+                wm = wm > ship.CrewMorale.WellBeing ? ship.CrewMorale.WellBeing : wm;
                 status.DutyEvents.Add(new EpicCookingFailureEvent
                 {
                     WellbeingPenalty = wm * -1,

@@ -5,6 +5,7 @@
         public SupplyType? SupplyType { get; set; }
 
         public bool CausedConfusion { get; set; }
+        public int QuantityLost { get; set; }
 
         public override string ToString()
         {

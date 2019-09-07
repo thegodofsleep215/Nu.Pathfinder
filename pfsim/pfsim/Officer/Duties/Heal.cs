@@ -46,12 +46,15 @@ namespace pfsim.Officer
             var santitation = 2;
             santitation += ship.HasHealer ? 0 : 4;
             santitation += status.CookResult <= -15 ? 4 : 0;
-            santitation += ship.ShipsMorale.WellBeing == 2 ? 2 : 0;
-            santitation += ship.ShipsMorale.WellBeing <= 1 ? 4 : 0;
+            santitation += ship.CrewMorale.WellBeing == 2 ? 2 : 0;
+            santitation += ship.CrewMorale.WellBeing <= 1 ? 4 : 0;
             santitation += ship.CurrentVoyage.DiseaseAboardShip ? 4 : 0;
 
             var assistBonus = PerformAssists(ship.GetAssistance(DutyType.Heal));
-            var result = DiceRoller.D20(1) + ship.HealerSkillBonus + assistBonus - santitation;
+            var job = ship.HealerJob;
+            var result = DiceRoller.D20(1) + job.SkillBonus + assistBonus - santitation;
+            if(SettingsManager.Verbose)
+                status.DutyEvents.Add(new PerformedDutyEvent(DutyType.Heal, job.CrewName, santitation, assistBonus, job.SkillBonus, result));
 
             if (result < 0 || !ship.HasHealer)
             {

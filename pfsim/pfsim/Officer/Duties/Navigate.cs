@@ -17,9 +17,10 @@ namespace pfsim.Officer
         {        
             var dc = ship.CurrentVoyage.NavigationDC - status.CommandModifier - ship.CurrentVoyage.GetWeatherModifier(DutyType.Navigate);
             var assistBonus = PerformAssists(ship.GetAssistance(DutyType.Navigate));
-            var job = ship.NavigatorSkillJob;
+            var job = ship.NavigatorJob;
             status.NavigationResult = (DiceRoller.D20(1) + job.SkillBonus + assistBonus) - dc;
-            status.DutyEvents.Add(new PerformedDutyEvent(DutyType.Navigate, job.CrewName, dc, assistBonus, job.SkillBonus, status.NavigationResult));
+            if(SettingsManager.Verbose)
+                status.DutyEvents.Add(new PerformedDutyEvent(DutyType.Navigate, job.CrewName, dc, assistBonus, job.SkillBonus, status.NavigationResult));
 
             if (status.NavigationResult <= -5)
             {

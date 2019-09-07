@@ -1,6 +1,7 @@
 ﻿{
   "CrewName": "Dogfish",
   "ShipSize": "Colossal",
+  "ShipType": "MerchantShip",
   "PropulsionTypes": [
     {
       "PropulsionType": "Sails",
@@ -322,29 +323,12 @@
       }
     }
   ],
-  "ShipsMorale": {
-    "MoralStats": {
-      "Shipshape": {
-        "Value": 5,
-        "TemporaryModifiers": []
-      },
-      "Wellbeing": {
-        "Value": 3,
-        "TemporaryModifiers": []
-      },
-      "Wealth": {
-        "Value": 1,
-        "TemporaryModifiers": []
-      },
-      "Infamy": {
-        "Value": 0,
-        "TemporaryModifiers": []
-      },
-      "Piracy": {
-        "Value": 4,
-        "TemporaryModifiers": []
-      }
-    }
+  "CrewMorale": {
+    "ShipShape": 5,
+    "WellBeing": 3,
+    "Wealth": 1,
+    "Infamy": 0,
+    "Piracy": 4
   },
   "DisciplineStandards": "Normal",
   "Alignment": "Chaotic",
@@ -371,5 +355,77 @@
     "NumberOfCrewPlottingMutiny": 0,
     "WeatherConditions": "Clear"
   },
-  "CargoPoints": 129
+  "CargoPoints": 129,
+  "ShipsCargo": [
+    {
+      "Name": "Cutter",
+      "CargoType": 10,
+      "CargoPoints": 2,
+      "Value": 250.0,
+      "Fragile": false,
+      "Perishable": false,
+      "DaysInHold": 0,
+      "SellableValue": 250.0
+    },
+    {
+      "Name": "Gig",
+      "CargoType": 10,
+      "CargoPoints": 2,
+      "Value": 250.0,
+      "Fragile": false,
+      "Perishable": false,
+      "DaysInHold": 0,
+      "SellableValue": 250.0
+    },
+    {
+      "$type": "pfsim.Officer.Ammunition, pfsim",
+      "SeigeEngineType": 1,
+      "CargoPoints": 1,
+      "SupplyType": 6,
+      "UnitsSupplyPerPoint": 100,
+      "UnitsSupplyRemaining": 100,
+      "Name": "Light Ballista Ammunition",
+      "CargoType": 4,
+      "Value": 1000.0,
+      "Fragile": false,
+      "Perishable": false,
+      "DaysInHold": 0
+    },
+    {
+      "$type": "pfsim.Officer.SiegeEngine, pfsim",
+      "SeigeEngineType": 1,
+      "Name": "Light Ballista",
+      "CargoType": 9,
+      "CargoPoints": 1,
+      "Value": 500.0,
+      "Fragile": false,
+      "Perishable": false,
+      "DaysInHold": 0,
+      "SellableValue": 500.0
+    },
+    {
+      "$type": "pfsim.Officer.SiegeEngine, pfsim",
+      "SeigeEngineType": 1,
+      "Name": "Light Ballista",
+      "CargoType": 9,
+      "CargoPoints": 1,
+      "Value": 500.0,
+      "Fragile": false,
+      "Perishable": false,
+      "DaysInHold": 0,
+      "SellableValue": 500.0
+    },
+    {
+      "$type": "pfsim.Officer.SiegeEngine, pfsim",
+      "SeigeEngineType": 1,
+      "Name": "Light Ballista",
+      "CargoType": 9,
+      "CargoPoints": 1,
+      "Value": 500.0,
+      "Fragile": false,
+      "Perishable": false,
+      "DaysInHold": 0,
+      "SellableValue": 500.0
+    }
+  ]
 }
