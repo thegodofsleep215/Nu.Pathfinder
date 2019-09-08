@@ -321,6 +321,88 @@
         "Heal": 0,
         "Perform": 0
       }
+    },
+    {
+      "Name": "Barefoot Sam",
+      "Title": "Able Seaman",
+      "Skills": {
+        "ProfessionSailor": 4,
+        "Diplomacy": 0,
+        "KnowledgeEngineering": 0,
+        "Intimidate": 0,
+        "Perception": 0,
+        "CraftCarpentry": 0,
+        "CraftShip": 0,
+        "CraftSails": 0,
+        "Survival": 4,
+        "ProfessionMerchant": 0,
+        "CraftCooking": 0,
+        "Heal": 0,
+        "Perform": 0
+      },
+      "Jobs": [
+        {
+          "CrewName": "Barefoot Sam",
+          "DutyType": "Pilot",
+          "IsAssistant": 1
+        }
+      ],
+      "ExternalModifiers": {
+        "ProfessionSailor": 0,
+        "Diplomacy": 0,
+        "KnowledgeEngineering": 0,
+        "Intimidate": 0,
+        "Perception": 0,
+        "CraftCarpentry": 0,
+        "CraftShip": 0,
+        "CraftSails": 0,
+        "Survival": 0,
+        "ProfessionMerchant": 0,
+        "CraftCooking": 0,
+        "Heal": 0,
+        "Perform": 0
+      }
+    },
+    {
+      "Name": "Maheem",
+      "Title": "Able Seaman",
+      "Skills": {
+        "ProfessionSailor": 4,
+        "Diplomacy": 0,
+        "KnowledgeEngineering": 0,
+        "Intimidate": 0,
+        "Perception": 0,
+        "CraftCarpentry": 0,
+        "CraftShip": 0,
+        "CraftSails": 0,
+        "Survival": 0,
+        "ProfessionMerchant": 0,
+        "CraftCooking": 0,
+        "Heal": 0,
+        "Perform": 0
+      },
+      "Jobs": [
+        {
+          "CrewName": "Maheem",
+          "DutyType": "Pilot",
+          "IsAssistant": 1
+        }
+      ],
+      "ExternalModifiers": {
+        "ProfessionSailor": 0,
+        "Diplomacy": 0,
+        "KnowledgeEngineering": 0,
+        "Intimidate": 0,
+        "Perception": 0,
+        "CraftCarpentry": 0,
+        "CraftShip": 0,
+        "CraftSails": 0,
+        "Survival": 0,
+        "ProfessionMerchant": 0,
+        "CraftCooking": 0,
+        "Heal": 0,
+        "Perform": 0
+      }
     }
   ],
   "CrewMorale": {
@@ -334,7 +416,7 @@
   "Alignment": "Chaotic",
   "Marines": 0,
   "Passengers": 0,
-  "Swabbies": 34,
+  "Swabbies": 32,
   "AverageSwabbieQuality": 4,
   "CurrentVoyage": {
     "NightStatus": "Underweigh",
@@ -426,6 +508,123 @@
       "Perishable": false,
       "DaysInHold": 0,
       "SellableValue": 500.0
+    },
+    {
+      "$type": "pfsim.Officer.Supplies, pfsim",
+      "CargoPoints": 4,
+      "SupplyType": 3,
+      "UnitsSupplyPerPoint": 900,
+      "UnitsSupplyRemaining": 900,
+      "Name": "Water",
+      "CargoType": 6,
+      "Value": 300.0,
+      "Fragile": false,
+      "Perishable": false,
+      "DaysInHold": 0
+    },
+    {
+      "$type": "pfsim.Officer.Supplies, pfsim",
+      "CargoPoints": 4,
+      "SupplyType": 2,
+      "UnitsSupplyPerPoint": 900,
+      "UnitsSupplyRemaining": 900,
+      "Name": "Salt Pork,Olive Oil,Milled Oats,Butter",
+      "CargoType": 5,
+      "Value": 1000.0,
+      "Fragile": false,
+      "Perishable": false,
+      "DaysInHold": 0
+    },
+    {
+      "$type": "pfsim.Officer.Supplies, pfsim",
+      "CargoPoints": 6,
+      "SupplyType": 4,
+      "UnitsSupplyPerPoint": 100,
+      "UnitsSupplyRemaining": 100,
+      "Name": "Ships Supplies",
+      "CargoType": 8,
+      "Value": 1000.0,
+      "Fragile": false,
+      "Perishable": false,
+      "DaysInHold": 0
+    },
+    {
+      "$type": "pfsim.Officer.Supplies, pfsim",
+      "CargoPoints": 4,
+      "SupplyType": 1,
+      "UnitsSupplyPerPoint": 900,
+      "UnitsSupplyRemaining": 900,
+      "Name": "Rum",
+      "CargoType": 7,
+      "Value": 1000.0,
+      "Fragile": false,
+      "Perishable": false,
+      "DaysInHold": 0
+    },
+    {
+      "$type": "pfsim.Officer.Plunder, pfsim",
+      "PlunderCategory": 2,
+      "IsLivestock": false,
+      "Name": "Wool",
+      "CargoType": 2,
+      "CargoPoints": 4,
+      "Value": 1000.0,
+      "Fragile": false,
+      "Perishable": false,
+      "DaysInHold": 0,
+      "SellableValue": 1000.0
+    },
+    {
+      "$type": "pfsim.Officer.Plunder, pfsim",
+      "PlunderCategory": 5,
+      "IsLivestock": false,
+      "Name": "Art Objects",
+      "CargoType": 2,
+      "CargoPoints": 1,
+      "Value": 1000.0,
+      "Fragile": false,
+      "Perishable": false,
+      "DaysInHold": 0,
+      "SellableValue": 1000.0
+    },
+    {
+      "$type": "pfsim.Officer.Plunder, pfsim",
+      "PlunderCategory": 2,
+      "IsLivestock": false,
+      "Name": "Coffee",
+      "CargoType": 2,
+      "CargoPoints": 4,
+      "Value": 1000.0,
+      "Fragile": false,
+      "Perishable": false,
+      "DaysInHold": 0,
+      "SellableValue": 1000.0
+    },
+    {
+      "$type": "pfsim.Officer.Plunder, pfsim",
+      "PlunderCategory": 1,
+      "IsLivestock": false,
+      "Name": "Flax",
+      "CargoType": 2,
+      "CargoPoints": 6,
+      "Value": 1000.0,
+      "Fragile": false,
+      "Perishable": false,
+      "DaysInHold": 0,
+      "SellableValue": 1000.0
+    },
+    {
+      "$type": "pfsim.Officer.Plunder, pfsim",
+      "PlunderCategory": 2,
+      "IsLivestock": false,
+      "Name": "Sugar",
+      "CargoType": 2,
+      "CargoPoints": 4,
+      "Value": 1000.0,
+      "Fragile": false,
+      "Perishable": true,
+      "DaysInHold": 0,
+      "SellableValue": 1000.0
     }
   ]
 }

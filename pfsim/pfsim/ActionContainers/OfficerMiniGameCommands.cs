@@ -353,7 +353,7 @@ namespace pfsim.ActionContainers
 
                     ship.ShipsCargo.Add(gun);
 
-                    ; var response = WriteAsset(ship);
+                    var response = WriteAsset(ship);
 
                     if (response.Success)
                         return "Added siege engine to ship.";
@@ -363,6 +363,36 @@ namespace pfsim.ActionContainers
                 else
                 {
                     return "Unrecognized siege engine type.";
+                }
+            }
+            else
+            {
+                return "Can't find ship.";
+            }
+        }
+        [TypedCommand("AddSupplies", "Adds supplies to a ship.")]
+        public string AddSuppplies(string shipName, string supplyType)
+        {
+            var ship = LoadShip(shipName);
+
+            if (ship != null && !string.IsNullOrEmpty(ship.CrewName))
+            {
+                if (Enum.TryParse<SupplyType>(supplyType, true, out SupplyType result))
+                {
+                    var s = CargoFactory.Instance.ProduceSupplies(result);
+
+                    ship.ShipsCargo.Add(s);
+
+                    var response = WriteAsset(ship);
+
+                    if (response.Success)
+                        return "Added supplies to ship.";
+                    else
+                        return string.Join(Environment.NewLine, response.Messages);
+                }
+                else
+                {
+                    return "Unrecognized supply type.";
                 }
             }
             else
@@ -1409,7 +1439,7 @@ namespace pfsim.ActionContainers
             {
                 return new Ship();
             }
-            string file = Directory.GetFiles(folder, string.Format("{0}.json", shipName)).First();
+            string file = Directory.GetFiles(folder, string.Format("{0}.json", shipName.Replace(' ', '_'))).First();
             JsonSerializerSettings settings = new JsonSerializerSettings();
             settings.TypeNameHandling = TypeNameHandling.Auto;
             return JsonConvert.DeserializeObject<Ship>(File.ReadAllText(file), settings);
@@ -1422,7 +1452,7 @@ namespace pfsim.ActionContainers
             {
                 return new List<Cargo>().ToArray();
             }
-            string file = Directory.GetFiles(folder, string.Format("{0}.json", fileName)).First();
+            string file = Directory.GetFiles(folder, string.Format("{0}.json", fileName.Replace(' ', '_'))).FirstOrDefault();
             if (file != null)
             {
                 JsonSerializerSettings settings = new JsonSerializerSettings();
@@ -1442,7 +1472,7 @@ namespace pfsim.ActionContainers
             {
                 return new List<CrewMember>().ToArray();
             }
-            string file = Directory.GetFiles(folder, string.Format("{0}.json", filename)).First();
+            string file = Directory.GetFiles(folder, string.Format("{0}.json", filename.Replace(' ', '_'))).FirstOrDefault();
             if (file != null)
             {
                 JsonSerializerSettings settings = new JsonSerializerSettings();

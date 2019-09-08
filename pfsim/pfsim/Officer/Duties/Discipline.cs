@@ -32,11 +32,11 @@ namespace pfsim.Officer
             tension += status.CommandResult <= -15 ? 4 : 0;
             tension += status.ManageResult <= -10 ? 2 : 0;
             tension += ship.CrewDisciplineModifier;
-            tension += (ship.CrewMorale.MoraleBonus * -1);
+            tension -= (ship.CrewMorale.MoraleBonus);
 
             var roll = DiceRoller.D20(1);
 
-            if (roll < tension)
+            if (roll <= tension)
             {
                 var dc = 10 + (ship.TotalCrew / 10) - status.CommandModifier;
                 var job = ship.DisciplineJob;

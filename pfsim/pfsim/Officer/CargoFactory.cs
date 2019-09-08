@@ -42,14 +42,14 @@ namespace pfsim.Officer
                     return new Supplies()
                     {
                         Name = GetFoodName(),
-                        CargoType = CargoType.Rum,
+                        CargoType = CargoType.Food,
                         CargoPoints = 4,
                         DaysInHold = 0,
                         Fragile = false,
                         Perishable = false,
-                        SupplyType = SupplyType.Water,
-                        UnitsSupplyPerPoint = 900,
-                        UnitsSupplyRemaining = 900,
+                        SupplyType = SupplyType.Food,
+                        UnitsSupplyPerPoint = ShipConstants.ShipFoodPerCargoPoint,
+                        UnitsSupplyRemaining = ShipConstants.ShipFoodPerCargoPoint,
                         Value = 1000
                     };
                 case CargoType.Medicine:
@@ -88,9 +88,9 @@ namespace pfsim.Officer
                         DaysInHold = 0,
                         Fragile = false,
                         Perishable = false,
-                        SupplyType = SupplyType.Water,
-                        UnitsSupplyPerPoint = 900,
-                        UnitsSupplyRemaining = 900,
+                        SupplyType = SupplyType.Rum,
+                        UnitsSupplyPerPoint = ShipConstants.ShipFoodPerCargoPoint,
+                        UnitsSupplyRemaining = ShipConstants.ShipFoodPerCargoPoint,
                         Value = 1000
                     };
                 case CargoType.SeigeWeapon:
@@ -107,8 +107,8 @@ namespace pfsim.Officer
                         Fragile = false,
                         Perishable = false,
                         SupplyType = SupplyType.ShipSupplies,
-                        UnitsSupplyPerPoint = 100,
-                        UnitsSupplyRemaining = 100,
+                        UnitsSupplyPerPoint = ShipConstants.ShipSuppliesPerCargoPoint,
+                        UnitsSupplyRemaining = ShipConstants.ShipSuppliesPerCargoPoint,
                         Value = 1000
                     };
                 case CargoType.Water:
@@ -121,8 +121,8 @@ namespace pfsim.Officer
                         Fragile = false,
                         Perishable = false,
                         SupplyType = SupplyType.Water,
-                        UnitsSupplyPerPoint = 900,
-                        UnitsSupplyRemaining = 900,
+                        UnitsSupplyPerPoint = ShipConstants.ShipFoodPerCargoPoint,
+                        UnitsSupplyRemaining = ShipConstants.ShipFoodPerCargoPoint,
                         Value = 300
                     };
                 case CargoType.WetContainers:
@@ -146,8 +146,8 @@ namespace pfsim.Officer
                         Fragile = false,
                         Perishable = false,
                         SupplyType = SupplyType.Fodder,
-                        UnitsSupplyPerPoint = 7,
-                        UnitsSupplyRemaining = 1,
+                        UnitsSupplyPerPoint = ShipConstants.ShipFodderPerCargoPoint,
+                        UnitsSupplyRemaining = ShipConstants.ShipFodderPerCargoPoint,
                         Value = 300
                     };
                 default:

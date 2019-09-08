@@ -10,7 +10,6 @@ namespace pfsim.Officer
     {
         private List<Job> _assignedJobs;
         private List<CrewMember> _shipsCrew;
-        private Morale _shipsMorale;
 
         private int MaxPilotAssistants
         {
@@ -85,7 +84,7 @@ namespace pfsim.Officer
         }
 
         public Morale CrewMorale { get; set; } = new Morale();
-        
+
         [JsonIgnore]
         public int CrewQuality
         {
@@ -93,8 +92,8 @@ namespace pfsim.Officer
             {
                 double retval = 0;
                 List<CrewMember> namedCrew;
-                // TODO: For ships boats, everyone counts as crew?
-                switch(ShipSize)
+                // For ships boats, everyone counts as crew
+                switch (ShipSize)
                 {
                     case ShipSize.Medium:
                     case ShipSize.Large:
@@ -106,7 +105,7 @@ namespace pfsim.Officer
                         break;
                 }
 
-                if(namedCrew != null && namedCrew.Count > 0)
+                if (namedCrew != null && namedCrew.Count > 0)
                     retval = namedCrew.Select(a => a.ProfessionSailorSkill).Sum();
 
                 retval = Math.Floor(((retval * namedCrew.Count) + (Convert.ToDouble(AverageSwabbieQuality) * Swabbies)) / (namedCrew.Count + Swabbies)) - 4;
@@ -143,17 +142,17 @@ namespace pfsim.Officer
             {
                 int retval = CurrentVoyage.DisciplineModifier;
 
-                switch(DisciplineStandards)
+                switch (DisciplineStandards)
                 {
                     case DisciplineStandards.Lax:
-                        retval +=2;
+                        retval += 2;
                         break;
                     case DisciplineStandards.Strict:
-                        retval -=2;
+                        retval -= 2;
                         break;
                 }
 
-                switch(ShipsAlignment)
+                switch (ShipsAlignment)
                 {
                     case Alignment.Chaotic:
                         retval += 2;
@@ -184,7 +183,7 @@ namespace pfsim.Officer
         {
             get
             {
-                switch(this.ShipSize)
+                switch (this.ShipSize)
                 {
                     case ShipSize.Medium:
                     case ShipSize.Large:
@@ -245,7 +244,7 @@ namespace pfsim.Officer
         {
             BaseResponse retval = new BaseResponse();
             retval.Success = false;
-            if(ShipsCrew.Exists(a => a.Name == crewname))
+            if (ShipsCrew.Exists(a => a.Name == crewname))
             {
                 var mate = ShipsCrew.FirstOrDefault(a => a.Name == crewname);
 
@@ -276,7 +275,7 @@ namespace pfsim.Officer
                 {
                     _assignedJobs = null;
                     retval.Success = true;
-                } 
+                }
                 else
                 {
                     retval.Messages.Add(string.Format("Crewmeber {0} already doesn't have duty {1}.", crewname, duty.ToString()));
@@ -294,7 +293,7 @@ namespace pfsim.Officer
         {
             BaseResponse retval = new BaseResponse();
 
-            if(ShipsCrew.Count != ShipsCrew.Select(a => a.Name).Distinct().Count())
+            if (ShipsCrew.Count != ShipsCrew.Select(a => a.Name).Distinct().Count())
             {
                 retval.Messages.Add("Everyone in the crew must have a different name!");
             }
@@ -411,7 +410,7 @@ namespace pfsim.Officer
                         case DutyType.Procure:
                             assistance.SkillBonus = mate.ProcureSkillBonus;
                             break;
-                        case DutyType.RepairHull: 
+                        case DutyType.RepairHull:
                             assistance.SkillBonus = mate.RepairSkillBonus;
                             break;
                         case DutyType.RepairSails:
@@ -431,6 +430,8 @@ namespace pfsim.Officer
                             break;
                     }
                 }
+
+                assists.Add(assistance);
             }
 
             return assists;
@@ -530,11 +531,11 @@ namespace pfsim.Officer
                 var day = AssignedJobs.Where(a => a.DutyType == DutyType.Watch);
                 var i = 0;
 
-                foreach(var watch in day)
+                foreach (var watch in day)
                 {
                     var lookout = ShipsCrew.FirstOrDefault(a => a.Name == watch.CrewName);
 
-                    if(lookout != null)
+                    if (lookout != null)
                     {
                         watchBonuses[i] = lookout.WatchSkillBonus;
                         i++;
@@ -703,10 +704,10 @@ namespace pfsim.Officer
                             || (a.DutyType == DutyType.RepairSeigeEngine && !a.IsAssistant));
 
             ShipsCargo.ConsumeSupplies(TotalCrew, days);
-            if(healCount > 0) // Note, various medical supplies can be consumed by other than treating disease.  It's best to adjust this separately.
+            if (healCount > 0) // Note, various medical supplies can be consumed by other than treating disease.  It's best to adjust this separately.
                 ShipsCargo.ConsumeSupply(SupplyType.Medicine, (CurrentVoyage.DiseasedCrew + 1) * days);
             if (repairCount > 0)
-                ShipsCargo.ConsumeSupply(SupplyType.ShipSupplies, repairCount * days);
+                ShipsCargo.ConsumeSupply(SupplyType.ShipSupplies, repairCount * days); // TODO: This should scale with ship size.
             ShipsCargo.ConsumeFodder(ShipsCargo.AnimalUnitsAboard * days);
         }
 
@@ -715,7 +716,7 @@ namespace pfsim.Officer
         public int CargoPoints { get; set; }
 
         public CargoHold ShipsCargo { get; private set; } = new CargoHold();
-        
+
         [JsonIgnore]
         public bool IsShipOverburdened
         {

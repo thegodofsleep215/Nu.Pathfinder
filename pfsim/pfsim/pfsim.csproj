@@ -134,6 +134,7 @@
     <Compile Include="Officer\Configuration\ShipSize.cs" />
     <Compile Include="Officer\Configuration\ShipType.cs" />
     <Compile Include="Officer\AnchoredEngine.cs" />
+    <Compile Include="Officer\ShipContants.cs" />
     <Compile Include="Officer\SupplyType.cs" />
     <Compile Include="Officer\Voyage.cs" />
     <Compile Include="Officer\WeatherConditions.cs" />
@@ -143,7 +144,22 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="Crews\dogfish.json">
+    <None Include="Crews\Audrin.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Crews\Barefoot_Sam.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Crews\Layla.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Crews\Maheem.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Crews\Rooster.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Crews\Sayna.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />

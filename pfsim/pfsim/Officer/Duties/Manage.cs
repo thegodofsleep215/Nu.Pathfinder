@@ -47,7 +47,10 @@ namespace pfsim.Officer
                 if (DiceRoller.D20(1) <= (ship.TotalCrew / 10 + 1))  // Possibly replace this random balancer with finer granularity in the future.
                 {
                     e.SupplyType = (SupplyType)DiceRoller.D4(1);
-                    e.QuantityLost = 900; // Full cargo point.
+                    if (e.SupplyType == SupplyType.ShipSupplies)
+                        e.QuantityLost = ShipConstants.ShipSuppliesPerCargoPoint;
+                    else
+                        e.QuantityLost = ShipConstants.ShipFoodPerCargoPoint;
                 }
 
                 if(status.ManageResult <= -10)
