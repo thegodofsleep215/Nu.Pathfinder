@@ -11,7 +11,7 @@ namespace pfsim.Officer
     {
         public NightStatus NightStatus { get; set; }
         public bool OpenOcean { get; set; }  
-        public bool ShallowWater { get; set; }  // TODO: Would it just better to set a general DC modifier from 0 to 10?
+        public bool ShallowWater { get; set; } 
         public bool NarrowPassage { get; set; }  
         public int DayOfVoyage { get; set; }
         public int DaysSinceResupply { get; set; }

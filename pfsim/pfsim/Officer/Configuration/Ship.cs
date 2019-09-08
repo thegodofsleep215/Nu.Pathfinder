@@ -705,9 +705,9 @@ namespace pfsim.Officer
 
             ShipsCargo.ConsumeSupplies(TotalCrew, days);
             if (healCount > 0) // Note, various medical supplies can be consumed by other than treating disease.  It's best to adjust this separately.
-                ShipsCargo.ConsumeSupply(SupplyType.Medicine, (CurrentVoyage.DiseasedCrew + 1) * days);
+                ShipsCargo.ConsumeSupply(SupplyType.Medicine, (CurrentVoyage.DiseasedCrew + 1) * days * -1);
             if (repairCount > 0)
-                ShipsCargo.ConsumeSupply(SupplyType.ShipSupplies, repairCount * days); // TODO: This should scale with ship size.
+                ShipsCargo.ConsumeSupply(SupplyType.ShipSupplies, repairCount * days * -1); // TODO: This should scale with ship size.
             ShipsCargo.ConsumeFodder(ShipsCargo.AnimalUnitsAboard * days);
             ShipsCargo.ResetPassengers(TotalCrew);
             ShipsCargo.AgeCargo(days);

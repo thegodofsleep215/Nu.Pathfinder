@@ -71,7 +71,7 @@ namespace pfsim.Officer
 
         public int AdjustSupplies(int amount)
         {
-            int missing = 0;  // TODO: Calculate how much we are short.
+            int missing = 0;  
 
             bool subtraction = amount < 0;
             int units = Math.Abs(amount) % UnitsSupplyPerPoint;

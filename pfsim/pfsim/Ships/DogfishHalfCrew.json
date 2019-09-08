@@ -5,10 +5,10 @@
     {
       "PropulsionType": "Sails",
       "ShipSpeed": 90,
-      "PropulsionHitPoints": 360
+      "PropulsionHitPoints": 480
     }
   ],
-  "HullHitPoints": 1620,
+  "HullHitPoints": 1080,
   "CrewSize": 16,
   "ShipDc": 10,
   "ShipPilotingBonus": 0,
@@ -245,7 +245,7 @@
       }
     }
   ],
-  "ShipsMorale": {
+  "CrewMorale": {
     "ShipShape": 5,
     "Wealth": 1,
     "WellBeing": 3,
@@ -279,5 +279,207 @@
     "NumberOfCrewPlottingMutiny": 0,
     "WeatherConditions": "Clear"
   },
-  "CargoPoints": 129
+  "CargoPoints": 129,
+  "ShipsCargo": [
+    {
+      "Name": "Cutter",
+      "CargoType": 10,
+      "CargoPoints": 2,
+      "Value": 250.0,
+      "Fragile": false,
+      "Perishable": false,
+      "DaysInHold": 0,
+      "SellableValue": 250.0
+    },
+    {
+      "Name": "Gig",
+      "CargoType": 10,
+      "CargoPoints": 2,
+      "Value": 250.0,
+      "Fragile": false,
+      "Perishable": false,
+      "DaysInHold": 0,
+      "SellableValue": 250.0
+    },
+    {
+      "$type": "pfsim.Officer.Ammunition, pfsim",
+      "SeigeEngineType": 1,
+      "CargoPoints": 1,
+      "SupplyType": 6,
+      "UnitsSupplyPerPoint": 100,
+      "UnitsSupplyRemaining": 100,
+      "Name": "Light Ballista Ammunition",
+      "CargoType": 4,
+      "Value": 1000.0,
+      "Fragile": false,
+      "Perishable": false,
+      "DaysInHold": 0
+    },
+    {
+      "$type": "pfsim.Officer.SiegeEngine, pfsim",
+      "SeigeEngineType": 1,
+      "Name": "Light Ballista",
+      "CargoType": 9,
+      "CargoPoints": 1,
+      "Value": 500.0,
+      "Fragile": false,
+      "Perishable": false,
+      "DaysInHold": 0,
+      "SellableValue": 500.0
+    },
+    {
+      "$type": "pfsim.Officer.SiegeEngine, pfsim",
+      "SeigeEngineType": 1,
+      "Name": "Light Ballista",
+      "CargoType": 9,
+      "CargoPoints": 1,
+      "Value": 500.0,
+      "Fragile": false,
+      "Perishable": false,
+      "DaysInHold": 0,
+      "SellableValue": 500.0
+    },
+    {
+      "$type": "pfsim.Officer.SiegeEngine, pfsim",
+      "SeigeEngineType": 1,
+      "Name": "Light Ballista",
+      "CargoType": 9,
+      "CargoPoints": 1,
+      "Value": 500.0,
+      "Fragile": false,
+      "Perishable": false,
+      "DaysInHold": 0,
+      "SellableValue": 500.0
+    },
+    {
+      "$type": "pfsim.Officer.Supplies, pfsim",
+      "CargoPoints": 4,
+      "SupplyType": 3,
+      "UnitsSupplyPerPoint": 900,
+      "UnitsSupplyRemaining": 900,
+      "Name": "Water",
+      "CargoType": 6,
+      "Value": 300.0,
+      "Fragile": false,
+      "Perishable": false,
+      "DaysInHold": 0
+    },
+    {
+      "$type": "pfsim.Officer.Supplies, pfsim",
+      "CargoPoints": 4,
+      "SupplyType": 2,
+      "UnitsSupplyPerPoint": 900,
+      "UnitsSupplyRemaining": 900,
+      "Name": "Salt Pork,Olive Oil,Milled Oats,Butter",
+      "CargoType": 5,
+      "Value": 1000.0,
+      "Fragile": false,
+      "Perishable": false,
+      "DaysInHold": 0
+    },
+    {
+      "$type": "pfsim.Officer.Supplies, pfsim",
+      "CargoPoints": 6,
+      "SupplyType": 4,
+      "UnitsSupplyPerPoint": 100,
+      "UnitsSupplyRemaining": 100,
+      "Name": "Ships Supplies",
+      "CargoType": 8,
+      "Value": 1000.0,
+      "Fragile": false,
+      "Perishable": false,
+      "DaysInHold": 0
+    },
+    {
+      "$type": "pfsim.Officer.Supplies, pfsim",
+      "CargoPoints": 4,
+      "SupplyType": 1,
+      "UnitsSupplyPerPoint": 900,
+      "UnitsSupplyRemaining": 900,
+      "Name": "Rum",
+      "CargoType": 7,
+      "Value": 1000.0,
+      "Fragile": false,
+      "Perishable": false,
+      "DaysInHold": 0
+    },
+    {
+      "$type": "pfsim.Officer.Plunder, pfsim",
+      "PlunderCategory": 2,
+      "IsLivestock": false,
+      "Name": "Wool",
+      "CargoType": 2,
+      "CargoPoints": 4,
+      "Value": 1000.0,
+      "Fragile": false,
+      "Perishable": false,
+      "DaysInHold": 0,
+      "SellableValue": 1000.0
+    },
+    {
+      "$type": "pfsim.Officer.Plunder, pfsim",
+      "PlunderCategory": 5,
+      "IsLivestock": false,
+      "Name": "Art Objects",
+      "CargoType": 2,
+      "CargoPoints": 1,
+      "Value": 1000.0,
+      "Fragile": false,
+      "Perishable": false,
+      "DaysInHold": 0,
+      "SellableValue": 1000.0
+    },
+    {
+      "$type": "pfsim.Officer.Plunder, pfsim",
+      "PlunderCategory": 2,
+      "IsLivestock": false,
+      "Name": "Coffee",
+      "CargoType": 2,
+      "CargoPoints": 4,
+      "Value": 1000.0,
+      "Fragile": false,
+      "Perishable": false,
+      "DaysInHold": 0,
+      "SellableValue": 1000.0
+    },
+    {
+      "$type": "pfsim.Officer.Plunder, pfsim",
+      "PlunderCategory": 1,
+      "IsLivestock": false,
+      "Name": "Flax",
+      "CargoType": 2,
+      "CargoPoints": 6,
+      "Value": 1000.0,
+      "Fragile": false,
+      "Perishable": false,
+      "DaysInHold": 0,
+      "SellableValue": 1000.0
+    },
+    {
+      "$type": "pfsim.Officer.Plunder, pfsim",
+      "PlunderCategory": 2,
+      "IsLivestock": false,
+      "Name": "Sugar",
+      "CargoType": 2,
+      "CargoPoints": 4,
+      "Value": 1000.0,
+      "Fragile": false,
+      "Perishable": true,
+      "DaysInHold": 0,
+      "SellableValue": 1000.0
+    },
+    {
+      "$type": "pfsim.Officer.Supplies, pfsim",
+      "CargoPoints": 1,
+      "SupplyType": 5,
+      "UnitsSupplyPerPoint": 1000,
+      "UnitsSupplyRemaining": 1000,
+      "Name": "Medicine",
+      "CargoType": 3,
+      "Value": 1000.0,
+      "Fragile": true,
+      "Perishable": false,
+      "DaysInHold": 0
+    }
+  ]
 }

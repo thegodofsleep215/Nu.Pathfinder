@@ -1264,7 +1264,6 @@ namespace pfsim.ActionContainers
                     case "DUTY":
                     case "DUTY+":
                         // Four part command to assign job j:<CrewMember>:<Duty>:<Assitant>, where <assistant> is optional and assumed false.
-                        // TODO: This is going to have a problem because crew members can have names containing spaces.
                         if (parts.Length < 3)
                         {
                             retval.Messages.Add("To assign job, use 'j:<CrewMember>:<Duty>:<IsAssitant>'.");
@@ -1323,7 +1322,6 @@ namespace pfsim.ActionContainers
                     case "JOB-":
                     case "DUTY-":
                         // Four part command to remove job j:<CrewMember>:<Duty>:<Assitant>, where <assistant> is optional and assumed false.
-                        // TODO: This is going to have a problem because crew members can have names containing spaces.
                         if (parts.Length < 3)
                         {
                             retval.Messages.Add("To remove job, use 'j-:<CrewMember>:<Duty>:<IsAssitant>'.");

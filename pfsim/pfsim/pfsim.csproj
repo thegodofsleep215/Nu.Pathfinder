@@ -150,6 +150,9 @@
     <None Include="Crews\Barefoot_Sam.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Crews\Fishguts.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Crews\Gideon_Sully.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
