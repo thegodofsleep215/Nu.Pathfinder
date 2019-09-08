@@ -95,9 +95,10 @@ namespace pfsim.Officer
             if (supply == null || string.IsNullOrEmpty(supply.Name))
                 supply = this.AllSupplies.FirstOrDefault(a => a.SupplyType == supplyType && !a.IsExausted);
 
-            if (supply == null && string.IsNullOrEmpty(supply.Name))
+            if (supply == null || string.IsNullOrEmpty(supply.Name))
             {
                 // TODO: All out of needed supply!
+                // TODO: Raise a supply exhausted event.
             }
             else
             {
@@ -120,6 +121,7 @@ namespace pfsim.Officer
             if (supply == null && string.IsNullOrEmpty(supply.Name))
             {
                 // TODO: All out of needed supply!
+                // TODO: Raise a supply exhausted event.
             }
             else
             {

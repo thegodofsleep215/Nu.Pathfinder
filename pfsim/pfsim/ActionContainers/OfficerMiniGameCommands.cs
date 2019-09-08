@@ -426,8 +426,6 @@ namespace pfsim.ActionContainers
                 }
 
                 // Argument to refit.
-                // Kill named crew member?
-                // Load named crew member from file?
                 switch (term.ToUpper())
                 {
                     case "M":

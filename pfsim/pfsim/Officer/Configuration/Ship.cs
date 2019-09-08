@@ -709,6 +709,7 @@ namespace pfsim.Officer
             if (repairCount > 0)
                 ShipsCargo.ConsumeSupply(SupplyType.ShipSupplies, repairCount * days); // TODO: This should scale with ship size.
             ShipsCargo.ConsumeFodder(ShipsCargo.AnimalUnitsAboard * days);
+            ShipsCargo.ResetPassengers(TotalCrew);
         }
 
         public Voyage CurrentVoyage { get; private set; } = new Voyage();

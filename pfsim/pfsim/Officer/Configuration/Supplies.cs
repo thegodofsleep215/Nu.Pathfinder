@@ -75,19 +75,20 @@ namespace pfsim.Officer
 
             bool subtraction = amount < 0;
             int units = Math.Abs(amount) % UnitsSupplyPerPoint;
-            int cargo = Math.Abs(amount) % UnitsSupplyPerPoint;
+            int cargo = Math.Abs(amount) / UnitsSupplyPerPoint;
 
             if (subtraction)
             {
                 if (units < _unitSuppliesRemaining)
                 {
                     _cargoPointsRemaining -= cargo;
+                    _unitSuppliesRemaining -= units;
                 }
                 else
                 {
                     _cargoPointsRemaining -= (cargo + 1);
+                    _unitSuppliesRemaining = UnitsSupplyPerPoint + _unitSuppliesRemaining - units;
                 }
-                _unitSuppliesRemaining = UnitsSupplyPerPoint + _unitSuppliesRemaining - units;
             }
             else
             {
@@ -105,7 +106,9 @@ namespace pfsim.Officer
 
             if (IsExausted)
             {
-                missing = _unitSuppliesRemaining * -1;
+                if (_cargoPointsRemaining < 0)
+                    missing = (UnitsSupplyPerPoint * _cargoPointsRemaining * -1);
+                missing += (_unitSuppliesRemaining * -1);
             }
 
             if (IsExausted || cargo > 1)
