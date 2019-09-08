@@ -6,7 +6,7 @@
     {
       "PropulsionType": "Sails",
       "ShipSpeed": 90,
-      "PropulsionHitPoints": 360
+      "PropulsionHitPoints": 452
     }
   ],
   "HullHitPoints": 1090,
@@ -625,6 +625,19 @@
       "Perishable": true,
       "DaysInHold": 0,
       "SellableValue": 1000.0
+    },
+    {
+      "$type": "pfsim.Officer.Supplies, pfsim",
+      "CargoPoints": 1,
+      "SupplyType": 5,
+      "UnitsSupplyPerPoint": 1000,
+      "UnitsSupplyRemaining": 1000,
+      "Name": "Medicine",
+      "CargoType": 3,
+      "Value": 1000.0,
+      "Fragile": true,
+      "Perishable": false,
+      "DaysInHold": 0
     }
   ]
 }

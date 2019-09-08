@@ -77,10 +77,9 @@ namespace pfsim.Officer
             ConsumeSupply(SupplyType.Water, totalCrew * days * -1);
             ConsumeSupply(SupplyType.Food, totalCrew * days * -1);
             ConsumeSupply(SupplyType.Rum, totalCrew * days * -1);
-            AgeCargo(days);
         }
 
-        private void AgeCargo(int days)
+        public void AgeCargo(int days)
         {
             foreach(Cargo c in this)
             {
