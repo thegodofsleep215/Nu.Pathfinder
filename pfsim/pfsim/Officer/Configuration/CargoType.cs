@@ -19,6 +19,7 @@ namespace pfsim.Officer
         ShipSupplies,
         SeigeWeapon,
         ShipsBoat,
-        Passengers
+        Passengers,
+        Fodder
     }
 }

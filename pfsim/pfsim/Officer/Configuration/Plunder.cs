@@ -9,5 +9,6 @@ namespace pfsim.Officer
     public class Plunder : Cargo, IPlunder
     {
         public PlunderCategory PlunderCategory { get; set; }
+        public bool IsLivestock { get; set; } = false;
     }
 }

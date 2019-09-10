@@ -14,6 +14,7 @@ namespace pfsim.Officer
         Pinnace = 4,
         Longboat = 6,
         Launch = 5,
-        Barge = 7
+        Barge = 7,
+        Gig = 8
     }
 }

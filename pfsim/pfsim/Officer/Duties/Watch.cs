@@ -26,11 +26,12 @@ namespace pfsim.Officer
             status.WatchResults.Add(result);
             status.DutyEvents.Add(new WatchResultEvent
             {
+                Watch = watch + 1,
                 Success = result >= 0
             });
         }
 
-        private int PerformAssists(List<Assists> list, int weatherModifier, MiniGameStatus status)
+        private int PerformAssists(List<JobMessage> list, int weatherModifier, MiniGameStatus status)
         {
             int retval = 0;
             int watch = status.WatchResults.Count;

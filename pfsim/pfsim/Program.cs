@@ -14,6 +14,7 @@ namespace pfsim
     {
         static void Main(string[] args)
         {
+            SettingsManager.SetSettings(args);
             var rc = HostFactory.Run(x =>
             {
                 HostLogger.UseLogger(new NullLogger());

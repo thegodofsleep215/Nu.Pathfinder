@@ -5,7 +5,7 @@ namespace pfsim
 {
     public static class DiceRoller
     {
-        private static Random rand = new Random();
+        private static readonly Random rand = new Random(DateTime.Now.Millisecond);
 
         public static int Roll(string expression)
         {

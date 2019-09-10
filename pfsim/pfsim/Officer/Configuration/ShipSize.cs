@@ -5,6 +5,7 @@
         Large,
         Huge,
         Gargantuan,
-        Colossal
+        Colossal,
+        Medium
     }
 }

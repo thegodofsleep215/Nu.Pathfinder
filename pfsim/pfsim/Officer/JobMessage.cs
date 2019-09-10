@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace pfsim.Officer
 {
-    public interface ICargo
+    public class JobMessage : Job
     {
-
+        public int SkillBonus { get; set; }
     }
 }

@@ -1,0 +1,48 @@
+[
+  {
+    "Name": "Sayna",
+    "Title": "First Mate",
+    "Skills": {
+      "ProfessionSailor": 9,
+      "Diplomacy": 11,
+      "KnowledgeEngineering": 0,
+      "Intimidate": 4,
+      "Perception": 8,
+      "CraftCarpentry": 1,
+      "CraftShip": 1,
+      "CraftSails": 1,
+      "Survival": 0,
+      "ProfessionMerchant": 0,
+      "CraftCooking": 1,
+      "Heal": 2,
+      "Perform": 11
+    },
+    "Jobs": [
+      {
+        "CrewName": "Sayna",
+        "DutyType": 0,
+        "IsAssistant": false
+      },
+      {
+        "CrewName": "Sayna",
+        "DutyType": 3,
+        "IsAssistant": false
+      }
+    ],
+    "ExternalModifiers": {
+      "ProfessionSailor": 0,
+      "Diplomacy": 0,
+      "KnowledgeEngineering": 0,
+      "Intimidate": 0,
+      "Perception": 0,
+      "CraftCarpentry": 0,
+      "CraftShip": 0,
+      "CraftSails": 0,
+      "Survival": 0,
+      "ProfessionMerchant": 0,
+      "CraftCooking": 0,
+      "Heal": 0,
+      "Perform": 0
+    }
+  }
+]

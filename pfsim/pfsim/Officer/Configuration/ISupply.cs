@@ -6,7 +6,7 @@
         int UnitsSupplyPerPoint { get; set; }
         int UnitsSupplyRemaining { get; }
 
-        void AdjustSupplies(int amount);
+        int AdjustSupplies(int amount);
 
         void OnExhuastion();
     }

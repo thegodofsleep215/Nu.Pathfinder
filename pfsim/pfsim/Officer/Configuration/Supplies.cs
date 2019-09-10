@@ -69,23 +69,26 @@ namespace pfsim.Officer
             }
         }
 
-        public void AdjustSupplies(int amount)
+        public int AdjustSupplies(int amount)
         {
+            int missing = 0;  
+
             bool subtraction = amount < 0;
             int units = Math.Abs(amount) % UnitsSupplyPerPoint;
-            int cargo = Math.Abs(amount) % UnitsSupplyPerPoint;
+            int cargo = Math.Abs(amount) / UnitsSupplyPerPoint;
 
             if (subtraction)
             {
                 if (units < _unitSuppliesRemaining)
                 {
                     _cargoPointsRemaining -= cargo;
+                    _unitSuppliesRemaining -= units;
                 }
                 else
                 {
                     _cargoPointsRemaining -= (cargo + 1);
+                    _unitSuppliesRemaining = UnitsSupplyPerPoint + _unitSuppliesRemaining - units;
                 }
-                _unitSuppliesRemaining = UnitsSupplyPerPoint + _unitSuppliesRemaining - units;
             }
             else
             {
@@ -101,10 +104,19 @@ namespace pfsim.Officer
                 }
             }
 
-            if (CargoPoints < 1 || cargo > 1)
+            if (IsExausted)
             {
-                OnExhuastion();
+                if (_cargoPointsRemaining < 0)
+                    missing = (UnitsSupplyPerPoint * _cargoPointsRemaining * -1);
+                missing += (_unitSuppliesRemaining * -1);
             }
+
+            if (IsExausted || cargo > 1)
+            {
+                OnExhuastion();   
+            }
+
+            return missing;
         }
    
         public void OnExhuastion()

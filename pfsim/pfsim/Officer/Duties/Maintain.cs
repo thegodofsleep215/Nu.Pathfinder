@@ -22,14 +22,18 @@ namespace pfsim.Officer
             var weatherModifier = ship.CurrentVoyage.GetWeatherModifier(DutyType.Maintain);
             var dc = 5 + ship.ShipDc - status.CommandModifier - status.ManageModifier - weatherModifier;
             var assistBonus = PerformAssists(ship.GetAssistance(DutyType.Maintain), weatherModifier);
-            status.MaintainResult = DiceRoller.D20(1) + ship.MaintainSkillBonus + assistBonus - dc;
+            var job = ship.MaintainJob;
+            status.MaintainResult = DiceRoller.D20(1) + job.SkillBonus + assistBonus - dc;
+            if(SettingsManager.Verbose)
+                status.DutyEvents.Add(new PerformedDutyEvent(DutyType.Maintain, job.CrewName, dc, assistBonus, job.SkillBonus, status.MaintainResult));
 
-            if(status.MaintainResult < 0)
+            if (status.MaintainResult < 0)
             {
                 int damage;
                 switch (ship.ShipSize)
                 {
                     default:
+                    case ShipSize.Medium:
                     case ShipSize.Large:
                         damage = 1;
                         break;
@@ -47,7 +51,7 @@ namespace pfsim.Officer
             }
         }
         
-        private int PerformAssists(List<Assists> list, int modifier)
+        private int PerformAssists(List<JobMessage> list, int modifier)
         {
             int retval = 0;
 

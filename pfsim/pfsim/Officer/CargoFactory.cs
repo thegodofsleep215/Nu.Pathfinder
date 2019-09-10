@@ -42,14 +42,14 @@ namespace pfsim.Officer
                     return new Supplies()
                     {
                         Name = GetFoodName(),
-                        CargoType = CargoType.Rum,
+                        CargoType = CargoType.Food,
                         CargoPoints = 4,
                         DaysInHold = 0,
                         Fragile = false,
                         Perishable = false,
-                        SupplyType = SupplyType.Water,
-                        UnitsSupplyPerPoint = 900,
-                        UnitsSupplyRemaining = 900,
+                        SupplyType = SupplyType.Food,
+                        UnitsSupplyPerPoint = ShipConstants.ShipFoodPerCargoPoint,
+                        UnitsSupplyRemaining = ShipConstants.ShipFoodPerCargoPoint,
                         Value = 1000
                     };
                 case CargoType.Medicine:
@@ -88,9 +88,9 @@ namespace pfsim.Officer
                         DaysInHold = 0,
                         Fragile = false,
                         Perishable = false,
-                        SupplyType = SupplyType.Water,
-                        UnitsSupplyPerPoint = 900,
-                        UnitsSupplyRemaining = 900,
+                        SupplyType = SupplyType.Rum,
+                        UnitsSupplyPerPoint = ShipConstants.ShipFoodPerCargoPoint,
+                        UnitsSupplyRemaining = ShipConstants.ShipFoodPerCargoPoint,
                         Value = 1000
                     };
                 case CargoType.SeigeWeapon:
@@ -107,8 +107,8 @@ namespace pfsim.Officer
                         Fragile = false,
                         Perishable = false,
                         SupplyType = SupplyType.ShipSupplies,
-                        UnitsSupplyPerPoint = 100,
-                        UnitsSupplyRemaining = 100,
+                        UnitsSupplyPerPoint = ShipConstants.ShipSuppliesPerCargoPoint,
+                        UnitsSupplyRemaining = ShipConstants.ShipSuppliesPerCargoPoint,
                         Value = 1000
                     };
                 case CargoType.Water:
@@ -121,9 +121,9 @@ namespace pfsim.Officer
                         Fragile = false,
                         Perishable = false,
                         SupplyType = SupplyType.Water,
-                        UnitsSupplyPerPoint = 900,
-                        UnitsSupplyRemaining = 900,
-                        Value = 75
+                        UnitsSupplyPerPoint = ShipConstants.ShipFoodPerCargoPoint,
+                        UnitsSupplyRemaining = ShipConstants.ShipFoodPerCargoPoint,
+                        Value = 300
                     };
                 case CargoType.WetContainers:
                     return new Cargo()
@@ -136,33 +136,67 @@ namespace pfsim.Officer
                         Perishable = false,
                         Value = 75
                     };
+                case CargoType.Fodder:
+                    return new Supplies()
+                    {
+                        Name = "Fodder",
+                        CargoPoints = 6,
+                        DaysInHold = 0,
+                        CargoType = CargoType.Fodder,
+                        Fragile = false,
+                        Perishable = false,
+                        SupplyType = SupplyType.Fodder,
+                        UnitsSupplyPerPoint = ShipConstants.ShipFodderPerCargoPoint,
+                        UnitsSupplyRemaining = ShipConstants.ShipFodderPerCargoPoint,
+                        Value = 300
+                    };
                 default:
                     return new Cargo();
             }
         }
 
-        private string GetPlunderName(PlunderCategory pc, out bool perishable, out bool fragile)
+        private string GetPlunderName(PlunderCategory pc, out bool perishable, out bool fragile, out bool livestock)
         {
             switch (pc)
             {
                 case PlunderCategory.Bulk:
-                    return GetBulkPlunderName(out perishable, out fragile);
+                    return GetBulkPlunderName(out perishable, out fragile, out livestock);
                 case PlunderCategory.Commodity:
-                    return GetCommodityPlunderName(out perishable, out fragile);
+                    return GetCommodityPlunderName(out perishable, out fragile, out livestock);
                 case PlunderCategory.Trade:
-                    return GetTradePlunderName(out perishable, out fragile);
+                    return GetTradePlunderName(out perishable, out fragile, out livestock);
                 case PlunderCategory.Luxury:
-                    return GetLuxuryPlunderName(out perishable, out fragile);
+                    return GetLuxuryPlunderName(out perishable, out fragile, out livestock);
                 case PlunderCategory.Precious:
-                    return GetPreciousPlunderName(out perishable, out fragile);
+                    return GetPreciousPlunderName(out perishable, out fragile, out livestock);
                 default:
-                    return GetCommodityPlunderName(out perishable, out fragile);
+                    return GetCommodityPlunderName(out perishable, out fragile, out livestock);
             }
         }
 
-        private string GetBulkPlunderName(out bool perishable, out bool fragile)
+        private string GetPlunderName(PlunderCategory pc, int hint, out bool perishable, out bool fragile, out bool livestock)
         {
-            switch (DiceRoller.D20(1))
+            switch (pc)
+            {
+                case PlunderCategory.Bulk:
+                    return GetBulkPlunderName(hint, out perishable, out fragile, out livestock);
+                case PlunderCategory.Commodity:
+                    return GetCommodityPlunderName(out perishable, out fragile, out livestock);
+                case PlunderCategory.Trade:
+                    return GetTradePlunderName(out perishable, out fragile, out livestock);
+                case PlunderCategory.Luxury:
+                    return GetLuxuryPlunderName(out perishable, out fragile, out livestock);
+                case PlunderCategory.Precious:
+                    return GetPreciousPlunderName(out perishable, out fragile, out livestock);
+                default:
+                    return GetCommodityPlunderName(out perishable, out fragile, out livestock);
+            }
+        }
+
+        private string GetBulkPlunderName(int hint, out bool perishable, out bool fragile, out bool livestock)
+        {
+            livestock = false;
+            switch (hint)
             {
                 case 1:
                 case 2:
@@ -212,6 +246,7 @@ namespace pfsim.Officer
                 case 19:
                     perishable = true;
                     fragile = true;
+                    livestock = true;
                     return GetLiveStockName();
                 case 20:
                     perishable = true;
@@ -224,9 +259,15 @@ namespace pfsim.Officer
             }
         }
 
-        private string GetCommodityPlunderName(out bool perishable, out bool fragile)
+        private string GetBulkPlunderName(out bool perishable, out bool fragile, out bool livestock)
         {
-            switch (DiceRoller.Roll(24, 1))
+            return GetBulkPlunderName(DiceRoller.D20(1), out perishable, out fragile, out livestock);
+        }
+
+        private string GetCommodityPlunderName(int hint, out bool perishable, out bool fragile, out bool livestock)
+        {
+            livestock = false;
+            switch (hint)
             {
                 case 1:
                     perishable = false;
@@ -313,6 +354,11 @@ namespace pfsim.Officer
             }
         }
 
+        private string GetCommodityPlunderName(out bool perishable, out bool fragile, out bool livestock)
+        {
+            return GetCommodityPlunderName(DiceRoller.Roll(24, 1), out perishable, out fragile, out livestock);
+        }
+
         private string ReturnGrainName()
         {
             switch (DiceRoller.D8(1))
@@ -357,9 +403,10 @@ namespace pfsim.Officer
             }
         }
 
-        private string GetTradePlunderName(out bool perishable, out bool fragile)
+        private string GetTradePlunderName(int hint, out bool perishable, out bool fragile, out bool livestock)
         {
-            switch (DiceRoller.Roll(21, 1))
+            livestock = false;
+            switch (hint)
             {
                 case 1:
                 case 2:
@@ -388,7 +435,7 @@ namespace pfsim.Officer
                 case 10:
                     perishable = false;
                     fragile = false;
-                    return "Wahle Oil";
+                    return "Whale Oil";
                 case 11:
                     perishable = false;
                     fragile = false;
@@ -432,6 +479,11 @@ namespace pfsim.Officer
                     fragile = false;
                     return "Hardtack";
             }
+        }
+
+        private string GetTradePlunderName(out bool perishable, out bool fragile, out bool livestock)
+        {
+            return GetTradePlunderName(DiceRoller.Roll(21, 1), out perishable, out fragile, out livestock);
         }
 
         private string GetFruitName()
@@ -479,9 +531,10 @@ namespace pfsim.Officer
             }
         }
 
-        private string GetLuxuryPlunderName(out bool perishable, out bool fragile)
+        private string GetLuxuryPlunderName(int hint, out bool perishable, out bool fragile, out bool livestock)
         {
-            switch (DiceRoller.D20(1))
+            livestock = false;
+            switch (hint)
             {
                 case 1:
                     perishable = false;
@@ -511,7 +564,7 @@ namespace pfsim.Officer
                 case 11:
                     perishable = false;
                     fragile = false;
-                    return GetRareWoodName(); // "Rare Wood";
+                    return GetRareWoodName(); 
                 case 12:
                 case 13:
                     perishable = false;
@@ -547,6 +600,11 @@ namespace pfsim.Officer
                     fragile = false;
                     return "Gizmos";
             }
+        }
+
+        private string GetLuxuryPlunderName(out bool perishable, out bool fragile, out bool livestock)
+        {
+            return GetLuxuryPlunderName(DiceRoller.D20(1), out perishable, out fragile, out livestock); 
         }
 
         private string GetRareWoodName()
@@ -592,9 +650,10 @@ namespace pfsim.Officer
             }
         }
 
-        private string GetPreciousPlunderName(out bool perishable, out bool fragile)
+        private string GetPreciousPlunderName(int hint, out bool perishable, out bool fragile, out bool livestock)
         {
-            switch (DiceRoller.Roll(24, 1))
+            livestock = false;
+            switch (hint)
             {
                 case 1:
                     perishable = false;
@@ -621,7 +680,7 @@ namespace pfsim.Officer
                 case 8:
                     perishable = false;
                     fragile = false;
-                    return "Spices";
+                    return GetSpiceName(); //"Spices";
                 case 9:
                 case 10:
                     perishable = false;
@@ -672,6 +731,54 @@ namespace pfsim.Officer
                     perishable = false;
                     fragile = false;
                     return "Beanie Babies";
+            }
+        }
+
+        private string GetPreciousPlunderName(out bool perishable, out bool fragile, out bool livestock)
+        {
+            return GetPreciousPlunderName(DiceRoller.Roll(24, 1), out perishable, out fragile, out livestock);
+        }
+
+        private string GetSpiceName()
+        {
+            switch (DiceRoller.D20(1))
+            {
+                case 1:
+                    return "Cardamon";
+                case 2:
+                case 3:
+                case 4:
+                case 5:
+                    return "Black Pepper";
+                case 6:
+                case 7:
+                    return "Cloves";
+                case 8:
+                case 9:
+                    return "Cinnamon";
+                case 10:
+                    return "Mace";
+                case 11:
+                    return "Nutmeg";
+                case 12:
+                    return "Chocolate";
+                case 13:
+                    return "Ginger";
+                case 14:
+                    return "Tumeric";
+                case 15:
+                    return "Cumin";
+                case 16:
+                    return "Anise";
+                case 17:
+                case 18:
+                    return "Vanilla";
+                case 19:
+                    return "Allspice";
+                case 20:
+                    return "Galangal";
+                default:
+                    return "Cayenne";
             }
         }
 
@@ -794,9 +901,9 @@ namespace pfsim.Officer
             return string.Join(",", foodstuffs.Keys.ToList());
         }
 
-        public Plunder ProducePlunder(PlunderCategory category)
+        public Plunder ProducePlunder(PlunderCategory category, int? hint = null)
         {
-            return Loot(category);
+            return Loot(category, hint);
         }
 
         public Ammunition ProduceAmmunition(SiegeEngineType engineType)
@@ -993,7 +1100,7 @@ namespace pfsim.Officer
             return Loot(pc);
         }
 
-        private Plunder Loot(PlunderCategory category)
+        private Plunder Loot(PlunderCategory category, int? hint = null)
         {
             var p = new Plunder()
             {
@@ -1025,9 +1132,16 @@ namespace pfsim.Officer
                     break;
             }
 
-            p.Name = GetPlunderName(p.PlunderCategory, out bool perishable, out bool fragile);
+            bool perishable;
+            bool fragile;
+            bool livestock;
+            if(hint.HasValue)
+                p.Name = GetPlunderName(p.PlunderCategory, hint.Value, out perishable, out fragile, out livestock);
+            else
+                p.Name = GetPlunderName(p.PlunderCategory, out perishable, out fragile, out livestock);
             p.Perishable = perishable;
             p.Fragile = fragile;
+            p.IsLivestock = livestock;
 
             return p;
         }
@@ -1096,6 +1210,10 @@ namespace pfsim.Officer
                     boat.Name = "Pinnace";
                     boat.CargoPoints = 3;
                     boat.Value = 400;
+                    break;
+                case BoatClasses.Gig:
+                    boat.Name = "Gig";
+                    boat.Value = 200;
                     break;
             }
 

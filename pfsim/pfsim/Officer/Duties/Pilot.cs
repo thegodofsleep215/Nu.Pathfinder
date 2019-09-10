@@ -27,8 +27,11 @@ namespace pfsim.Officer
         {
             var weatherModifier = ship.CurrentVoyage.GetWeatherModifier(DutyType.Pilot);
             var dc = 7 + ship.ShipDc - status.CommandModifier - ship.CrewPilotModifier - weatherModifier + status.WatchModifier;
+            var job = ship.PilotJob;
             var assistBonus = PerformAssists(ship.GetAssistance(DutyType.Pilot), weatherModifier);
-            status.PilotResult = (DiceRoller.D20(1) + ship.PilotSkillBonus + assistBonus) - dc;
+            status.PilotResult = (DiceRoller.D20(1) + job.SkillBonus + assistBonus) - dc;
+            if(SettingsManager.Verbose)
+                status.DutyEvents.Add(new PerformedDutyEvent(DutyType.Pilot, job.CrewName, dc, assistBonus, job.SkillBonus, status.PilotResult));
 
             if (status.PilotResult >= 0)
             {
@@ -41,6 +44,9 @@ namespace pfsim.Officer
                 {
                     switch (ship.ShipSize)
                     {
+                        case ShipSize.Medium:
+                            damage = DiceRoller.D8(2);
+                            break;
                         case ShipSize.Large:
                             damage = DiceRoller.D8(3);
                             break;
@@ -59,10 +65,17 @@ namespace pfsim.Officer
                         Damage = damage
                     });
                 }
+                else
+                {
+                    status.DutyEvents.Add(new PilotFailedEvent
+                    {
+                        Damage = 0
+                    });
+                }
             }
         }
 
-        private int PerformAssists(List<Assists> list, int modifier)
+        private int PerformAssists(List<JobMessage> list, int modifier)
         {
             int retval = 0;
 
