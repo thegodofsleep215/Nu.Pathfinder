@@ -400,14 +400,19 @@ namespace pfsim.ActionContainers
                 return "Can't find ship.";
             }
         }
-        [TypedCommand("RandomCrewName", "Adds supplies to a ship.")]
+        [TypedCommand("RandomCrewName", "Gets a crew name.")]
         public string RandomCrewName(string shipName)
+        {
+            return RandomCrewName(shipName, 1);
+        }
+        [TypedCommand("RandomCrewName", "Gets a crew name.")]
+        public string RandomCrewName(string shipName, int count)
         {
             var ship = LoadShip(shipName);
 
             if (ship != null && !string.IsNullOrEmpty(ship.CrewName))
             {
-                return ship.GetRandomCrewName();
+                return ship.GetRandomCrewName(count);
             }
             else
             {
