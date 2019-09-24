@@ -10,19 +10,19 @@ namespace pfsim.Officer
     public class Supplies : Cargo, ISupply
     {
         private int _unitSuppliesRemaining { get; set; }
-        private int _cargoPointsRemaining { get; set; }
+        public int CargoPointsRemaining { get; set; }
         public override int CargoPoints
         {
             get
             {
                 if (_unitSuppliesRemaining == UnitsSupplyPerPoint)
-                    return _cargoPointsRemaining;
+                    return CargoPointsRemaining;
                 else
-                    return _cargoPointsRemaining + ((_unitSuppliesRemaining > 0) ? 1 : 0);
+                    return CargoPointsRemaining + ((_unitSuppliesRemaining > 0) ? 1 : 0);
             }
             set
             {
-                _cargoPointsRemaining = value;
+                CargoPointsRemaining = value;
             }
         }
         public SupplyType SupplyType { get; set; }
@@ -53,7 +53,7 @@ namespace pfsim.Officer
         {
             get
             {
-                return _cargoPointsRemaining < 0;
+                return CargoPointsRemaining < 0;
             }
         }
         [JsonIgnore]
@@ -63,9 +63,10 @@ namespace pfsim.Officer
             {
                 if ((CargoPoints == 0) || (UnitsSupplyPerPoint == 0))
                     return 0;
+                else if (_unitSuppliesRemaining == UnitsSupplyPerPoint)
+                    return Math.Floor(Value * (CargoPointsRemaining / CargoPoints));
                 else
-                    // TODO: Test this formula.
-                    return Math.Floor(Value * (_cargoPointsRemaining / CargoPoints) + Value * (_unitSuppliesRemaining / (CargoPoints * UnitsSupplyPerPoint)));
+                    return Math.Floor(Value * (CargoPointsRemaining / CargoPoints) + Value * (_unitSuppliesRemaining / (CargoPoints * UnitsSupplyPerPoint)));
             }
         }
 
@@ -81,12 +82,12 @@ namespace pfsim.Officer
             {
                 if (units < _unitSuppliesRemaining)
                 {
-                    _cargoPointsRemaining -= cargo;
+                    CargoPointsRemaining -= cargo;
                     _unitSuppliesRemaining -= units;
                 }
                 else
                 {
-                    _cargoPointsRemaining -= (cargo + 1);
+                    CargoPointsRemaining -= (cargo + 1);
                     _unitSuppliesRemaining = UnitsSupplyPerPoint + _unitSuppliesRemaining - units;
                 }
             }
@@ -94,20 +95,20 @@ namespace pfsim.Officer
             {
                 if (units < (UnitsSupplyPerPoint - _unitSuppliesRemaining))
                 {
-                    _cargoPointsRemaining += cargo;
+                    CargoPointsRemaining += cargo;
                     _unitSuppliesRemaining += units;
                 }
                 else
                 {
-                    _cargoPointsRemaining += (cargo + 1);
+                    CargoPointsRemaining += (cargo + 1);
                     _unitSuppliesRemaining = _unitSuppliesRemaining + units - UnitsSupplyPerPoint;
                 }
             }
 
             if (IsExausted)
             {
-                if (_cargoPointsRemaining < 0)
-                    missing = (UnitsSupplyPerPoint * _cargoPointsRemaining * -1);
+                if (CargoPointsRemaining < 0)
+                    missing = (UnitsSupplyPerPoint * CargoPointsRemaining * -1);
                 missing += (_unitSuppliesRemaining * -1);
             }
 

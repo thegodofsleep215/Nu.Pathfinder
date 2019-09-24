@@ -43,7 +43,7 @@ namespace pfsim.Officer
     {
         public void PerformDuty(Ship ship, ref MiniGameStatus status)
         {
-            var santitation = 2;
+            var santitation = ship.TotalCrew / 10;
             santitation += ship.HasHealer ? 0 : 4;
             santitation += status.CookResult <= -15 ? 4 : 0;
             santitation += ship.CrewMorale.WellBeing == 2 ? 2 : 0;

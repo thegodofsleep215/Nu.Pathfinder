@@ -240,6 +240,25 @@ namespace pfsim.Officer
             return _assignedJobs;
         }
 
+        public string GetRandomCrewName()
+        {
+            var swabCount = Swabbies + ShipsCrew.Count(a => a.CountsAsCrew);
+            var result = DiceRoller.Roll(swabCount, 1);
+
+            if(result > Swabbies)
+            {
+                var mates = ShipsCrew.Where(a => a.CountsAsCrew).ToList();
+
+                var mate = mates[result - (Swabbies + 1)];
+
+                return string.Format("{0} {1}", mate.Title, mate.Name).Trim();
+            }
+            else
+            {
+                return string.Format("Swabby #{0}", result);
+            }
+        }
+
         public BaseResponse AssignJob(string crewname, DutyType duty, bool isAssistant)
         {
             BaseResponse retval = new BaseResponse();
@@ -557,7 +576,6 @@ namespace pfsim.Officer
                 List<int> shantyBonuses = new List<int>();
 
                 var day = AssignedJobs.Where(a => a.DutyType == DutyType.Ministrel);
-                var i = 0;
 
                 foreach (var watch in day)
                 {
@@ -565,8 +583,7 @@ namespace pfsim.Officer
 
                     if (ministrel != null)
                     {
-                        shantyBonuses[i] = ministrel.MinistrelSkillBonus;
-                        i++;
+                        shantyBonuses.Add(ministrel.MinistrelSkillBonus);
                     }
                 }
 

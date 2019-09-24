@@ -246,7 +246,7 @@ namespace pfsim.ActionContainers
             if (ship != null && !string.IsNullOrEmpty(ship.CrewName)
                 && crew != null && crew.Length > 0)
             {
-                foreach(var mate in crew)
+                foreach (var mate in crew)
                 {
                     var existing = ship.ShipsCrew.FirstOrDefault(a => a.Name == mate.Name);
 
@@ -283,7 +283,7 @@ namespace pfsim.ActionContainers
         {
             var ship = LoadShip(shipName);
 
-            if(ship != null && !string.IsNullOrEmpty(ship.CrewName))
+            if (ship != null && !string.IsNullOrEmpty(ship.CrewName))
             {
                 if (Enum.TryParse<BoatClasses>(boatClass, true, out BoatClasses result))
                 {
@@ -291,7 +291,7 @@ namespace pfsim.ActionContainers
 
                     ship.ShipsCargo.Add(boat);
 
-;                   var response = WriteAsset(ship);
+                    var response = WriteAsset(ship);
 
                     if (response.Success)
                         return "Added boat to ship.";
@@ -399,6 +399,41 @@ namespace pfsim.ActionContainers
             {
                 return "Can't find ship.";
             }
+        }
+        [TypedCommand("RandomCrewName", "Adds supplies to a ship.")]
+        public string RandomCrewName(string shipName)
+        {
+            var ship = LoadShip(shipName);
+
+            if (ship != null && !string.IsNullOrEmpty(ship.CrewName))
+            {
+                return ship.GetRandomCrewName();
+            }
+            else
+            {
+                return "Can't find ship.";
+            }
+        }
+        [TypedCommand("TestRandom", "How random is that dice roller anyway?")]
+        public string TestRandom(int tries)
+        {
+            int[] list;
+            if (tries > 0)
+                list = new int[tries];
+            else
+                return "Tries must be a positive integer.";
+
+            for(int i = 0; i < tries; i++)
+            {
+                list[i] = DiceRoller.D20(1);
+            }
+
+            var mean = list.ToList().Average();
+            var mode = list.ToList().GroupBy(a => a).Select(b => new { key = b, count = b.Count() }).ToDictionary(c => c.key, c => c.count);
+            var stddev = list.ToList().Sum(a => Math.Pow(a - mean, 2)) / tries;
+            stddev = Math.Sqrt(stddev);
+
+            return string.Format("Average: {0}", mean);
         }
 
         private BaseResponse ProcessOMGArguments(string[] args, ref Ship ship, ref List<string> messages)

@@ -3,7 +3,7 @@
     "Name": "Barefoot Sam",
     "Title": "Able Seaman",
     "Skills": {
-      "ProfessionSailor": 4,
+      "ProfessionSailor": 5,
       "Diplomacy": 0,
       "KnowledgeEngineering": 0,
       "Intimidate": 0,
@@ -11,7 +11,7 @@
       "CraftCarpentry": 0,
       "CraftShip": 0,
       "CraftSails": 0,
-      "Survival": 4,
+      "Survival": 0,
       "ProfessionMerchant": 0,
       "CraftCooking": 0,
       "Heal": 0,
