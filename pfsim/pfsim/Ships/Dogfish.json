@@ -672,15 +672,15 @@
   "Alignment": "Chaotic",
   "Marines": 0,
   "Passengers": 0,
-  "Swabbies": 54,
+  "Swabbies": 56,
   "AverageSwabbieQuality": 4,
   "CurrentVoyage": {
     "NightStatus": "Underweigh",
     "OpenOcean": true,
     "ShallowWater": false,
     "NarrowPassage": false,
-    "DayOfVoyage": 3,
-    "DaysSinceResupply": 3,
+    "DayOfVoyage": 17,
+    "DaysSinceResupply": 6,
     "HullDamageSinceRefit": 0,
     "CurrentHullDamage": 0,
     "SailDamageSinceRefit": 0,
@@ -693,7 +693,7 @@
     "NumberOfCrewPlottingMutiny": 0,
     "WeatherConditions": "Clear"
   },
-  "CargoPoints": 129,
+  "CargoPoints": 123,
   "ShipsCargo": [
     {
       "Name": "Cutter",
@@ -982,11 +982,24 @@
     },
     {
       "$type": "pfsim.Officer.Plunder, pfsim",
-      "PlunderCategory": 2,
+      "PlunderCategory": 1,
       "IsLivestock": false,
-      "Name": "Wool",
+      "Name": "Wheat",
       "CargoType": 2,
-      "CargoPoints": 4,
+      "CargoPoints": 6,
+      "Value": 1000.0,
+      "Fragile": false,
+      "Perishable": true,
+      "DaysInHold": 0,
+      "SellableValue": 1000.0
+    },
+    {
+      "$type": "pfsim.Officer.Plunder, pfsim",
+      "PlunderCategory": 1,
+      "IsLivestock": false,
+      "Name": "Wheat",
+      "CargoType": 2,
+      "CargoPoints": 6,
       "Value": 1000.0,
       "Fragile": false,
       "Perishable": true,
@@ -997,9 +1010,35 @@
       "$type": "pfsim.Officer.Plunder, pfsim",
       "PlunderCategory": 2,
       "IsLivestock": false,
-      "Name": "Weapons",
+      "Name": "Salt",
       "CargoType": 2,
       "CargoPoints": 4,
+      "Value": 1000.0,
+      "Fragile": true,
+      "Perishable": false,
+      "DaysInHold": 0,
+      "SellableValue": 1000.0
+    },
+    {
+      "$type": "pfsim.Officer.Plunder, pfsim",
+      "PlunderCategory": 3,
+      "IsLivestock": false,
+      "Name": "Copper & Cloth",
+      "CargoType": 2,
+      "CargoPoints": 3,
+      "Value": 1000.0,
+      "Fragile": false,
+      "Perishable": false,
+      "DaysInHold": 0,
+      "SellableValue": 1000.0
+    },
+    {
+      "$type": "pfsim.Officer.Plunder, pfsim",
+      "PlunderCategory": 5,
+      "IsLivestock": false,
+      "Name": "Semi-Precious Stones",
+      "CargoType": 2,
+      "CargoPoints": 1,
       "Value": 1000.0,
       "Fragile": false,
       "Perishable": false,
@@ -1018,6 +1057,136 @@
       "Fragile": true,
       "Perishable": false,
       "DaysInHold": 0
+    },
+    {
+      "Name": "Empty Crates",
+      "CargoType": 1,
+      "CargoPoints": 1,
+      "Value": 0.0,
+      "Fragile": false,
+      "Perishable": false,
+      "DaysInHold": 1,
+      "SellableValue": 75.0
+    },
+    {
+      "Name": "Empty Crates",
+      "CargoType": 11,
+      "CargoPoints": 1,
+      "Value": 0.0,
+      "Fragile": false,
+      "Perishable": false,
+      "DaysInHold": 1,
+      "SellableValue": 75.0
+    },
+    {
+      "Name": "Empty Crates",
+      "CargoType": 11,
+      "CargoPoints": 1,
+      "Value": 0.0,
+      "Fragile": false,
+      "Perishable": false,
+      "DaysInHold": 1,
+      "SellableValue": 75.0
+    },
+    {
+      "Name": "Empty Barrels",
+      "CargoType": 1,
+      "CargoPoints": 1,
+      "Value": 0.0,
+      "Fragile": false,
+      "Perishable": false,
+      "DaysInHold": 1,
+      "SellableValue": 75.0
+    },
+    {
+      "Name": "Empty Barrels",
+      "CargoType": 11,
+      "CargoPoints": 1,
+      "Value": 0.0,
+      "Fragile": false,
+      "Perishable": false,
+      "DaysInHold": 1,
+      "SellableValue": 75.0
+    },
+    {
+      "Name": "Empty Barrels",
+      "CargoType": 11,
+      "CargoPoints": 1,
+      "Value": 0.0,
+      "Fragile": false,
+      "Perishable": false,
+      "DaysInHold": 1,
+      "SellableValue": 75.0
+    },
+    {
+      "Name": "Passengers",
+      "CargoType": 11,
+      "CargoPoints": 1,
+      "Value": 0.0,
+      "Fragile": false,
+      "Perishable": false,
+      "DaysInHold": 1,
+      "SellableValue": 0.0
+    },
+    {
+      "Name": "Passengers",
+      "CargoType": 11,
+      "CargoPoints": 1,
+      "Value": 0.0,
+      "Fragile": false,
+      "Perishable": false,
+      "DaysInHold": 1,
+      "SellableValue": 0.0
+    },
+    {
+      "Name": "Passengers",
+      "CargoType": 11,
+      "CargoPoints": 1,
+      "Value": 0.0,
+      "Fragile": false,
+      "Perishable": false,
+      "DaysInHold": 1,
+      "SellableValue": 0.0
+    },
+    {
+      "Name": "Passengers",
+      "CargoType": 11,
+      "CargoPoints": 1,
+      "Value": 0.0,
+      "Fragile": false,
+      "Perishable": false,
+      "DaysInHold": 1,
+      "SellableValue": 0.0
+    },
+    {
+      "Name": "Passengers",
+      "CargoType": 11,
+      "CargoPoints": 1,
+      "Value": 0.0,
+      "Fragile": false,
+      "Perishable": false,
+      "DaysInHold": 1,
+      "SellableValue": 0.0
+    },
+    {
+      "Name": "Passengers",
+      "CargoType": 11,
+      "CargoPoints": 1,
+      "Value": 0.0,
+      "Fragile": false,
+      "Perishable": false,
+      "DaysInHold": 1,
+      "SellableValue": 0.0
+    },
+    {
+      "Name": "Passengers",
+      "CargoType": 11,
+      "CargoPoints": 1,
+      "Value": 0.0,
+      "Fragile": false,
+      "Perishable": false,
+      "DaysInHold": 1,
+      "SellableValue": 0.0
     }
   ]
 }

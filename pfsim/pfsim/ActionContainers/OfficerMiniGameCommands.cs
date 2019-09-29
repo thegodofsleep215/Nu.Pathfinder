@@ -419,27 +419,6 @@ namespace pfsim.ActionContainers
                 return "Can't find ship.";
             }
         }
-        [TypedCommand("TestRandom", "How random is that dice roller anyway?")]
-        public string TestRandom(int tries)
-        {
-            int[] list;
-            if (tries > 0)
-                list = new int[tries];
-            else
-                return "Tries must be a positive integer.";
-
-            for(int i = 0; i < tries; i++)
-            {
-                list[i] = DiceRoller.D20(1);
-            }
-
-            var mean = list.ToList().Average();
-            var mode = list.ToList().GroupBy(a => a).Select(b => new { key = b, count = b.Count() }).ToDictionary(c => c.key, c => c.count);
-            var stddev = list.ToList().Sum(a => Math.Pow(a - mean, 2)) / tries;
-            stddev = Math.Sqrt(stddev);
-
-            return string.Format("Average: {0}", mean);
-        }
 
         private BaseResponse ProcessOMGArguments(string[] args, ref Ship ship, ref List<string> messages)
         {

@@ -17,7 +17,7 @@ namespace pfsim.Officer
     {
         public void PerformDuty(Ship ship, ref MiniGameStatus status)
         {
-            var dc = 5 + ship.ShipDc + (ship.TotalCrew / 10) - status.CommandModifier;
+            var dc = 5 + ship.ShipDc + (ship.TotalCrew / 20) - status.CommandModifier;
             var assistBonus = PerformAssists(ship.GetAssistance(DutyType.Manage));
             var job = ship.ManagerJob;
             status.ManageResult = (DiceRoller.D20(1) + job.SkillBonus + assistBonus) - dc;
@@ -33,7 +33,7 @@ namespace pfsim.Officer
                     status.MinistrelResults.Add(shanty);
                     if (shanty >= 0)
                     { 
-                        status.MaintainResult += 2;
+                        status.ManageResult += 2;
                         status.DutyEvents.Add(new SeaShantyEvent(DutyType.Manage));
                     }
                 }

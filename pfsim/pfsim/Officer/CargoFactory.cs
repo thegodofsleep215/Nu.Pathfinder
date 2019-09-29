@@ -983,8 +983,8 @@ namespace pfsim.Officer
                     a.Name = "Heavy Catopolt Ammunition";
                     break;
                 case SiegeEngineType.LightBallista:
-                    a.UnitsSupplyPerPoint = 100;
-                    a.UnitsSupplyRemaining = 100;
+                    a.UnitsSupplyPerPoint = ShipConstants.LightBallistaAmmunitionPerCargoPoint;
+                    a.UnitsSupplyRemaining = ShipConstants.LightBallistaAmmunitionPerCargoPoint;
                     a.Name = "Light Ballista Ammunition";
                     break;
                 case SiegeEngineType.LightCatapolt:

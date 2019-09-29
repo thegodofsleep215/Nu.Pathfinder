@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace pfsim.Officer
 {
@@ -21,6 +22,7 @@ namespace pfsim.Officer
         {
             var weatherModifier = ship.CurrentVoyage.GetWeatherModifier(DutyType.Maintain);
             var dc = 5 + ship.ShipDc - status.CommandModifier - status.ManageModifier - weatherModifier;
+            dc += ship.IsShipOverburdened ? (int)Math.Ceiling(ship.OverburdenedFactor + 1) : 0;
             var assistBonus = PerformAssists(ship.GetAssistance(DutyType.Maintain), weatherModifier);
             var job = ship.MaintainJob;
             status.MaintainResult = DiceRoller.D20(1) + job.SkillBonus + assistBonus - dc;
@@ -47,6 +49,8 @@ namespace pfsim.Officer
                         damage = DiceRoller.D6(1);
                         break;
                 }
+                damage = (int)Math.Ceiling(damage * ship.OverburdenedFactor);
+
                 status.DutyEvents.Add(new PoorMaintenanceEvent { Damage = damage });
             }
         }
