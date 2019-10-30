@@ -25,6 +25,7 @@ namespace pfsim.Officer
     /// is modified by the crew’s morale bonus.
     public class Discipline : IDuty
     {
+ 
         public void PerformDuty(Ship ship, ref MiniGameStatus status)
         {
             var tension = 6;
@@ -41,7 +42,7 @@ namespace pfsim.Officer
                 var dc = 10 + (ship.TotalCrew / 10) - status.CommandModifier;
                 var job = ship.DisciplineJob;
                 var result = DiceRoller.D20(1) + job.SkillBonus - dc;
-                if(result < 0 && result >= -2)
+                if (result < 0 && result >= -2)
                 {
                     // Use a ministrel.
                     int ministrel = status.MinistrelResults.Count;
@@ -58,7 +59,7 @@ namespace pfsim.Officer
                         }
                     }
                 }
-                if(SettingsManager.Verbose)
+                if (SettingsManager.Verbose)
                     status.DutyEvents.Add(new PerformedDutyEvent(DutyType.Discipline, job.CrewName, dc, 0, job.SkillBonus, result));
                 if (result < 0 || !ship.HasDisciplineOfficer)
                 {
