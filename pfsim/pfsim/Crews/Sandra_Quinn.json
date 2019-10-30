@@ -1,33 +1,33 @@
 [
   {
-    "Name": "Rooster",
-    "Title": "Surgeon",
+    "Name": "Sandra Quinn",
+    "Title": "Chaplin",
     "Skills": {
-      "ProfessionSailor": 6,
+      "ProfessionSailor": 8,
       "Diplomacy": 0,
-      "KnowledgeEngineering": -1,
+      "KnowledgeEngineering": 0,
       "Intimidate": 0,
-      "Perception": 3,
-      "CraftCarpentry": -1,
-      "CraftShip": -1,
-      "CraftSails": -1,
-      "Survival": 3,
+      "Perception": 0,
+      "CraftCarpentry": 0,
+      "CraftShip": 0,
+      "CraftSails": 0,
+      "Survival": 0,
       "ProfessionMerchant": 0,
-      "CraftCooking": -1,
-      "Heal": 8,
+      "CraftCooking": 0,
+      "Heal": 6,
       "Perform": 0
     },
     "Jobs": [
       {
-        "CrewName": "Rooster",
-        "DutyType": 8,
-        "IsAssistant": false
+        "CrewName": "Sandra Quinn",
+        "DutyType": 2,
+        "IsAssistant": true
       },
 	  {
-		"CrewName": "Rooster",
-		"DutyType": "Pilot",
-		"IsAssistant": true
-	  }
+        "CrewName": "Sandra Quinn",
+        "DutyType": "Heal",
+        "IsAssistant": false
+      }
     ],
     "ExternalModifiers": {
       "ProfessionSailor": 0,

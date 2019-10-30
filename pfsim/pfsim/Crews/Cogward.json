@@ -1,33 +1,28 @@
 [
   {
-    "Name": "Rooster",
-    "Title": "Surgeon",
+    "Name": "Cogward",
+    "Title": "Sergent-At-Arms",
     "Skills": {
-      "ProfessionSailor": 6,
+      "ProfessionSailor": 4,
       "Diplomacy": 0,
-      "KnowledgeEngineering": -1,
-      "Intimidate": 0,
-      "Perception": 3,
-      "CraftCarpentry": -1,
-      "CraftShip": -1,
-      "CraftSails": -1,
-      "Survival": 3,
+      "KnowledgeEngineering": 0,
+      "Intimidate": 9,
+      "Perception": 5,
+      "CraftCarpentry": 0,
+      "CraftShip": 0,
+      "CraftSails": 0,
+      "Survival": 0,
       "ProfessionMerchant": 0,
-      "CraftCooking": -1,
-      "Heal": 8,
+      "CraftCooking": 0,
+      "Heal": 0,
       "Perform": 0
     },
     "Jobs": [
       {
-        "CrewName": "Rooster",
-        "DutyType": 8,
-        "IsAssistant": false
-      },
-	  {
-		"CrewName": "Rooster",
-		"DutyType": "Pilot",
-		"IsAssistant": true
-	  }
+        "CrewName": "Cogward",
+        "DutyType": 2,
+        "IsAssistant": true
+      }
     ],
     "ExternalModifiers": {
       "ProfessionSailor": 0,

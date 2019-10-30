@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace pfsim.Officer
 {
@@ -67,6 +68,7 @@ namespace pfsim.Officer
         public int ShipDc { get; set; } // General modifier to the difficulty to sail that increases with the size of the ship.
         public int ShipPilotingBonus { get; set; } // Bonus or penalty that the ship recieves for being especially easy to sail.
         public int ShipQuality { get; set; } // Place holder for generic bonus.
+        public List<string> SpecialFeatures { get; set; } = new List<string>();
 
         public List<CrewMember> ShipsCrew
         {
@@ -238,6 +240,42 @@ namespace pfsim.Officer
             }
 
             return _assignedJobs;
+        }
+
+        public string GetRandomCrewName(int count = 1)
+        {
+            var swabCount = Swabbies + ShipsCrew.Count(a => a.CountsAsCrew);
+            var mates = ShipsCrew.Where(a => a.CountsAsCrew).ToList();
+            HashSet<int> picked = new HashSet<int>();
+            StringBuilder sb = new StringBuilder();
+            int result;
+
+            if (count > swabCount)
+                count = swabCount;
+
+            for (int i = 0; i < count; i++)
+            {
+                do
+                {
+                    result = DiceRoller.Roll(swabCount, 1);
+                }
+                while (picked.Contains(result));
+
+                picked.Add(result);
+
+                if (result > Swabbies)
+                {
+                    var mate = mates[result - (Swabbies + 1)];
+
+                    sb.AppendLine(string.Format("{0} {1}", mate.Title, mate.Name).Trim());
+                }
+                else
+                {
+                    sb.AppendLine(string.Format("Swabby #{0}", result));
+                }
+            }
+
+            return sb.ToString();
         }
 
         public BaseResponse AssignJob(string crewname, DutyType duty, bool isAssistant)
@@ -557,7 +595,6 @@ namespace pfsim.Officer
                 List<int> shantyBonuses = new List<int>();
 
                 var day = AssignedJobs.Where(a => a.DutyType == DutyType.Ministrel);
-                var i = 0;
 
                 foreach (var watch in day)
                 {
@@ -565,8 +602,7 @@ namespace pfsim.Officer
 
                     if (ministrel != null)
                     {
-                        shantyBonuses[i] = ministrel.MinistrelSkillBonus;
-                        i++;
+                        shantyBonuses.Add(ministrel.MinistrelSkillBonus);
                     }
                 }
 

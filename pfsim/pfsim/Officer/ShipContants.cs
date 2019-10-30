@@ -8,8 +8,9 @@ namespace pfsim.Officer
 {
     public class ShipConstants
     {
-        public const int ShipSuppliesPerCargoPoint = 100;
+        public const int ShipSuppliesPerCargoPoint = 17;
         public const int ShipFoodPerCargoPoint = 900;
         public const int ShipFodderPerCargoPoint = 7;
+        public const int LightBallistaAmmunitionPerCargoPoint = 100;
     }
 }

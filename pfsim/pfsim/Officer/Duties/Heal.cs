@@ -43,7 +43,7 @@ namespace pfsim.Officer
     {
         public void PerformDuty(Ship ship, ref MiniGameStatus status)
         {
-            var santitation = 2;
+            var santitation = ship.TotalCrew / 10;
             santitation += ship.HasHealer ? 0 : 4;
             santitation += status.CookResult <= -15 ? 4 : 0;
             santitation += ship.CrewMorale.WellBeing == 2 ? 2 : 0;
@@ -58,8 +58,8 @@ namespace pfsim.Officer
 
             if (result < 0 || !ship.HasHealer)
             {
-                // TODO: The number of sick should scale better with the size of the crew.
-                var sickCount = santitation >= 20 ? DiceRoller.D3(1) : 1;
+                // The number of sick should scale better with the size of the crew.
+                var sickCount = santitation >= 20 ? DiceRoller.D3(1) * DiceRoller.Roll(ship.TotalCrew / 10, 1) : DiceRoller.Roll(ship.TotalCrew / 10, 1);
                 status.DutyEvents.Add(new SicknessEvent { NumberAffected = sickCount });
             }
         }
