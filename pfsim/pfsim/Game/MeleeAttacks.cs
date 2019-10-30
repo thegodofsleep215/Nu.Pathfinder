@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using Nu.Game.Common;
+using System.Linq;
 
 namespace pfsim
 {

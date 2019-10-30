@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Nu.CommandLine.Attributes;
-using Nu.Messaging;
-using pfsim.Officer;
+using Nu.Game.Common;
+using Nu.OfficerMiniGame;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -38,7 +38,7 @@ namespace pfsim.ActionContainers
 
             if (pResponse.Success)
             {
-                var game = new SailingEngine(ship);
+                var game = new SailingEngine(ship, SettingsManager.Verbose);
                 var gResponse = game.Run(); // Distinguish between successful and unsuccessful game.
 
                 if (gResponse.Success)
@@ -112,7 +112,7 @@ namespace pfsim.ActionContainers
 
             if (pResponse.Success)
             {
-                var game = new AnchoredEngine(ship);
+                var game = new AnchoredEngine(ship, SettingsManager.Verbose);
                 var gResponse = game.Run(); // Distinguish between successful and unsuccessful game.
 
                 if (gResponse.Success)
