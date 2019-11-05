@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Nu.CommandLine.Attributes;
-using Nu.Messaging;
-using pfsim.Officer;
+using Nu.Game.Common;
+using Nu.OfficerMiniGame;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -38,7 +38,7 @@ namespace pfsim.ActionContainers
 
             if (pResponse.Success)
             {
-                var game = new SailingEngine(ship);
+                var game = new SailingEngine(ship, SettingsManager.Verbose);
                 var gResponse = game.Run(); // Distinguish between successful and unsuccessful game.
 
                 if (gResponse.Success)
@@ -112,7 +112,7 @@ namespace pfsim.ActionContainers
 
             if (pResponse.Success)
             {
-                var game = new AnchoredEngine(ship);
+                var game = new AnchoredEngine(ship, SettingsManager.Verbose);
                 var gResponse = game.Run(); // Distinguish between successful and unsuccessful game.
 
                 if (gResponse.Success)
@@ -246,7 +246,7 @@ namespace pfsim.ActionContainers
             if (ship != null && !string.IsNullOrEmpty(ship.CrewName)
                 && crew != null && crew.Length > 0)
             {
-                foreach(var mate in crew)
+                foreach (var mate in crew)
                 {
                     var existing = ship.ShipsCrew.FirstOrDefault(a => a.Name == mate.Name);
 
@@ -283,7 +283,7 @@ namespace pfsim.ActionContainers
         {
             var ship = LoadShip(shipName);
 
-            if(ship != null && !string.IsNullOrEmpty(ship.CrewName))
+            if (ship != null && !string.IsNullOrEmpty(ship.CrewName))
             {
                 if (Enum.TryParse<BoatClasses>(boatClass, true, out BoatClasses result))
                 {
@@ -291,7 +291,7 @@ namespace pfsim.ActionContainers
 
                     ship.ShipsCargo.Add(boat);
 
-;                   var response = WriteAsset(ship);
+                    var response = WriteAsset(ship);
 
                     if (response.Success)
                         return "Added boat to ship.";
@@ -394,6 +394,25 @@ namespace pfsim.ActionContainers
                 {
                     return "Unrecognized supply type.";
                 }
+            }
+            else
+            {
+                return "Can't find ship.";
+            }
+        }
+        [TypedCommand("RandomCrewName", "Gets a crew name.")]
+        public string RandomCrewName(string shipName)
+        {
+            return RandomCrewName(shipName, 1);
+        }
+        [TypedCommand("RandomCrewName", "Gets a crew name.")]
+        public string RandomCrewName(string shipName, int count)
+        {
+            var ship = LoadShip(shipName);
+
+            if (ship != null && !string.IsNullOrEmpty(ship.CrewName))
+            {
+                return ship.GetRandomCrewName(count);
             }
             else
             {

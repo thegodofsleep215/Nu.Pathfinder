@@ -57,59 +57,6 @@
   <ItemGroup>
     <Compile Include="ActionContainers\OfficerMiniGameCommands.cs" />
     <Compile Include="CommandLineArgsReader.cs" />
-    <Compile Include="Officer\Alignment.cs" />
-    <Compile Include="Officer\Events\SeaShantyEvent.cs" />
-    <Compile Include="Officer\JobMessage.cs" />
-    <Compile Include="Officer\BaseResponse.cs" />
-    <Compile Include="Officer\CargoFactory.cs" />
-    <Compile Include="Officer\Configuration\Ammunition.cs" />
-    <Compile Include="Officer\Configuration\Cargo.cs" />
-    <Compile Include="Officer\Configuration\CargoHold.cs" />
-    <Compile Include="Officer\Configuration\CargoType.cs" />
-    <Compile Include="Officer\Configuration\BoatClasses.cs" />
-    <Compile Include="Officer\Configuration\IPlunder.cs" />
-    <Compile Include="Officer\Configuration\ISeigeEngine.cs" />
-    <Compile Include="Officer\Configuration\IAmmunition.cs" />
-    <Compile Include="Officer\Configuration\ISupply.cs" />
-    <Compile Include="Officer\Configuration\Plunder.cs" />
-    <Compile Include="Officer\Configuration\PlunderCategory.cs" />
-    <Compile Include="Officer\Configuration\SeigeEngineType.cs" />
-    <Compile Include="Officer\Configuration\SiegeEngine.cs" />
-    <Compile Include="Officer\Configuration\Supplies.cs" />
-    <Compile Include="Officer\DisciplineStandards.cs" />
-    <Compile Include="Officer\Configuration\CrewMember.cs" />
-    <Compile Include="Officer\Configuration\CrewSkills.cs" />
-    <Compile Include="Officer\Duties\Command.cs" />
-    <Compile Include="Officer\Duties\Cook.cs" />
-    <Compile Include="Officer\Duties\Discipline.cs" />
-    <Compile Include="Officer\Duties\Heal.cs" />
-    <Compile Include="Officer\Duties\IDuty.cs" />
-    <Compile Include="Officer\Duties\Maintain.cs" />
-    <Compile Include="Officer\Duties\Manage.cs" />
-    <Compile Include="Officer\Duties\Navigate.cs" />
-    <Compile Include="Officer\Duties\Pilot.cs" />
-    <Compile Include="Officer\Duties\RepairHull.cs" />
-    <Compile Include="Officer\Duties\RepairSails.cs" />
-    <Compile Include="Officer\Duties\Watch.cs" />
-    <Compile Include="Officer\DutyType.cs" />
-    <Compile Include="Officer\Events\DailyEvent.cs" />
-    <Compile Include="Officer\Events\EpicCookingFailureEvent.cs" />
-    <Compile Include="Officer\Events\EventProcessor.cs" />
-    <Compile Include="Officer\Events\MismanagedSuppliesEvent.cs" />
-    <Compile Include="Officer\Events\OffCourseEvent.cs" />
-    <Compile Include="Officer\Events\PerformedDutyEvent.cs" />
-    <Compile Include="Officer\Events\PilotFailedEvent.cs" />
-    <Compile Include="Officer\Events\PilotSuccessEvent.cs" />
-    <Compile Include="Officer\Events\PoorMaintenanceEvent.cs" />
-    <Compile Include="Officer\Events\RepairFailureEvent.cs" />
-    <Compile Include="Officer\Events\RepairSuccessEvent.cs" />
-    <Compile Include="Officer\Events\SicknessEvent.cs" />
-    <Compile Include="Officer\Events\SuppliesExhaustedEvent.cs" />
-    <Compile Include="Officer\Events\UnrulyCrewEvent.cs" />
-    <Compile Include="Officer\Events\WatchResultEvent.cs" />
-    <Compile Include="Officer\GameEngine.cs" />
-    <Compile Include="Officer\Job.cs" />
-    <Compile Include="Officer\MiniGameStatus.cs" />
     <Compile Include="Commands\AddCombatants.cs" />
     <Compile Include="Commands\StartCombat.cs" />
     <Compile Include="ControlService.cs" />
@@ -120,74 +67,35 @@
     <Compile Include="ActionContainers\PfSimCommands.cs" />
     <Compile Include="Game\CombatEngine.cs" />
     <Compile Include="Game\CombatManager.cs" />
-    <Compile Include="Game\DiceRoller.cs" />
     <Compile Include="Game\GameCharacter.cs" />
     <Compile Include="Game\IWeaponAttack.cs" />
     <Compile Include="Game\MeleeAttacks.cs" />
     <Compile Include="Game\RangedAttack.cs" />
     <Compile Include="Commands\NextCombatAction.cs" />
-    <Compile Include="Officer\Morale.cs" />
-    <Compile Include="Officer\NightStatus.cs" />
-    <Compile Include="Officer\OfficerEngine.cs" />
-    <Compile Include="Officer\Propulsion.cs" />
-    <Compile Include="Officer\Configuration\Ship.cs" />
-    <Compile Include="Officer\Configuration\ShipSize.cs" />
-    <Compile Include="Officer\Configuration\ShipType.cs" />
-    <Compile Include="Officer\AnchoredEngine.cs" />
-    <Compile Include="Officer\ShipContants.cs" />
-    <Compile Include="Officer\SupplyType.cs" />
-    <Compile Include="Officer\Voyage.cs" />
-    <Compile Include="Officer\WeatherConditions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SettingsManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="Crews\Audrin.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Crews\Barefoot_Sam.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Crews\Fishguts.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Crews\Gideon_Sully.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Crews\Jack_Gunner.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Crews\Layla.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Crews\Maheem.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Crews\Rooster.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Crews\Sayna.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="packages.config" />
-    <None Include="Ships\Dogfish.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Ships\DogfishHalfCrew.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Nu.Game.Common\Nu.Game.Common.csproj">
+      <Project>{43a8ec5e-8993-4f8f-974e-90ebfa98bc43}</Project>
+      <Name>Nu.Game.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Nu.Messaging\Nu.Messaging.csproj">
       <Project>{8a5ee3cf-e1d9-4722-bab4-de9852abd677}</Project>
       <Name>Nu.Messaging</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Nu.OfficerMiniGame\Nu.OfficerMiniGame.csproj">
+      <Project>{e0d3ab0c-d5ef-4a06-93f0-daeaec10cb65}</Project>
+      <Name>Nu.OfficerMiniGame</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assets\" />
-    <Folder Include="Cargo\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

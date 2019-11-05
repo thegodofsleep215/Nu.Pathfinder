@@ -28,8 +28,6 @@ namespace pfsim
             }
         }
 
-        public static int PollingPeriod { get; set; }
-
         internal static bool SetKey(string key, string value)
         {
             bool retval = true;
