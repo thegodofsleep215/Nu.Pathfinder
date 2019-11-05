@@ -698,8 +698,8 @@
     "OpenOcean": true,
     "ShallowWater": false,
     "NarrowPassage": false,
-    "DayOfVoyage": 30,
-    "DaysSinceResupply": 30,
+    "DayOfVoyage": 29,
+    "DaysSinceResupply": 29,
     "HullDamageSinceRefit": 0,
     "CurrentHullDamage": 0,
     "SailDamageSinceRefit": 0,
@@ -721,7 +721,7 @@
       "Value": 250.0,
       "Fragile": false,
       "Perishable": false,
-      "DaysInHold": 27,
+      "DaysInHold": 26,
       "SellableValue": 250.0
     },
     {
@@ -731,7 +731,7 @@
       "Value": 250.0,
       "Fragile": false,
       "Perishable": false,
-      "DaysInHold": 27,
+      "DaysInHold": 26,
       "SellableValue": 250.0
     },
     {
@@ -747,7 +747,7 @@
       "Value": 1000.0,
       "Fragile": false,
       "Perishable": false,
-      "DaysInHold": 27
+      "DaysInHold": 26
     },
     {
       "$type": "pfsim.Officer.Ammunition, pfsim",
@@ -762,7 +762,7 @@
       "Value": 1000.0,
       "Fragile": false,
       "Perishable": false,
-      "DaysInHold": 27
+      "DaysInHold": 26
     },
     {
       "$type": "pfsim.Officer.SiegeEngine, pfsim",
@@ -773,7 +773,7 @@
       "Value": 500.0,
       "Fragile": false,
       "Perishable": false,
-      "DaysInHold": 27,
+      "DaysInHold": 26,
       "SellableValue": 500.0
     },
     {
@@ -785,7 +785,7 @@
       "Value": 500.0,
       "Fragile": false,
       "Perishable": false,
-      "DaysInHold": 27,
+      "DaysInHold": 26,
       "SellableValue": 500.0
     },
     {
@@ -797,7 +797,7 @@
       "Value": 500.0,
       "Fragile": false,
       "Perishable": false,
-      "DaysInHold": 27,
+      "DaysInHold": 26,
       "SellableValue": 500.0
     },
     {
@@ -809,7 +809,7 @@
       "Value": 500.0,
       "Fragile": false,
       "Perishable": false,
-      "DaysInHold": 27,
+      "DaysInHold": 26,
       "SellableValue": 500.0
     },
     {
@@ -821,7 +821,7 @@
       "Value": 500.0,
       "Fragile": false,
       "Perishable": false,
-      "DaysInHold": 27,
+      "DaysInHold": 26,
       "SellableValue": 500.0
     },
     {
@@ -833,7 +833,7 @@
       "Value": 500.0,
       "Fragile": false,
       "Perishable": false,
-      "DaysInHold": 27,
+      "DaysInHold": 26,
       "SellableValue": 500.0
     },
     {
@@ -845,7 +845,7 @@
       "Value": 500.0,
       "Fragile": false,
       "Perishable": false,
-      "DaysInHold": 27,
+      "DaysInHold": 26,
       "SellableValue": 500.0
     },
     {
@@ -857,7 +857,7 @@
       "Value": 500.0,
       "Fragile": false,
       "Perishable": false,
-      "DaysInHold": 27,
+      "DaysInHold": 26,
       "SellableValue": 500.0
     },
     {
@@ -869,7 +869,7 @@
       "Value": 500.0,
       "Fragile": false,
       "Perishable": false,
-      "DaysInHold": 27,
+      "DaysInHold": 26,
       "SellableValue": 500.0
     },
     {
@@ -881,22 +881,22 @@
       "Value": 500.0,
       "Fragile": false,
       "Perishable": false,
-      "DaysInHold": 27,
+      "DaysInHold": 26,
       "SellableValue": 500.0
     },
     {
       "$type": "pfsim.Officer.Supplies, pfsim",
-      "CargoPointsRemaining": 28,
-      "CargoPoints": 29,
+      "CargoPointsRemaining": 29,
+      "CargoPoints": 30,
       "SupplyType": 3,
       "UnitsSupplyPerPoint": 900,
-      "UnitsSupplyRemaining": 837,
+      "UnitsSupplyRemaining": 6,
       "Name": "Water",
       "CargoType": 6,
       "Value": 300.0,
       "Fragile": false,
       "Perishable": false,
-      "DaysInHold": 27
+      "DaysInHold": 26
     },
     {
       "$type": "pfsim.Officer.Supplies, pfsim",
@@ -910,7 +910,7 @@
       "Value": 300.0,
       "Fragile": false,
       "Perishable": false,
-      "DaysInHold": 27
+      "DaysInHold": 26
     },
     {
       "$type": "pfsim.Officer.Supplies, pfsim",
@@ -918,13 +918,13 @@
       "CargoPoints": 26,
       "SupplyType": 2,
       "UnitsSupplyPerPoint": 900,
-      "UnitsSupplyRemaining": 45,
+      "UnitsSupplyRemaining": 114,
       "Name": "Salt Pork,Olive Oil,Milled Oats,Butter",
       "CargoType": 5,
       "Value": 1000.0,
       "Fragile": false,
       "Perishable": false,
-      "DaysInHold": 27
+      "DaysInHold": 26
     },
     {
       "$type": "pfsim.Officer.Supplies, pfsim",
@@ -938,7 +938,7 @@
       "Value": 1000.0,
       "Fragile": false,
       "Perishable": false,
-      "DaysInHold": 27
+      "DaysInHold": 26
     },
     {
       "$type": "pfsim.Officer.Supplies, pfsim",
@@ -952,7 +952,7 @@
       "Value": 1000.0,
       "Fragile": false,
       "Perishable": false,
-      "DaysInHold": 27
+      "DaysInHold": 26
     },
     {
       "$type": "pfsim.Officer.Supplies, pfsim",
@@ -960,13 +960,13 @@
       "CargoPoints": 33,
       "SupplyType": 4,
       "UnitsSupplyPerPoint": 100,
-      "UnitsSupplyRemaining": 70,
+      "UnitsSupplyRemaining": 71,
       "Name": "Ships Supplies",
       "CargoType": 8,
       "Value": 1000.0,
       "Fragile": false,
       "Perishable": false,
-      "DaysInHold": 27
+      "DaysInHold": 26
     },
     {
       "$type": "pfsim.Officer.Supplies, pfsim",
@@ -974,13 +974,13 @@
       "CargoPoints": 26,
       "SupplyType": 1,
       "UnitsSupplyPerPoint": 900,
-      "UnitsSupplyRemaining": 45,
+      "UnitsSupplyRemaining": 114,
       "Name": "Rum",
       "CargoType": 7,
       "Value": 1000.0,
       "Fragile": false,
       "Perishable": false,
-      "DaysInHold": 27
+      "DaysInHold": 26
     },
     {
       "$type": "pfsim.Officer.Supplies, pfsim",
@@ -994,7 +994,7 @@
       "Value": 1000.0,
       "Fragile": false,
       "Perishable": false,
-      "DaysInHold": 27
+      "DaysInHold": 26
     },
     {
       "$type": "pfsim.Officer.Supplies, pfsim",
@@ -1008,7 +1008,7 @@
       "Value": 1000.0,
       "Fragile": false,
       "Perishable": false,
-      "DaysInHold": 27
+      "DaysInHold": 26
     },
     {
       "$type": "pfsim.Officer.Plunder, pfsim",
@@ -1020,7 +1020,7 @@
       "Value": 1000.0,
       "Fragile": false,
       "Perishable": true,
-      "DaysInHold": 27,
+      "DaysInHold": 26,
       "SellableValue": 1000.0
     },
     {
@@ -1033,7 +1033,7 @@
       "Value": 1000.0,
       "Fragile": false,
       "Perishable": false,
-      "DaysInHold": 27,
+      "DaysInHold": 26,
       "SellableValue": 1000.0
     },
     {
@@ -1042,13 +1042,13 @@
       "CargoPoints": 28,
       "SupplyType": 5,
       "UnitsSupplyPerPoint": 1000,
-      "UnitsSupplyRemaining": 970,
+      "UnitsSupplyRemaining": 971,
       "Name": "Medicine",
       "CargoType": 3,
       "Value": 1000.0,
       "Fragile": true,
       "Perishable": false,
-      "DaysInHold": 27
+      "DaysInHold": 26
     },
     {
       "Name": "Passengers",
