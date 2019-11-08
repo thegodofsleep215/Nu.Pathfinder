@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nu.OfficerMiniGame", "Nu.Of
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nu.Game.Common", "Nu.Game.Common\Nu.Game.Common.csproj", "{43A8EC5E-8993-4F8F-974E-90EBFA98BC43}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nu.OfficerMiniGame.Wpf", "Nu.OfficerMiniGame.Wpf\Nu.OfficerMiniGame.Wpf.csproj", "{D2DB3599-C91F-4C82-953D-05F605C6291F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{43A8EC5E-8993-4F8F-974E-90EBFA98BC43}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{43A8EC5E-8993-4F8F-974E-90EBFA98BC43}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{43A8EC5E-8993-4F8F-974E-90EBFA98BC43}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D2DB3599-C91F-4C82-953D-05F605C6291F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2DB3599-C91F-4C82-953D-05F605C6291F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2DB3599-C91F-4C82-953D-05F605C6291F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2DB3599-C91F-4C82-953D-05F605C6291F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
