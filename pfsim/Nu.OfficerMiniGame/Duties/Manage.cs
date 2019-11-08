@@ -29,7 +29,7 @@ namespace  Nu.OfficerMiniGame
 
                 if (ship.MinistrelBonuses.Count > ministrel)
                 {
-                    dc = 10 + (ship.TotalCrew / 10) > 15 ? 10 + (ship.TotalCrew / 10) : 15;
+                    dc = 10 + (ship.TotalCrew / 20) > 15 ? 10 + (ship.TotalCrew / 20) : 15;
                     var shanty = DiceRoller.D20(1) + ship.MinistrelBonuses[ministrel] - dc;
                     status.MinistrelResults.Add(shanty);
                     if (shanty >= 0)

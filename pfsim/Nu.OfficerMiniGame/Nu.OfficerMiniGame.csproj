@@ -150,7 +150,7 @@
     </None>
     <None Include="packages.config" />
     <None Include="Ships\Dogfish.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
