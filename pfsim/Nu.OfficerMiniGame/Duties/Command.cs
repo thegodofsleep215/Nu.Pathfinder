@@ -15,7 +15,7 @@ namespace  Nu.OfficerMiniGame
     {
         public void PerformDuty(Ship ship, bool verbose, ref MiniGameStatus status)
         {
-            var dc = 5 + ship.ShipDc + (ship.TotalCrew / 10) + ship.CurrentVoyage.CommandModifier;
+            var dc = 5 + ship.Stats.ShipDc + (ship.TotalCrew / 10) + ship.CurrentVoyage.CommandModifier;
             var assistBonus = PerformAssists(ship.GetAssistance(DutyType.Command));
             var job = ship.CommanderJob;
             status.CommandResult = (DiceRoller.D20(1) + job.SkillBonus + assistBonus) - dc;

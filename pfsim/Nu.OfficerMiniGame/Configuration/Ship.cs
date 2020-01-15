@@ -5,19 +5,46 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace  Nu.OfficerMiniGame
+namespace Nu.OfficerMiniGame
 {
+    public class ShipStats
+    {
+        public string CrewName { get; set; }
+
+        public ShipType ShipType { get; set; }
+
+        public ShipSize ShipSize { get; set; }
+
+        public List<Propulsion> PropulsionTypes { get; set; } = new List<Propulsion>();
+
+        public int HullHitPoints { get; set; }
+
+        public int CrewSize { get; set; }
+
+        public int ShipDc { get; set; } // General modifier to the difficulty to sail that increases with the size of the ship.
+
+        public int ShipPilotingBonus { get; set; } // Bonus or penalty that the ship recieves for being especially easy to sail.
+
+        public int ShipQuality { get; set; } // Place holder for generic bonus.
+
+        public List<string> SpecialFeatures { get; set; } = new List<string>();
+    }
+
     [Serializable]
     public class Ship
     {
+
+        public ShipStats Stats { get; set; }
+
         private List<Job> _assignedJobs;
+
         private List<CrewMember> _shipsCrew;
 
         private int MaxPilotAssistants
         {
             get
             {
-                switch (ShipSize)
+                switch (Stats.ShipSize)
                 {
                     case ShipSize.Medium:
                         return 1;
@@ -32,6 +59,7 @@ namespace  Nu.OfficerMiniGame
                 }
             }
         }
+
         private int MaxCookAssistants
         {
             get
@@ -39,6 +67,7 @@ namespace  Nu.OfficerMiniGame
                 return 1;
             }
         }
+
         private int MaxClerks
         {
             get
@@ -47,29 +76,17 @@ namespace  Nu.OfficerMiniGame
             }
         }
 
-        public string CrewName { get; set; }
-        public ShipType ShipType { get; set; }
-        public ShipSize ShipSize { get; set; }
-        public List<Propulsion> PropulsionTypes { get; set; } = new List<Propulsion>();
-        public int HullHitPoints { get; set; }
-        public int CrewSize { get; set; }
-
         // Below this number, the ship cannot be piloted successfully.
         public int MinimumCrewSize
         {
             get
             {
-                if (CrewSize >= 6)
-                    return CrewSize / 2;
+                if (Stats.CrewSize >= 6)
+                    return Stats.CrewSize / 2;
                 else
                     return 1; // Allow boats to be controlled 
             }
         }
-
-        public int ShipDc { get; set; } // General modifier to the difficulty to sail that increases with the size of the ship.
-        public int ShipPilotingBonus { get; set; } // Bonus or penalty that the ship recieves for being especially easy to sail.
-        public int ShipQuality { get; set; } // Place holder for generic bonus.
-        public List<string> SpecialFeatures { get; set; } = new List<string>();
 
         public List<CrewMember> ShipsCrew
         {
@@ -86,6 +103,7 @@ namespace  Nu.OfficerMiniGame
             }
         }
 
+        [JsonIgnore]
         public Morale CrewMorale { get; set; } = new Morale();
 
         [JsonIgnore]
@@ -96,7 +114,7 @@ namespace  Nu.OfficerMiniGame
                 double retval = 0;
                 List<CrewMember> namedCrew;
                 // For ships boats, everyone counts as crew
-                switch (ShipSize)
+                switch (Stats.ShipSize)
                 {
                     case ShipSize.Medium:
                     case ShipSize.Large:
@@ -121,6 +139,7 @@ namespace  Nu.OfficerMiniGame
                     return (int)retval;
             }
         }
+
         [JsonIgnore]
         public bool HasDisciplineOfficer
         {
@@ -129,6 +148,7 @@ namespace  Nu.OfficerMiniGame
                 return AssignedJobs.Exists(a => a.DutyType == DutyType.Discipline);
             }
         }
+
         [JsonIgnore]
         public bool HasHealer
         {
@@ -137,7 +157,9 @@ namespace  Nu.OfficerMiniGame
                 return AssignedJobs.Exists(a => a.DutyType == DutyType.Heal);
             }
         }
+       
         public DisciplineStandards DisciplineStandards { get; set; }
+
         [JsonIgnore]
         public int CrewDisciplineModifier
         {
@@ -168,11 +190,16 @@ namespace  Nu.OfficerMiniGame
                 return retval;
             }
         }
+     
         public Alignment ShipsAlignment { get; set; }
         public int Marines { get; set; }
+    
         public int Passengers { get; set; }
+       
         public int Swabbies { get; set; }
+       
         public decimal AverageSwabbieQuality { get; set; }
+
         [JsonIgnore]
         public int TotalCrew
         {
@@ -181,12 +208,13 @@ namespace  Nu.OfficerMiniGame
                 return ShipsCrew.Count + Swabbies + Marines + Passengers;
             }
         }
+
         [JsonIgnore]
         public int AvailableCrew
         {
             get
             {
-                switch (this.ShipSize)
+                switch (Stats.ShipSize)
                 {
                     case ShipSize.Medium:
                     case ShipSize.Large:
@@ -202,7 +230,7 @@ namespace  Nu.OfficerMiniGame
         {
             get
             {
-                int retval = AvailableCrew - CrewSize;
+                int retval = AvailableCrew - Stats.CrewSize;
 
                 if (retval > 0)
                     return 0;
@@ -210,6 +238,7 @@ namespace  Nu.OfficerMiniGame
                     return retval < -10 ? -10 : retval;
             }
         }
+
         [JsonIgnore]
         public bool HasMinimumCrew
         {
@@ -508,7 +537,7 @@ namespace  Nu.OfficerMiniGame
         {
             get
             {
-                return (SkeletonCrewPenalty + ShipPilotingBonus + CrewQuality + CurrentVoyage.PilotingModifier);
+                return (SkeletonCrewPenalty + Stats.ShipPilotingBonus + CrewQuality + CurrentVoyage.PilotingModifier);
             }
         }
 

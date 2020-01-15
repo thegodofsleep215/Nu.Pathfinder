@@ -102,15 +102,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Nu.Game.Common\Nu.Game.Common.csproj">
-      <Project>{43a8ec5e-8993-4f8f-974e-90ebfa98bc43}</Project>
-      <Name>Nu.Game.Common</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Nu.OfficerMiniGame\Nu.OfficerMiniGame.csproj">
-      <Project>{e0d3ab0c-d5ef-4a06-93f0-daeaec10cb65}</Project>
+      <Project>{25466b31-691e-4628-bbf1-da3c2d959a99}</Project>
       <Name>Nu.OfficerMiniGame</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

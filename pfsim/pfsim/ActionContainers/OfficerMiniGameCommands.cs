@@ -27,11 +27,11 @@ namespace pfsim.ActionContainers
             var result = new List<string>();
             var ship = LoadShip(crew);
 
-            if (string.IsNullOrEmpty(ship.CrewName))
+            if (string.IsNullOrEmpty(ship.Stats.CrewName))
             {
                 return "Crew not found.";
             }
-            WriteAsset(ship, string.Format("{0}.old", ship.CrewName)); // Store the current ship in case need to recover from bad command.
+            WriteAsset(ship, string.Format("{0}.old", ship.Stats.CrewName)); // Store the current ship in case need to recover from bad command.
 
             // Voyage modifiers from args (all args optional, ei state is unchanged).
             var pResponse = ProcessOMGArguments(args.ToArray(), ref ship, ref result);
@@ -69,11 +69,11 @@ namespace pfsim.ActionContainers
 
             var ship = LoadShip(crew);
 
-            if (string.IsNullOrEmpty(ship.CrewName))
+            if (string.IsNullOrEmpty(ship.Stats.CrewName))
             {
                 return "Crew not found.";
             }
-            WriteAsset(ship, string.Format("{0}.old", ship.CrewName)); // Store the current ship in case need to recover.
+            WriteAsset(ship, string.Format("{0}.old", ship.Stats.CrewName)); // Store the current ship in case need to recover.
 
             // Voyage modifiers from args (all args optional, ei state is unchanged).
             var pResponse = ProcessOMGArguments(args.ToArray(), ref ship, ref result);
@@ -101,11 +101,11 @@ namespace pfsim.ActionContainers
             var result = new List<string>();
             var ship = LoadShip(crew);
 
-            if (string.IsNullOrEmpty(ship.CrewName))
+            if (string.IsNullOrEmpty(ship.Stats.CrewName))
             {
                 return "Crew not found.";
             }
-            WriteAsset(ship, string.Format("{0}.old", ship.CrewName)); // Store the current ship in case need to recover from bad command.
+            WriteAsset(ship, string.Format("{0}.old", ship.Stats.CrewName)); // Store the current ship in case need to recover from bad command.
 
             // Voyage modifiers from args (all args optional, ei state is unchanged).
             var pResponse = ProcessOMGArguments(args.ToArray(), ref ship, ref result);
@@ -168,7 +168,7 @@ namespace pfsim.ActionContainers
             var ship = LoadShip(shipName);
             var cargo = LoadCargo(cargoName);
 
-            if (ship != null && !string.IsNullOrEmpty(ship.CrewName)
+            if (ship != null && !string.IsNullOrEmpty(ship.Stats.CrewName)
                 && cargo != null && cargo.Length > 0)
             {
                 ship.ShipsCargo.AddRange(cargo);
@@ -187,7 +187,7 @@ namespace pfsim.ActionContainers
                     return string.Join(Environment.NewLine, response.Messages);
                 }
             }
-            else if (ship != null && !string.IsNullOrEmpty(ship.CrewName))
+            else if (ship != null && !string.IsNullOrEmpty(ship.Stats.CrewName))
             {
                 return "Can't find ship.";
             }
@@ -202,7 +202,7 @@ namespace pfsim.ActionContainers
         {
             var ship = LoadShip(shipName);
 
-            if (ship != null && !string.IsNullOrEmpty(ship.CrewName))
+            if (ship != null && !string.IsNullOrEmpty(ship.Stats.CrewName))
             {
                 var crew = ship.ShipsCrew.FirstOrDefault(a => a.Name == crewName);
 
@@ -243,7 +243,7 @@ namespace pfsim.ActionContainers
             var ship = LoadShip(shipName);
             var crew = LoadCrew(crewName);
 
-            if (ship != null && !string.IsNullOrEmpty(ship.CrewName)
+            if (ship != null && !string.IsNullOrEmpty(ship.Stats.CrewName)
                 && crew != null && crew.Length > 0)
             {
                 foreach (var mate in crew)
@@ -268,7 +268,7 @@ namespace pfsim.ActionContainers
                 else
                     return string.Join(Environment.NewLine, response.Messages);
             }
-            else if (ship != null && !string.IsNullOrEmpty(ship.CrewName))
+            else if (ship != null && !string.IsNullOrEmpty(ship.Stats.CrewName))
             {
                 return "Can't find ship.";
             }
@@ -283,7 +283,7 @@ namespace pfsim.ActionContainers
         {
             var ship = LoadShip(shipName);
 
-            if (ship != null && !string.IsNullOrEmpty(ship.CrewName))
+            if (ship != null && !string.IsNullOrEmpty(ship.Stats.CrewName))
             {
                 if (Enum.TryParse<BoatClasses>(boatClass, true, out BoatClasses result))
                 {
@@ -314,7 +314,7 @@ namespace pfsim.ActionContainers
         {
             var ship = LoadShip(shipName);
 
-            if (ship != null && !string.IsNullOrEmpty(ship.CrewName))
+            if (ship != null && !string.IsNullOrEmpty(ship.Stats.CrewName))
             {
                 if (Enum.TryParse<SiegeEngineType>(siegeEngine, true, out SiegeEngineType result))
                 {
@@ -345,7 +345,7 @@ namespace pfsim.ActionContainers
         {
             var ship = LoadShip(shipName);
 
-            if (ship != null && !string.IsNullOrEmpty(ship.CrewName))
+            if (ship != null && !string.IsNullOrEmpty(ship.Stats.CrewName))
             {
                 if (Enum.TryParse<SiegeEngineType>(siegeEngine, true, out SiegeEngineType result))
                 {
@@ -375,7 +375,7 @@ namespace pfsim.ActionContainers
         {
             var ship = LoadShip(shipName);
 
-            if (ship != null && !string.IsNullOrEmpty(ship.CrewName))
+            if (ship != null && !string.IsNullOrEmpty(ship.Stats.CrewName))
             {
                 if (Enum.TryParse<SupplyType>(supplyType, true, out SupplyType result))
                 {
@@ -410,7 +410,7 @@ namespace pfsim.ActionContainers
         {
             var ship = LoadShip(shipName);
 
-            if (ship != null && !string.IsNullOrEmpty(ship.CrewName))
+            if (ship != null && !string.IsNullOrEmpty(ship.Stats.CrewName))
             {
                 return ship.GetRandomCrewName(count);
             }
@@ -1422,7 +1422,7 @@ namespace pfsim.ActionContainers
                 return new Dictionary<string, Ship>();
             }
             var charFiles = Directory.GetFiles(folder, "*.json");
-            return charFiles.Select(cf => JsonConvert.DeserializeObject<Ship>(File.ReadAllText(cf))).ToDictionary(x => x.CrewName, x => x);
+            return charFiles.Select(cf => JsonConvert.DeserializeObject<Ship>(File.ReadAllText(cf))).ToDictionary(x => x.Stats.CrewName, x => x);
         }
 
         /// <summary>
@@ -1439,7 +1439,7 @@ namespace pfsim.ActionContainers
             var charFiles = Directory.GetFiles(folder, "*.json");
             JsonSerializerSettings settings = new JsonSerializerSettings();
             settings.TypeNameHandling = TypeNameHandling.Auto;
-            return charFiles.Select(cf => JsonConvert.DeserializeObject<Ship>(File.ReadAllText(cf), settings)).ToDictionary(x => x.CrewName, x => x);
+            return charFiles.Select(cf => JsonConvert.DeserializeObject<Ship>(File.ReadAllText(cf), settings)).ToDictionary(x => x.Stats.CrewName, x => x);
         }
 
         /// <summary>
@@ -1504,7 +1504,7 @@ namespace pfsim.ActionContainers
         {
             BaseResponse retval = new BaseResponse();
             if (filename == null)
-                filename = ship.CrewName;
+                filename = ship.Stats.CrewName;
             try
             {
                 JsonSerializerSettings settings = new JsonSerializerSettings();

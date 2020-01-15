@@ -1,0 +1,40 @@
+﻿.ships-grid {
+    grid-area: ships;
+}
+
+.right-grid {
+    grid-area: right
+}
+
+.grid-container {
+    display: grid;
+    grid-template-areas: 'header header header header' 'ships right right right';
+    grid-column-gap: 5px;
+    grid-row-gap: 5px;
+}
+
+.card {
+    /* Add shadows to create the "card" effect */
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    width: 100%
+}
+
+    /* On mouse-over, add a deeper shadow */
+    .card:hover {
+        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    }
+
+/* Add some padding inside the card container */
+.container {
+    padding: 2px 16px;
+}
+
+.stat {
+    text-align: left
+}
+
+.sub-stat {
+    text-align:left;
+    padding-left: 10px;
+}

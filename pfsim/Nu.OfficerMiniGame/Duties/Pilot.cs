@@ -27,7 +27,7 @@ namespace  Nu.OfficerMiniGame
         public void PerformDuty(Ship ship, bool verbose, ref MiniGameStatus status)
         {
             var weatherModifier = ship.CurrentVoyage.GetWeatherModifier(DutyType.Pilot);
-            var dc = 7 + ship.ShipDc - status.CommandModifier - ship.CrewPilotModifier - weatherModifier + status.WatchModifier;
+            var dc = 7 + ship.Stats.ShipDc - status.CommandModifier - ship.CrewPilotModifier - weatherModifier + status.WatchModifier;
             var job = ship.PilotJob;
             var assistBonus = PerformAssists(ship.GetAssistance(DutyType.Pilot), weatherModifier);
             status.PilotResult = (DiceRoller.D20(1) + job.SkillBonus + assistBonus) - dc;
@@ -43,7 +43,7 @@ namespace  Nu.OfficerMiniGame
                 int damage = 0;
                 if (status.PilotResult <= -15)
                 {
-                    switch (ship.ShipSize)
+                    switch (ship.Stats.ShipSize)
                     {
                         case ShipSize.Medium:
                             damage = DiceRoller.D8(2);

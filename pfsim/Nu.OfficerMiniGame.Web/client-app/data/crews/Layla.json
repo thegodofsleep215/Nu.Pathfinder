@@ -1,0 +1,48 @@
+[
+  {
+    "Name": "Layla",
+    "Title": "Boatswain",
+    "Skills": {
+		"ProfessionSailor": 10,
+		"Diplomacy": 3,
+		"KnowledgeEngineering": 0,
+		"Intimidate": 9,
+		"Perception": 2,
+		"CraftCarpentry": 0,
+		"CraftShip": 10,
+		"CraftSails": 0,
+		"Survival": 3,
+		"ProfessionMerchant": 0,
+		"CraftCooking": 6,
+		"Heal": 0,
+		"Perform": 0
+    },
+    "Jobs": [
+      {
+        "CrewName": "Layla",
+        "DutyType": 6,
+        "IsAssistant": false
+      },
+      {
+        "CrewName": "Layla",
+        "DutyType": 5,
+        "IsAssistant": false
+      }
+    ],
+    "ExternalModifiers": {
+      "ProfessionSailor": 0,
+      "Diplomacy": 0,
+      "KnowledgeEngineering": 0,
+      "Intimidate": 0,
+      "Perception": 0,
+      "CraftCarpentry": 0,
+      "CraftShip": 0,
+      "CraftSails": 0,
+      "Survival": 0,
+      "ProfessionMerchant": 0,
+      "CraftCooking": 0,
+      "Heal": 0,
+      "Perform": 0
+    }
+  }
+]

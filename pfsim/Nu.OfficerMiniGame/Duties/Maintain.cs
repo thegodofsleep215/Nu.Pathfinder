@@ -22,7 +22,7 @@ namespace  Nu.OfficerMiniGame
         public void PerformDuty(Ship ship, bool verbose, ref MiniGameStatus status)
         {
             var weatherModifier = ship.CurrentVoyage.GetWeatherModifier(DutyType.Maintain);
-            var dc = 5 + ship.ShipDc - status.CommandModifier - status.ManageModifier - weatherModifier;
+            var dc = 5 + ship.Stats.ShipDc - status.CommandModifier - status.ManageModifier - weatherModifier;
             dc += ship.IsShipOverburdened ? (int)Math.Ceiling(ship.OverburdenedFactor + 1) : 0;
             var assistBonus = PerformAssists(ship.GetAssistance(DutyType.Maintain), weatherModifier);
             var job = ship.MaintainJob;
@@ -33,7 +33,7 @@ namespace  Nu.OfficerMiniGame
             if (status.MaintainResult < 0)
             {
                 int damage;
-                switch (ship.ShipSize)
+                switch (ship.Stats.ShipSize)
                 {
                     default:
                     case ShipSize.Medium:
