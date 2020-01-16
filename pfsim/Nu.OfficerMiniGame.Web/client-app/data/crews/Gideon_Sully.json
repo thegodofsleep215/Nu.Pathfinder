@@ -1,53 +1,18 @@
-[
-  {
+{
     "Name": "Gideon Sully",
-    "Title": "Captain",
     "Skills": {
-      "ProfessionSailor": 15,
-      "Diplomacy": 1,
-      "KnowledgeEngineering": 0,
-      "Intimidate": 5,
-      "Perception": 8,
-      "CraftCarpentry": 1,
-      "CraftShip": 1,
-      "CraftSails": 1,
-      "Survival": 8,
-      "ProfessionMerchant": 0,
-      "CraftCooking": 1,
-      "Heal": 2,
-      "Perform": 0
-    },
-    "Jobs": [
-      {
-        "CrewName": "Gideon Sully",
-        "DutyType": 2,
-        "IsAssistant": false
-      },
-      {
-        "CrewName": "Gideon Sully",
-        "DutyType": 4,
-        "IsAssistant": false
-      },
-      {
-        "CrewName": "Gideon Sully",
-        "DutyType": 3,
-        "IsAssistant": false
-      }
-    ],
-    "ExternalModifiers": {
-      "ProfessionSailor": 0,
-      "Diplomacy": 0,
-      "KnowledgeEngineering": 0,
-      "Intimidate": 0,
-      "Perception": 0,
-      "CraftCarpentry": 0,
-      "CraftShip": 0,
-      "CraftSails": 0,
-      "Survival": 0,
-      "ProfessionMerchant": 0,
-      "CraftCooking": 0,
-      "Heal": 0,
-      "Perform": 0
+        "ProfessionSailor": 15,
+        "Diplomacy": 1,
+        "KnowledgeEngineering": 0,
+        "Intimidate": 5,
+        "Perception": 8,
+        "CraftCarpentry": 1,
+        "CraftShip": 1,
+        "CraftSails": 1,
+        "Survival": 8,
+        "ProfessionMerchant": 0,
+        "CraftCooking": 1,
+        "Heal": 2,
+        "Perform": 0
     }
-  }
-]
+}

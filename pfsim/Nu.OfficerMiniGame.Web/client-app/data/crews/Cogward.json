@@ -1,43 +1,18 @@
-[
-  {
+{
     "Name": "Cogward",
-    "Title": "Sergent-At-Arms",
     "Skills": {
-      "ProfessionSailor": 4,
-      "Diplomacy": 0,
-      "KnowledgeEngineering": 0,
-      "Intimidate": 9,
-      "Perception": 5,
-      "CraftCarpentry": 0,
-      "CraftShip": 0,
-      "CraftSails": 0,
-      "Survival": 0,
-      "ProfessionMerchant": 0,
-      "CraftCooking": 0,
-      "Heal": 0,
-      "Perform": 0
-    },
-    "Jobs": [
-      {
-        "CrewName": "Cogward",
-        "DutyType": 2,
-        "IsAssistant": true
-      }
-    ],
-    "ExternalModifiers": {
-      "ProfessionSailor": 0,
-      "Diplomacy": 0,
-      "KnowledgeEngineering": 0,
-      "Intimidate": 0,
-      "Perception": 0,
-      "CraftCarpentry": 0,
-      "CraftShip": 0,
-      "CraftSails": 0,
-      "Survival": 0,
-      "ProfessionMerchant": 0,
-      "CraftCooking": 0,
-      "Heal": 0,
-      "Perform": 0
+        "ProfessionSailor": 4,
+        "Diplomacy": 0,
+        "KnowledgeEngineering": 0,
+        "Intimidate": 9,
+        "Perception": 5,
+        "CraftCarpentry": 0,
+        "CraftShip": 0,
+        "CraftSails": 0,
+        "Survival": 0,
+        "ProfessionMerchant": 0,
+        "CraftCooking": 0,
+        "Heal": 0,
+        "Perform": 0
     }
-  }
-]
+}

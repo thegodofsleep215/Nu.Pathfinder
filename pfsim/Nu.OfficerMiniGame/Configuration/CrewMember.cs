@@ -5,14 +5,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace  Nu.OfficerMiniGame
+namespace Nu.OfficerMiniGame
 {
-    [Serializable]
-    public class CrewMember
+    public class BaseCrewMember
     {
         public string Name { get; set; }
-        public string Title { get; set; }
+
         public CrewSkills Skills { get; set; } = new CrewSkills();
+    }
+
+    [Serializable]
+    public class CrewMember : BaseCrewMember
+    {
+        public string Title { get; set; }
 
         [JsonIgnore]
         public int PerformSkill => Skills.Perform + WorkModifier + ExternalModifiers.Perform;

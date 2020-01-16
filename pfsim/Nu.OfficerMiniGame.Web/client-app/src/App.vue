@@ -1,16 +1,17 @@
 <template>
     <div id="app">
-        <Ships></Ships>
+        <Nagivation></Nagivation>
+        <router-view/>
     </div>
 </template>
 
 <script>
-    import Ships from './components/Ships.vue'
+    import Nagivation from './components/Navigation.vue'
 
     export default {
         name: 'app',
         components: {
-            Ships
+            Nagivation
         }
     }
 </script>
@@ -23,6 +24,5 @@
         -moz-osx-font-smoothing: grayscale;
         text-align: center;
         color: #2c3e50;
-        margin-top: 60px;
     }
 </style>

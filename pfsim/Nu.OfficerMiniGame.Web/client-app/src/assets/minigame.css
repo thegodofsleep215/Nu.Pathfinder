@@ -1,14 +1,24 @@
-﻿.ships-grid {
-    grid-area: ships;
+﻿.left-grid {
+    grid-area: left;
 }
 
 .right-grid {
     grid-area: right
 }
 
+.header-grid {
+    grid-area: header
+}
+
+.button-grid{
+    grid-area: button;
+    align-self: center;
+    justify-self: center;
+}
+
 .grid-container {
     display: grid;
-    grid-template-areas: 'header header header header' 'ships right right right';
+    grid-template-areas: 'header header header button' 'left right right right';
     grid-column-gap: 5px;
     grid-row-gap: 5px;
 }
@@ -30,11 +40,43 @@
     padding: 2px 16px;
 }
 
+.stat-label {
+    font-weight: bold;
+}
+
 .stat {
     text-align: left
 }
 
 .sub-stat {
-    text-align:left;
+    text-align: left;
     padding-left: 10px;
 }
+
+.update-button {
+    background: url("../../public/arrow-circle-top.svg") no-repeat top left;
+    background-size: contain;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    cursor: pointer;
+    display: inline-block;
+    height: 20px;
+    width: 20px;
+}
+
+.add-button {
+    background: url("../../public/plus.svg") no-repeat top left;
+    background-size: contain;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    cursor: pointer;
+    display: inline-block;
+    height: 20px;
+    width: 20px;
+}
+
+    .update-button:active, .add-button:active {
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    }

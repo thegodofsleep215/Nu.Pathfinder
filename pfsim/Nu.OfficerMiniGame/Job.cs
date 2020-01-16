@@ -10,7 +10,9 @@ namespace Nu.OfficerMiniGame
     public class Job
     {
         public string CrewName { get; set; }
+
         public DutyType DutyType { get; set; }
+
         public virtual bool IsAssistant { get; set; }
     }
 }

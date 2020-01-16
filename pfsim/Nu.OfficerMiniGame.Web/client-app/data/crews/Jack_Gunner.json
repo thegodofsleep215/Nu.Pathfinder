@@ -1,43 +1,18 @@
-[
-  {
+{
     "Name": "Jack Gunner",
-    "Title": "Gunner",
     "Skills": {
-      "ProfessionSailor": 0,
-      "Diplomacy": 0,
-      "KnowledgeEngineering": 0,
-      "Intimidate": 0,
-      "Perception": 8,
-      "CraftCarpentry": 0,
-      "CraftShip": 0,
-      "CraftSails": 0,
-      "Survival": 6,
-      "ProfessionMerchant": 0,
-      "CraftCooking": 0,
-      "Heal": 6,
-      "Perform": 0
-    },
-    "Jobs": [
-      {
-        "CrewName": "Jack Gunner",
-        "DutyType": 3,
-        "IsAssistant": false
-      }
-    ],
-    "ExternalModifiers": {
-      "ProfessionSailor": 0,
-      "Diplomacy": 0,
-      "KnowledgeEngineering": 0,
-      "Intimidate": 0,
-      "Perception": 0,
-      "CraftCarpentry": 0,
-      "CraftShip": 0,
-      "CraftSails": 0,
-      "Survival": 0,
-      "ProfessionMerchant": 0,
-      "CraftCooking": 0,
-      "Heal": 0,
-      "Perform": 0
+        "ProfessionSailor": 0,
+        "Diplomacy": 0,
+        "KnowledgeEngineering": 0,
+        "Intimidate": 0,
+        "Perception": 8,
+        "CraftCarpentry": 0,
+        "CraftShip": 0,
+        "CraftSails": 0,
+        "Survival": 6,
+        "ProfessionMerchant": 0,
+        "CraftCooking": 0,
+        "Heal": 6,
+        "Perform": 0
     }
-  }
-]
+}

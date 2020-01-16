@@ -1,29 +1,29 @@
 ﻿<template>
     <div class="grid-container">
-        <div class="ships-grid">
+        <div class="left-grid">
             <div v-for="ship in ships" :key="ship" class="card">
                 <div class="container" v-on:click="loadShip(ship)">
                     <h3>{{ship}}</h3>
                 </div>
             </div>
         </div>
-        <div id="selectedCrew" class="right-grid" style="visibility:hidden">
-            <Crew v-bind:crew="crew"></Crew>
+        <div id="selectedShip" class="right-grid" style="visibility:hidden">
+            <ShipDetails v-bind:ship="ship"></ShipDetails>
         </div>
     </div>
 </template>
 
 <script>
-    import Crew from './Crew.vue'
+    import ShipDetails from './ShipDetails.vue'
     export default {
         name: 'Ships',
         components: {
-            Crew
+            ShipDetails
         },
         data: function () {
             return {
                 ships: [],
-                crew: {}
+                ship: {}
             }
         },
         mounted: function () {
@@ -32,9 +32,9 @@
         },
         methods: {
             loadShip(name) {
-                document.getElementById("selectedCrew").style.visibility = "visible";
+                document.getElementById("selectedShip").style.visibility = "visible";
                 var self = this;
-                fetch('/Ship?name=' + name).then(r => r.json()).then(d => self.crew = d);
+                fetch('/Ship?name=' + name).then(r => r.json()).then(d => self.ship = d);
             }
         }
     }

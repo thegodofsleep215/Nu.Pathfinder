@@ -10,7 +10,7 @@ namespace Nu.OfficerMiniGame.Web.Controllers
         [HttpGet]
         public IActionResult Get(string name)
         {
-            var dal = new FailShipsStatsDal(".\\client-app\\data");
+            var dal = new FileShipsDal(".\\client-app\\data");
             var ship = dal.Get(name);
             if (ship == null) return new NotFoundResult();
 
@@ -21,7 +21,7 @@ namespace Nu.OfficerMiniGame.Web.Controllers
         [Route("[action]")]
         public IActionResult Names()
         {
-            var dal = new FailShipsStatsDal(".\\client-app\\data");
+            var dal = new FileShipsDal(".\\client-app\\data");
             return new JsonResult(dal.GetNames());
         }
     }

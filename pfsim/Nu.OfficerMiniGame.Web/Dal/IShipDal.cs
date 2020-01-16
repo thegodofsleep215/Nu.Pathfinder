@@ -2,10 +2,10 @@
 
 namespace Nu.OfficerMiniGame.Web.Controllers
 {
-    public interface IShipStatsDal
+    public interface IShipDal
     {
         List<string> GetNames();
 
-        ShipStats Get(string name);
+        BaseShip Get(string name);
     }
 }
