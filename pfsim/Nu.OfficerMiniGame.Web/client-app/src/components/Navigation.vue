@@ -18,8 +18,8 @@
                 links: [
                     {
                         id: 0,
-                        text: "Ships",
-                        page: "/Ships"
+                        text: "Ship Loadouts",
+                        page: "/ShipLoadouts"
                     },
                     {
                         id: 1,

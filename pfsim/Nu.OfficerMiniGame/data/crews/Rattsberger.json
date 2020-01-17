@@ -1,0 +1,18 @@
+{
+    "Name": "Rattsberger",
+    "Skills": {
+        "ProfessionSailor": 8,
+        "Diplomacy": 0,
+        "KnowledgeEngineering": 0,
+        "Intimidate": 0,
+        "Perception": 8,
+        "CraftCarpentry": 0,
+        "CraftShip": 0,
+        "CraftSails": 0,
+        "Survival": 0,
+        "ProfessionMerchant": 0,
+        "CraftCooking": 6,
+        "Heal": 0,
+        "Perform": 0
+    }
+}

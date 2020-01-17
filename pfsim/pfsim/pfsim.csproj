@@ -91,6 +91,10 @@
       <Project>{a2e19a13-515c-48d6-bfa7-5602de81b59a}</Project>
       <Name>Nu.Game.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Nu.OfficerMiniGame.Dal\Nu.OfficerMiniGame.Dal.csproj">
+      <Project>{877cfd76-2f21-46f6-8215-5d6c8eae9678}</Project>
+      <Name>Nu.OfficerMiniGame.Dal</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Nu.OfficerMiniGame\Nu.OfficerMiniGame.csproj">
       <Project>{25466b31-691e-4628-bbf1-da3c2d959a99}</Project>
       <Name>Nu.OfficerMiniGame</Name>

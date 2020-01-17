@@ -1,6 +1,6 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Nu.Game.Common;
+﻿using Nu.Game.Common;
+using Nu.OfficerMiniGame.Dal.Dto;
+using Nu.OfficerMiniGame.Dal.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,20 +8,16 @@ using System.Text;
 
 namespace Nu.OfficerMiniGame
 {
-    [Serializable]
     public class Ship
     {
-
-        public BaseShip BaseShip { get; set; }
-
         private List<Job> _assignedJobs;
-
+        private List<CrewMember> _shipsCrew;
 
         private int MaxPilotAssistants
         {
             get
             {
-                switch (BaseShip.ShipSize)
+                switch (ShipSize)
                 {
                     case ShipSize.Medium:
                         return 1;
@@ -36,7 +32,6 @@ namespace Nu.OfficerMiniGame
                 }
             }
         }
-
         private int MaxCookAssistants
         {
             get
@@ -44,7 +39,6 @@ namespace Nu.OfficerMiniGame
                 return 1;
             }
         }
-
         private int MaxClerks
         {
             get
@@ -53,22 +47,48 @@ namespace Nu.OfficerMiniGame
             }
         }
 
+        public string CrewName { get; set; }
+        public ShipType ShipType { get; set; }
+        public ShipSize ShipSize { get; set; }
+        public List<Propulsion> PropulsionTypes { get; set; } = new List<Propulsion>();
+        public int HullHitPoints { get; set; }
+        public int CrewSize { get; set; }
+
         // Below this number, the ship cannot be piloted successfully.
         public int MinimumCrewSize
         {
             get
             {
-                if (BaseShip.CrewSize >= 6)
-                    return BaseShip.CrewSize / 2;
+                if (CrewSize >= 6)
+                    return CrewSize / 2;
                 else
                     return 1; // Allow boats to be controlled 
             }
         }
 
-        [JsonIgnore]
+        public int ShipDc { get; set; } // General modifier to the difficulty to sail that increases with the size of the ship.
+        public int ShipPilotingBonus { get; set; } // Bonus or penalty that the ship recieves for being especially easy to sail.
+        public int ShipQuality { get; set; } // Place holder for generic bonus.
+        public List<string> SpecialFeatures { get; set; } = new List<string>();
+
+        public List<CrewMember> ShipsCrew
+        {
+            get
+            {
+                if (_shipsCrew == null)
+                    _shipsCrew = new List<CrewMember>();
+
+                return _shipsCrew;
+            }
+            set
+            {
+                _shipsCrew = value;
+            }
+        }
+
         public Morale CrewMorale { get; set; } = new Morale();
 
-        [JsonIgnore]
+        
         public int CrewQuality
         {
             get
@@ -76,15 +96,15 @@ namespace Nu.OfficerMiniGame
                 double retval = 0;
                 List<CrewMember> namedCrew;
                 // For ships boats, everyone counts as crew
-                switch (BaseShip.ShipSize)
+                switch (ShipSize)
                 {
                     case ShipSize.Medium:
                     case ShipSize.Large:
                     case ShipSize.Huge:
-                        namedCrew = BaseShip.ShipsCrew.ToList();
+                        namedCrew = ShipsCrew.ToList();
                         break;
                     default:
-                        namedCrew = BaseShip.ShipsCrew.Where(a => a.CountsAsCrew).ToList();
+                        namedCrew = ShipsCrew.Where(a => a.CountsAsCrew).ToList();
                         break;
                 }
 
@@ -101,8 +121,7 @@ namespace Nu.OfficerMiniGame
                     return (int)retval;
             }
         }
-
-        [JsonIgnore]
+        
         public bool HasDisciplineOfficer
         {
             get
@@ -110,8 +129,7 @@ namespace Nu.OfficerMiniGame
                 return AssignedJobs.Exists(a => a.DutyType == DutyType.Discipline);
             }
         }
-
-        [JsonIgnore]
+        
         public bool HasHealer
         {
             get
@@ -119,10 +137,8 @@ namespace Nu.OfficerMiniGame
                 return AssignedJobs.Exists(a => a.DutyType == DutyType.Heal);
             }
         }
-       
         public DisciplineStandards DisciplineStandards { get; set; }
-
-        [JsonIgnore]
+        
         public int CrewDisciplineModifier
         {
             get
@@ -152,47 +168,41 @@ namespace Nu.OfficerMiniGame
                 return retval;
             }
         }
-     
         public Alignment ShipsAlignment { get; set; }
         public int Marines { get; set; }
-    
         public int Passengers { get; set; }
-       
         public int Swabbies { get; set; }
-       
         public decimal AverageSwabbieQuality { get; set; }
-
-        [JsonIgnore]
+        
         public int TotalCrew
         {
             get
             {
-                return BaseShip.ShipsCrew.Count + Swabbies + Marines + Passengers;
+                return ShipsCrew.Count + Swabbies + Marines + Passengers;
             }
         }
-
-        [JsonIgnore]
+        
         public int AvailableCrew
         {
             get
             {
-                switch (BaseShip.ShipSize)
+                switch (this.ShipSize)
                 {
                     case ShipSize.Medium:
                     case ShipSize.Large:
                     case ShipSize.Huge:
-                        return BaseShip.ShipsCrew.Count + Swabbies - CurrentVoyage.DiseasedCrew - CurrentVoyage.CrewUnfitForDuty;  // Allow officers to serve as crew on boats.
+                        return ShipsCrew.Count + Swabbies - CurrentVoyage.DiseasedCrew - CurrentVoyage.CrewUnfitForDuty;  // Allow officers to serve as crew on boats.
                     default:
-                        return BaseShip.ShipsCrew.Count(a => a.CountsAsCrew) + Swabbies - CurrentVoyage.DiseasedCrew - CurrentVoyage.CrewUnfitForDuty;
+                        return ShipsCrew.Count(a => a.CountsAsCrew) + Swabbies - CurrentVoyage.DiseasedCrew - CurrentVoyage.CrewUnfitForDuty;
                 }
             }
         }
-        [JsonIgnore]
+        
         public int SkeletonCrewPenalty
         {
             get
             {
-                int retval = AvailableCrew - BaseShip.CrewSize;
+                int retval = AvailableCrew - CrewSize;
 
                 if (retval > 0)
                     return 0;
@@ -200,8 +210,7 @@ namespace Nu.OfficerMiniGame
                     return retval < -10 ? -10 : retval;
             }
         }
-
-        [JsonIgnore]
+        
         public bool HasMinimumCrew
         {
             get
@@ -210,7 +219,7 @@ namespace Nu.OfficerMiniGame
             }
         }
 
-        [JsonIgnore]
+        
         public List<Job> AssignedJobs
         {
             get
@@ -226,7 +235,7 @@ namespace Nu.OfficerMiniGame
         {
             _assignedJobs = new List<Job>();
 
-            foreach (var matey in BaseShip.ShipsCrew)
+            foreach (var matey in ShipsCrew)
             {
                 _assignedJobs.AddRange(matey.Jobs);
             }
@@ -236,8 +245,8 @@ namespace Nu.OfficerMiniGame
 
         public string GetRandomCrewName(int count = 1)
         {
-            var swabCount = Swabbies + BaseShip.ShipsCrew.Count(a => a.CountsAsCrew);
-            var mates = BaseShip.ShipsCrew.Where(a => a.CountsAsCrew).ToList();
+            var swabCount = Swabbies + ShipsCrew.Count(a => a.CountsAsCrew);
+            var mates = ShipsCrew.Where(a => a.CountsAsCrew).ToList();
             HashSet<int> picked = new HashSet<int>();
             StringBuilder sb = new StringBuilder();
             int result;
@@ -274,9 +283,9 @@ namespace Nu.OfficerMiniGame
         {
             BaseResponse retval = new BaseResponse();
             retval.Success = false;
-            if (BaseShip.ShipsCrew.Exists(a => a.Name == crewname))
+            if (ShipsCrew.Exists(a => a.Name == crewname))
             {
-                var mate = BaseShip.ShipsCrew.FirstOrDefault(a => a.Name == crewname);
+                var mate = ShipsCrew.FirstOrDefault(a => a.Name == crewname);
 
                 mate.AddJob(duty, isAssistant);
 
@@ -295,9 +304,9 @@ namespace Nu.OfficerMiniGame
         {
             BaseResponse retval = new BaseResponse();
             retval.Success = false;
-            if (BaseShip.ShipsCrew.Exists(a => a.Name == crewname))
+            if (ShipsCrew.Exists(a => a.Name == crewname))
             {
-                var mate = BaseShip.ShipsCrew.FirstOrDefault(a => a.Name == crewname);
+                var mate = ShipsCrew.FirstOrDefault(a => a.Name == crewname);
 
                 var response = mate.RemoveJob(duty, isAssistant);
 
@@ -323,7 +332,7 @@ namespace Nu.OfficerMiniGame
         {
             BaseResponse retval = new BaseResponse();
 
-            if (BaseShip.ShipsCrew.Count != BaseShip.ShipsCrew.Select(a => a.Name).Distinct().Count())
+            if (ShipsCrew.Count != ShipsCrew.Select(a => a.Name).Distinct().Count())
             {
                 retval.Messages.Add("Everyone in the crew must have a different name!");
             }
@@ -382,7 +391,7 @@ namespace Nu.OfficerMiniGame
                 retval.Messages.Add("Can't have an assistant discipline officer!");
             }
 
-            foreach (var matey in BaseShip.ShipsCrew)
+            foreach (var matey in ShipsCrew)
             {
                 retval.Messages.AddRange(matey.ValidateJobs());
             }
@@ -404,7 +413,7 @@ namespace Nu.OfficerMiniGame
 
                 assistance.DutyType = duty;
 
-                var mate = BaseShip.ShipsCrew.FirstOrDefault(a => a.Name == job.CrewName);
+                var mate = ShipsCrew.FirstOrDefault(a => a.Name == job.CrewName);
 
                 if (mate != null)
                 {
@@ -467,7 +476,7 @@ namespace Nu.OfficerMiniGame
             return assists;
         }
 
-        [JsonIgnore]
+        
         public JobMessage CommanderJob
         {
             get
@@ -478,7 +487,7 @@ namespace Nu.OfficerMiniGame
                 {
                     string commanderName = AssignedJobs.First(a => a.DutyType == DutyType.Command).CrewName;
 
-                    var commander = BaseShip.ShipsCrew.FirstOrDefault(a => a.Name == commanderName);
+                    var commander = ShipsCrew.FirstOrDefault(a => a.Name == commanderName);
 
                     if (commander != null)
                     {
@@ -494,16 +503,16 @@ namespace Nu.OfficerMiniGame
         /// <summary>
         /// In the engine, this adds to DC so the result needs to be inverse of a modification to a dice role.
         /// </summary>
-        [JsonIgnore]
+        
         public int CrewPilotModifier
         {
             get
             {
-                return (SkeletonCrewPenalty + BaseShip.ShipPilotingBonus + CrewQuality + CurrentVoyage.PilotingModifier);
+                return (SkeletonCrewPenalty + ShipPilotingBonus + CrewQuality + CurrentVoyage.PilotingModifier);
             }
         }
 
-        [JsonIgnore]
+        
         public JobMessage PilotJob
         {
             get
@@ -514,7 +523,7 @@ namespace Nu.OfficerMiniGame
                 {
                     string pilotName = AssignedJobs.First(a => a.DutyType == DutyType.Pilot).CrewName;
 
-                    var pilot = BaseShip.ShipsCrew.FirstOrDefault(a => a.Name == pilotName);
+                    var pilot = ShipsCrew.FirstOrDefault(a => a.Name == pilotName);
 
                     if (pilot != null)
                     {
@@ -527,7 +536,7 @@ namespace Nu.OfficerMiniGame
             }
         }
 
-        [JsonIgnore]
+        
         public JobMessage DisciplineJob
         {
             get
@@ -538,7 +547,7 @@ namespace Nu.OfficerMiniGame
                 {
                     string bosunName = AssignedJobs.First(a => a.DutyType == DutyType.Discipline).CrewName;
 
-                    var bosun = BaseShip.ShipsCrew.FirstOrDefault(a => a.Name == bosunName);
+                    var bosun = ShipsCrew.FirstOrDefault(a => a.Name == bosunName);
 
                     if (bosun != null)
                     {
@@ -551,7 +560,7 @@ namespace Nu.OfficerMiniGame
             }
         }
 
-        [JsonIgnore]
+        
         public List<int> WatchBonuses
         {
             get
@@ -563,7 +572,7 @@ namespace Nu.OfficerMiniGame
 
                 foreach (var watch in day)
                 {
-                    var lookout = BaseShip.ShipsCrew.FirstOrDefault(a => a.Name == watch.CrewName);
+                    var lookout = ShipsCrew.FirstOrDefault(a => a.Name == watch.CrewName);
 
                     if (lookout != null)
                     {
@@ -579,7 +588,7 @@ namespace Nu.OfficerMiniGame
             }
         }
 
-        [JsonIgnore]
+        
         public List<int> MinistrelBonuses
         {
             get
@@ -590,7 +599,7 @@ namespace Nu.OfficerMiniGame
 
                 foreach (var watch in day)
                 {
-                    var ministrel = BaseShip.ShipsCrew.FirstOrDefault(a => a.Name == watch.CrewName);
+                    var ministrel = ShipsCrew.FirstOrDefault(a => a.Name == watch.CrewName);
 
                     if (ministrel != null)
                     {
@@ -602,7 +611,7 @@ namespace Nu.OfficerMiniGame
             }
         }
 
-        [JsonIgnore]
+        
         public JobMessage MaintainJob
         {
             get
@@ -613,7 +622,7 @@ namespace Nu.OfficerMiniGame
                 {
                     string fixitFelixName = AssignedJobs.First(a => a.DutyType == DutyType.Maintain).CrewName;
 
-                    var fixitFelix = BaseShip.ShipsCrew.FirstOrDefault(a => a.Name == fixitFelixName);
+                    var fixitFelix = ShipsCrew.FirstOrDefault(a => a.Name == fixitFelixName);
 
                     if (fixitFelix != null)
                     {
@@ -626,7 +635,7 @@ namespace Nu.OfficerMiniGame
             }
         }
 
-        [JsonIgnore]
+        
         public JobMessage ManagerJob
         {
             get
@@ -637,7 +646,7 @@ namespace Nu.OfficerMiniGame
                 {
                     string pointyHairedOneName = AssignedJobs.First(a => a.DutyType == DutyType.Manage).CrewName;
 
-                    var pointyHairedOne = BaseShip.ShipsCrew.FirstOrDefault(a => a.Name == pointyHairedOneName);
+                    var pointyHairedOne = ShipsCrew.FirstOrDefault(a => a.Name == pointyHairedOneName);
 
                     if (pointyHairedOne != null)
                     {
@@ -650,7 +659,7 @@ namespace Nu.OfficerMiniGame
             }
         }
 
-        [JsonIgnore]
+        
         public JobMessage NavigatorJob
         {
             get
@@ -661,7 +670,7 @@ namespace Nu.OfficerMiniGame
                 {
                     string navigatorName = AssignedJobs.First(a => a.DutyType == DutyType.Navigate).CrewName;
 
-                    var navigator = BaseShip.ShipsCrew.FirstOrDefault(a => a.Name == navigatorName);
+                    var navigator = ShipsCrew.FirstOrDefault(a => a.Name == navigatorName);
 
                     if (navigator != null)
                     {
@@ -674,7 +683,7 @@ namespace Nu.OfficerMiniGame
             }
         }
 
-        [JsonIgnore]
+        
         public JobMessage HealerJob
         {
             get
@@ -685,7 +694,7 @@ namespace Nu.OfficerMiniGame
                 {
                     string healerName = AssignedJobs.First(a => a.DutyType == DutyType.Heal).CrewName;
 
-                    var healer = BaseShip.ShipsCrew.FirstOrDefault(a => a.Name == healerName);
+                    var healer = ShipsCrew.FirstOrDefault(a => a.Name == healerName);
 
                     if (healer != null)
                     {
@@ -698,7 +707,7 @@ namespace Nu.OfficerMiniGame
             }
         }
 
-        [JsonIgnore]
+        
         public JobMessage CookJob
         {
             get
@@ -709,7 +718,7 @@ namespace Nu.OfficerMiniGame
                 {
                     string cookName = AssignedJobs.First(a => a.DutyType == DutyType.Cook).CrewName;
 
-                    var cook = BaseShip.ShipsCrew.FirstOrDefault(a => a.Name == cookName);
+                    var cook = ShipsCrew.FirstOrDefault(a => a.Name == cookName);
 
                     if (cook != null)
                     {
@@ -747,7 +756,7 @@ namespace Nu.OfficerMiniGame
 
         public CargoHold ShipsCargo { get; private set; } = new CargoHold();
 
-        [JsonIgnore]
+        
         public bool IsShipOverburdened
         {
             get
@@ -756,7 +765,7 @@ namespace Nu.OfficerMiniGame
             }
         }
 
-        [JsonIgnore]
+        
         public decimal OverburdenedFactor
         {
             get

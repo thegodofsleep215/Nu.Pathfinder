@@ -10,7 +10,7 @@
     grid-area: header
 }
 
-.button-grid{
+.button-grid {
     grid-area: button;
     align-self: center;
     justify-self: center;
@@ -21,6 +21,16 @@
     grid-template-areas: 'header header header button' 'left right right right';
     grid-column-gap: 5px;
     grid-row-gap: 5px;
+}
+
+.form-grid-container {
+    display: grid;
+    grid-template-columns: auto 20px;
+    grid-column-gap: 2px;
+    grid-row-gap: 5px;
+    padding: 5px;
+    justify-items: center;
+    align-items: center;
 }
 
 .card {
@@ -77,6 +87,45 @@
     width: 20px;
 }
 
-    .update-button:active, .add-button:active {
-        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-    }
+.small-add-button {
+    background: url("../../public/plus.svg") no-repeat top left;
+    background-size: contain;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    cursor: pointer;
+    display: inline-block;
+    height: 15px;
+    width: 15px;
+}
+
+
+.delete-button {
+    background: url("../../public/x.svg") no-repeat top left;
+    background-size: contain;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    cursor: pointer;
+    display: inline-block;
+    height: 20px;
+    width: 20px;
+}
+
+
+.small-delete-button {
+    background: url("../../public/x.svg") no-repeat top left;
+    background-size: contain;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    cursor: pointer;
+    display: inline-block;
+    height: 15px;
+    width: 15px;
+}
+
+.update-button:active,
+.add-button:active {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}

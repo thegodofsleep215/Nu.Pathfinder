@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Nu.Game.Common\Nu.Game.Common.csproj" />
+    <ProjectReference Include="..\Nu.OfficerMiniGame.Dal\Nu.OfficerMiniGame.Dal.csproj" />
   </ItemGroup>
 
 </Project>

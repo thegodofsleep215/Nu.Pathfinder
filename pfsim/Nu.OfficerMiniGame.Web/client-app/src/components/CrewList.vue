@@ -16,7 +16,9 @@
             </div>
         </div>
         <div id="selectedCrew" class="right-grid">
-            <CrewDetail v-bind:data="crew"></CrewDetail>
+            <CrewDetail v-model="currentCrewMember"
+                        @delete-crew="onDeleteCrew"
+                        v-if="showDetail"></CrewDetail>
         </div>
 
     </div>
@@ -44,15 +46,25 @@
         mounted: function () {
             this.loadNames();
         },
+        computed: {
+            currentCrewMember() {
+                return this.crew;
+            },
+            showDetail() {
+                if (this.currentCrewMember == undefined || Object.entries(this.currentCrewMember).length === 0) {
+                    return false;
+                }
+                return true;
+            }
+        },
         methods: {
             loadNames() {
                 var self = this;
-                fetch('/Crew/Names').then(r => r.json()).then(d => self.crewMembers = d);
+                fetch('/CrewMemberStats/Names').then(r => r.json()).then(d => self.crewMembers = d);
             },
             loadCrewMember(name) {
-                //document.getElementById("selectedCrew").style.visibility = "visible";
                 var self = this;
-                fetch('/Crew?name=' + name).then(r => r.json()).then(d => self.crew = d);
+                fetch('/CrewMemberStats?name=' + name).then(r => r.json()).then(d => self.crew = d);
             },
             showAdd() {
                 this.isAddCrewVisible = !this.isAddCrewVisible;
@@ -60,9 +72,22 @@
             saveNewCrewMember() {
                 this.isAddCrewVisible = !this.isAddCrewVisible;
             },
-            onAddCrew(e) {
-                alert(e);
+            onAddCrew(name) {
                 this.isAddCrewVisible = !this.isAddCrewVisible;
+                fetch('/CrewMemberStats/Create?name=' + name, { method: 'POST' }).then(r => {
+                    if (r.status == 200) {
+                        this.loadNames();
+                    }
+                });
+            },
+            onDeleteCrew(name) {
+                var self = this;
+                fetch('/CrewMemberStats/Delete?name=' + name, { method: 'DELETE' }).then(r => {
+                    if (r.status == 200) {
+                        self.loadNames();
+                        self.crew = {};
+                    }
+                })
             }
         }
     }

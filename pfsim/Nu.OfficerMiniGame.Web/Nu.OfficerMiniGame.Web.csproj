@@ -27,6 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Nu.OfficerMiniGame.Dal\Nu.OfficerMiniGame.Dal.csproj" />
     <ProjectReference Include="..\Nu.OfficerMiniGame\Nu.OfficerMiniGame.csproj" />
   </ItemGroup>
 

@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Nu.OfficerMiniGame.Dal.Dto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,70 +8,64 @@ using System.Threading.Tasks;
 
 namespace Nu.OfficerMiniGame
 {
-    public class BaseCrewMember
+    public class CrewMember
     {
         public string Name { get; set; }
-
-        public CrewSkills Skills { get; set; } = new CrewSkills();
-    }
-
-    [Serializable]
-    public class CrewMember : BaseCrewMember
-    {
         public string Title { get; set; }
+        public CrewSkills Skills { get; set; } = new CrewSkills();
 
-        [JsonIgnore]
+        
         public int PerformSkill => Skills.Perform + WorkModifier + ExternalModifiers.Perform;
 
-        [JsonIgnore]
+        
         public int ProfessionSailorSkill => Skills.ProfessionSailor + WorkModifier + ExternalModifiers.ProfessionSailor;
 
-        [JsonIgnore]
+        
         public int DiplomacySkill => Skills.Diplomacy + WorkModifier + ExternalModifiers.Diplomacy;
 
-        [JsonIgnore]
+        
         public int KnowledgeEngineeringSkill => Skills.KnowledgeEngineering + WorkModifier + ExternalModifiers.KnowledgeEngineering;
 
-        [JsonIgnore]
+        
         public int IntimidateSkill => Skills.Intimidate + WorkModifier + ExternalModifiers.Intimidate;
 
-        [JsonIgnore]
+        
         public int PerceptionSkill => Skills.Perception + WorkModifier + ExternalModifiers.Perception;
 
-        [JsonIgnore]
+        
         public int CraftCarpentrySkill => Skills.CraftCarpentry + WorkModifier + ExternalModifiers.CraftCarpentry;
 
-        [JsonIgnore]
+        
         public int CraftShipSkill => Skills.CraftShip + WorkModifier + ExternalModifiers.CraftShip;
 
-        [JsonIgnore]
+        
         public int CraftCookingSkill => Skills.CraftCooking + WorkModifier + ExternalModifiers.CraftCooking;
 
-        [JsonIgnore]
+        
         public int HealSkill => Skills.Heal + WorkModifier + ExternalModifiers.Heal;
 
-        [JsonIgnore]
+        
         public int SurvivalSkill => Skills.Survival + WorkModifier + ExternalModifiers.Survival;
 
-        [JsonIgnore]
+        
         public int ProfessionMerchantSkill => Skills.ProfessionMerchant + WorkModifier + ExternalModifiers.ProfessionMerchant;
 
-        [JsonIgnore]
+        
         public int CommanderSkillBonus => ProfessionSailorSkill > DiplomacySkill ? ProfessionSailorSkill : DiplomacySkill;
 
-        [JsonIgnore]
+        
         public int CrewPilotModifier => ProfessionSailorSkill;
 
-        [JsonIgnore]
+        
         public int DisciplineSkillBonus => IntimidateSkill;
 
-        [JsonIgnore]
+        
         public int WatchSkillBonus => PerceptionSkill;
 
-        [JsonIgnore]
+        
         public int MaintainSkillBonus => CraftCarpentrySkill > CraftShipSkill ? CraftCarpentrySkill : CraftShipSkill;
 
-        [JsonIgnore]
+        
         public int ManagerSkillBonus
         {
             get
@@ -83,40 +78,40 @@ namespace Nu.OfficerMiniGame
             }
         }
 
-        [JsonIgnore]
+        
         public int NavigatorSkillBonus => ProfessionSailorSkill > SurvivalSkill ? ProfessionSailorSkill : SurvivalSkill;
 
-        [JsonIgnore]
+        
         public int PilotSkillBonus => ProfessionSailorSkill;
 
-        [JsonIgnore]
+        
         public int CookSkillBonus => CraftCookingSkill;
 
-        [JsonIgnore]
+        
         public int HealerSkillBonus => HealSkill;
 
-        [JsonIgnore]
+        
         public int MinistrelSkillBonus => PerformSkill;
 
-        [JsonIgnore]
+        
         public int ProcureSkillBonus => SurvivalSkill;
 
         // TODO: RepairSail, RepairSiegeEngine
-        [JsonIgnore]
+        
         public int RepairSkillBonus => CraftShipSkill > CraftCarpentrySkill ? CraftShipSkill : CraftCarpentrySkill;
 
-        [JsonIgnore]
+        
         public int RepairHullSkillBonus => CraftShipSkill > CraftCarpentrySkill ? CraftShipSkill : CraftCarpentrySkill;
 
-        [JsonIgnore]
+        
         public int StowSkillBonus => ProfessionSailorSkill > KnowledgeEngineeringSkill ? ProfessionSailorSkill : KnowledgeEngineeringSkill;
 
-        [JsonIgnore]
+        
         public int UnloadSkillBonus => ProfessionSailorSkill > KnowledgeEngineeringSkill ? ProfessionSailorSkill : KnowledgeEngineeringSkill;
 
         public List<Job> Jobs { get; set; } = new List<Job>();
 
-        [JsonIgnore]
+        
         public bool CountsAsCrew
         {
             get
@@ -130,7 +125,7 @@ namespace Nu.OfficerMiniGame
             }
         }
 
-        [JsonIgnore]
+        
         public int NumberOfJobs
         {
             get
@@ -142,7 +137,7 @@ namespace Nu.OfficerMiniGame
             }
         }
 
-        [JsonIgnore]
+        
         public int WorkModifier
         {
             get
