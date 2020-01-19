@@ -19,7 +19,7 @@ namespace  Nu.OfficerMiniGame
             var dc = ship.CurrentVoyage.NavigationDC - status.CommandModifier - ship.CurrentVoyage.GetWeatherModifier(DutyType.Navigate);
             var assistBonus = PerformAssists(ship.GetAssistance(DutyType.Navigate));
             var job = ship.NavigatorJob;
-            status.NavigationResult = (DiceRoller.D20(1) + job.SkillBonus + assistBonus) - dc;
+            status.NavigationResult = (DiceRoller.D20(1) + job.SkillBonus + assistBonus) - dc + 3; // The +3 because I am assuming compass + map
             if(verbose)
                 status.DutyEvents.Add(new PerformedDutyEvent(DutyType.Navigate, job.CrewName, dc, assistBonus, job.SkillBonus, status.NavigationResult));
 

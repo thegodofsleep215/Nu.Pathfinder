@@ -12,7 +12,7 @@
   "HullHitPoints": 1090,
   "CrewSize": 16,
   "MinimumCrewSize": 8,
-  "ShipDc": 10,
+  "ShipDc": 11,
   "ShipPilotingBonus": 1,
   "ShipQuality": 0,
   "ShipsCrew": [
