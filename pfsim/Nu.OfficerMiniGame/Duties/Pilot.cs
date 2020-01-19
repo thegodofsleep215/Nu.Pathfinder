@@ -1,4 +1,5 @@
 ﻿using Nu.Game.Common;
+using Nu.OfficerMiniGame.Dal.Enums;
 using System.Collections.Generic;
 
 namespace  Nu.OfficerMiniGame

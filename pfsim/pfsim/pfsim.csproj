@@ -39,6 +39,9 @@
     <Reference Include="Nu.CommandLine, Version=1.7.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Nu.CommandLine.1.7.0\lib\Nu.CommandLine.dll</HintPath>
     </Reference>
+    <Reference Include="Nu.Messaging, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Nu.Messaging.1.0.1\lib\netstandard2.0\Nu.Messaging.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Configuration.Install" />
@@ -81,21 +84,21 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Nu.Game.Common\Nu.Game.Common.csproj">
-      <Project>{43a8ec5e-8993-4f8f-974e-90ebfa98bc43}</Project>
-      <Name>Nu.Game.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Nu.Messaging\Nu.Messaging.csproj">
-      <Project>{8a5ee3cf-e1d9-4722-bab4-de9852abd677}</Project>
-      <Name>Nu.Messaging</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Nu.OfficerMiniGame\Nu.OfficerMiniGame.csproj">
-      <Project>{e0d3ab0c-d5ef-4a06-93f0-daeaec10cb65}</Project>
-      <Name>Nu.OfficerMiniGame</Name>
-    </ProjectReference>
+    <Folder Include="Assets\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Assets\" />
+    <ProjectReference Include="..\Nu.Game.Common\Nu.Game.Common.csproj">
+      <Project>{a2e19a13-515c-48d6-bfa7-5602de81b59a}</Project>
+      <Name>Nu.Game.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Nu.OfficerMiniGame.Dal\Nu.OfficerMiniGame.Dal.csproj">
+      <Project>{877cfd76-2f21-46f6-8215-5d6c8eae9678}</Project>
+      <Name>Nu.OfficerMiniGame.Dal</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Nu.OfficerMiniGame\Nu.OfficerMiniGame.csproj">
+      <Project>{25466b31-691e-4628-bbf1-da3c2d959a99}</Project>
+      <Name>Nu.OfficerMiniGame</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

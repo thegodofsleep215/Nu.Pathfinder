@@ -2,6 +2,7 @@
 using Nu.CommandLine.Attributes;
 using Nu.Game.Common;
 using Nu.OfficerMiniGame;
+using Nu.OfficerMiniGame.Dal.Dal;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -1449,15 +1450,10 @@ namespace pfsim.ActionContainers
         /// <returns>A ship.</returns>
         private Ship LoadShip(string shipName)
         {
-            var folder = ".\\Ships";
-            if (!Directory.Exists(folder))
-            {
-                return new Ship();
-            }
-            string file = Directory.GetFiles(folder, string.Format("{0}.json", shipName.Replace(' ', '_'))).First();
-            JsonSerializerSettings settings = new JsonSerializerSettings();
-            settings.TypeNameHandling = TypeNameHandling.Auto;
-            return JsonConvert.DeserializeObject<Ship>(File.ReadAllText(file), settings);
+            var folder = ".\\data";
+            var dal = new MiniGameDal(new FileShipLoadoutDal(folder), new FileShipStatsDal(folder), new FileCrewMemberStats(folder));
+
+            return dal.GetLoadout(shipName);
         }
 
         private Cargo[] LoadCargo(string fileName)

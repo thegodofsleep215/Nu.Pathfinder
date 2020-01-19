@@ -1,0 +1,18 @@
+{
+    "Name": "Cogward",
+    "Skills": {
+        "ProfessionSailor": 4,
+        "Diplomacy": 0,
+        "KnowledgeEngineering": 0,
+        "Intimidate": 9,
+        "Perception": 5,
+        "CraftCarpentry": 0,
+        "CraftShip": 0,
+        "CraftSails": 0,
+        "Survival": 0,
+        "ProfessionMerchant": 0,
+        "CraftCooking": 0,
+        "Heal": 0,
+        "Perform": 0
+    }
+}

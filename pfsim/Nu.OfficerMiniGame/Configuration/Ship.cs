@@ -1,13 +1,13 @@
-﻿using Newtonsoft.Json;
-using Nu.Game.Common;
+﻿using Nu.Game.Common;
+using Nu.OfficerMiniGame.Dal.Dto;
+using Nu.OfficerMiniGame.Dal.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace  Nu.OfficerMiniGame
+namespace Nu.OfficerMiniGame
 {
-    [Serializable]
     public class Ship
     {
         private List<Job> _assignedJobs;
@@ -88,7 +88,7 @@ namespace  Nu.OfficerMiniGame
 
         public Morale CrewMorale { get; set; } = new Morale();
 
-        [JsonIgnore]
+        
         public int CrewQuality
         {
             get
@@ -121,7 +121,7 @@ namespace  Nu.OfficerMiniGame
                     return (int)retval;
             }
         }
-        [JsonIgnore]
+        
         public bool HasDisciplineOfficer
         {
             get
@@ -129,7 +129,7 @@ namespace  Nu.OfficerMiniGame
                 return AssignedJobs.Exists(a => a.DutyType == DutyType.Discipline);
             }
         }
-        [JsonIgnore]
+        
         public bool HasHealer
         {
             get
@@ -138,7 +138,7 @@ namespace  Nu.OfficerMiniGame
             }
         }
         public DisciplineStandards DisciplineStandards { get; set; }
-        [JsonIgnore]
+        
         public int CrewDisciplineModifier
         {
             get
@@ -173,7 +173,7 @@ namespace  Nu.OfficerMiniGame
         public int Passengers { get; set; }
         public int Swabbies { get; set; }
         public decimal AverageSwabbieQuality { get; set; }
-        [JsonIgnore]
+        
         public int TotalCrew
         {
             get
@@ -181,7 +181,7 @@ namespace  Nu.OfficerMiniGame
                 return ShipsCrew.Count + Swabbies + Marines + Passengers;
             }
         }
-        [JsonIgnore]
+        
         public int AvailableCrew
         {
             get
@@ -197,7 +197,7 @@ namespace  Nu.OfficerMiniGame
                 }
             }
         }
-        [JsonIgnore]
+        
         public int SkeletonCrewPenalty
         {
             get
@@ -210,7 +210,7 @@ namespace  Nu.OfficerMiniGame
                     return retval < -10 ? -10 : retval;
             }
         }
-        [JsonIgnore]
+        
         public bool HasMinimumCrew
         {
             get
@@ -219,7 +219,7 @@ namespace  Nu.OfficerMiniGame
             }
         }
 
-        [JsonIgnore]
+        
         public List<Job> AssignedJobs
         {
             get
@@ -476,7 +476,7 @@ namespace  Nu.OfficerMiniGame
             return assists;
         }
 
-        [JsonIgnore]
+        
         public JobMessage CommanderJob
         {
             get
@@ -503,7 +503,7 @@ namespace  Nu.OfficerMiniGame
         /// <summary>
         /// In the engine, this adds to DC so the result needs to be inverse of a modification to a dice role.
         /// </summary>
-        [JsonIgnore]
+        
         public int CrewPilotModifier
         {
             get
@@ -512,7 +512,7 @@ namespace  Nu.OfficerMiniGame
             }
         }
 
-        [JsonIgnore]
+        
         public JobMessage PilotJob
         {
             get
@@ -536,7 +536,7 @@ namespace  Nu.OfficerMiniGame
             }
         }
 
-        [JsonIgnore]
+        
         public JobMessage DisciplineJob
         {
             get
@@ -560,7 +560,7 @@ namespace  Nu.OfficerMiniGame
             }
         }
 
-        [JsonIgnore]
+        
         public List<int> WatchBonuses
         {
             get
@@ -588,7 +588,7 @@ namespace  Nu.OfficerMiniGame
             }
         }
 
-        [JsonIgnore]
+        
         public List<int> MinistrelBonuses
         {
             get
@@ -611,7 +611,7 @@ namespace  Nu.OfficerMiniGame
             }
         }
 
-        [JsonIgnore]
+        
         public JobMessage MaintainJob
         {
             get
@@ -635,7 +635,7 @@ namespace  Nu.OfficerMiniGame
             }
         }
 
-        [JsonIgnore]
+        
         public JobMessage ManagerJob
         {
             get
@@ -659,7 +659,7 @@ namespace  Nu.OfficerMiniGame
             }
         }
 
-        [JsonIgnore]
+        
         public JobMessage NavigatorJob
         {
             get
@@ -683,7 +683,7 @@ namespace  Nu.OfficerMiniGame
             }
         }
 
-        [JsonIgnore]
+        
         public JobMessage HealerJob
         {
             get
@@ -707,7 +707,7 @@ namespace  Nu.OfficerMiniGame
             }
         }
 
-        [JsonIgnore]
+        
         public JobMessage CookJob
         {
             get
@@ -756,7 +756,7 @@ namespace  Nu.OfficerMiniGame
 
         public CargoHold ShipsCargo { get; private set; } = new CargoHold();
 
-        [JsonIgnore]
+        
         public bool IsShipOverburdened
         {
             get
@@ -765,7 +765,7 @@ namespace  Nu.OfficerMiniGame
             }
         }
 
-        [JsonIgnore]
+        
         public decimal OverburdenedFactor
         {
             get
