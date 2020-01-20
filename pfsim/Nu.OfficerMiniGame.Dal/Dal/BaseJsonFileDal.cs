@@ -11,27 +11,21 @@ namespace Nu.OfficerMiniGame.Dal.Dal
         protected BaseJsonFileDal(string folder)
         {
             this.folder = folder;
+            if (!Directory.Exists(folder))
+            {
+                Directory.CreateDirectory(folder);
+            }
 
         }
 
         public List<string> GetNames()
         {
-            if (!Directory.Exists(folder))
-            {
-                return new List<string>();
-            }
             var files = Directory.GetFiles(folder, "*.json").ToList();
-
             return files.Select(x => Path.GetFileNameWithoutExtension(x)).ToList();
-
         }
 
         public T Get(string name)
         {
-            if (!Directory.Exists(folder))
-            {
-                return null;
-            }
             string filename = $"{name}.json";
             if (!File.Exists(Path.Combine(folder, filename)))
             {
@@ -65,7 +59,7 @@ namespace Nu.OfficerMiniGame.Dal.Dal
                 File.Delete(filename);
             }
         }
-        
+
         public bool Exists(string name)
         {
             var filename = Path.Combine(folder, $"{name}.json");

@@ -3,6 +3,7 @@ import Router from 'vue-router'
 
 import ShipLoadouts from '@/components/ShipLoadouts.vue'
 import CrewList from '@/components/CrewList.vue'
+import Voyages from '@/components/Voyages.vue'
 
 Vue.use(Router)
 
@@ -23,5 +24,10 @@ export default new Router({
             name: 'Crew',
             component: CrewList
         },
+        {
+            path: '/Voyages',
+            name: 'Voyages',
+            component: Voyages
+        }
     ]
 })

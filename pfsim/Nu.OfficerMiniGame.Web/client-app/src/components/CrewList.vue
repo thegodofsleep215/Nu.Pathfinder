@@ -1,7 +1,9 @@
 ﻿<template>
     <div class="grid-container">
 
-        <AddCrewModal v-model="isAddCrewVisible" @add-crew="onAddCrew"></AddCrewModal>
+        <AddModal v-model="isAddCrewVisible" 
+                      @add-crew="onAddCrew"
+                      @add-cancel="onAddCrewCancel"></AddModal>
         <div class="header-grid">
             <h3>Crew Members</h3>
         </div>
@@ -27,7 +29,7 @@
 
 <script>
     import CrewDetail from './CrewDetail.vue'
-    import AddCrewModal from './AddCrewModal.vue'
+    import AddModal from './AddModal.vue'
     export default {
         name: "CrewList",
         components: {
@@ -79,6 +81,9 @@
                         this.loadNames();
                     }
                 });
+            },
+            onAddCrewCancel() {
+                this.isAddCrewVisible = false;
             },
             onDeleteCrew(name) {
                 var self = this;

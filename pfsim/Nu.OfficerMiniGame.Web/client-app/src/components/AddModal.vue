@@ -9,6 +9,7 @@
             <footer class="modal-footer">
                 <slot name="footer">
                     <button type="button" @click="onOk(name)">Ok</button>
+                    <button type="button" @click="OnCancel()">Cancel</button>
                 </slot>
             </footer>
         </div>
@@ -17,7 +18,7 @@
 
 <script>
     export default {
-        name: "AddCrewModal",
+        name: "AddModal",
         props: {
             value: {required:false}
         },
@@ -26,7 +27,10 @@
         },
         methods: {
             onOk(name) {
-                this.$emit("add-crew", name);
+                this.$emit("add-item", name);
+            },
+            onCancel() {
+                this.$emit("add-cancel");
             }
         },
     }

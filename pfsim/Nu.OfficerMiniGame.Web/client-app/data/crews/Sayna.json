@@ -1,18 +1,1 @@
-{
-    "Name": "Sayna",
-    "Skills": {
-        "ProfessionSailor": 6,
-        "Diplomacy": 11,
-        "KnowledgeEngineering": 0,
-        "Intimidate": 5,
-        "Perception": 8,
-        "CraftCarpentry": 1,
-        "CraftShip": 5,
-        "CraftSails": 1,
-        "Survival": 0,
-        "ProfessionMerchant": 0,
-        "CraftCooking": 1,
-        "Heal": 2,
-        "Perform": 11
-    }
-}
+{"Name":"Sayna","Title":null,"Skills":{"ProfessionSailor":12,"Diplomacy":15,"KnowledgeEngineering":0,"Intimidate":5,"Perception":8,"CraftCarpentry":1,"CraftShip":5,"CraftSails":1,"Survival":0,"ProfessionMerchant":0,"CraftCooking":1,"Heal":2,"Perform":11}}

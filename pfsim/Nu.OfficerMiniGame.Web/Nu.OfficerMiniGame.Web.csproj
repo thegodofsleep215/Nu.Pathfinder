@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="client-app\data\voyagePlans\" />
     <Folder Include="Middleware\" />
   </ItemGroup>
 
