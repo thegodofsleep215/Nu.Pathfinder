@@ -1,9 +1,11 @@
 <template>
     <div class="grid-container">
 
-        <AddModal v-model="isAddVoyageVisible" @add-crew="onAddVoyage"></AddModal>
+        <AddModal v-model="isAddVoyageVisible"
+                  @modal-ok="onAddVoyage"
+                  @modal-cancel="onAddCancel"></AddModal>
         <div class="header-grid">
-            <h3>Crew Members</h3>
+            <h3>Voyages</h3>
         </div>
         <div class="button-grid">
             <button class="add-button" v-on:click="showAdd()"></button>
@@ -15,47 +17,76 @@
                 </div>
             </div>
         </div>
-        <div id="selectedCrew" class="right-grid">
-            <!--CrewDetail v-model="currentCrewMember"
-                        @delete-crew="onDeleteCrew"
-                        v-if="showDetail"></!--CrewDetail -->
+        <div class="right-grid">
+            <VoyageDetail v-model="selectedVoyage"
+                          @delete-voyage="deleteVoyage"
+                          v-if="showDetail"></VoyageDetail>
         </div>
     </div>
 </template>
 
 <script>
-    import AddModal from '.\AddModal.vue'
+    import AddModal from './AddModal.vue'
+    import VoyageDetail from './VoyageDetail.vue'
     export default {
         name: "Voyages",
         components: {
-            AddModal
+            AddModal,
+            VoyageDetail
         },
         data: function () {
             return {
                 isAddVoyageVisible: false,
                 voyages: {},
                 voyage: {},
+                crew: { name: "Foo" }
+            }
+        },
+        mounted: function () {
+            this.loadNames();
+        },
+        computed: {
+            selectedVoyage() {
+                return this.voyage;
+            },
+            showDetail() {
+                if (this.selectedVoyage == undefined || Object.entries(this.selectedVoyage).length === 0) {
+                    return false;
+                }
+                return true;
             }
         },
         methods: {
             loadNames() {
                 var self = this;
-                fetch('/Voyage/Names').then(r => r.json()).then(d => self.crewMembers = d);
+                fetch('/Voyage/Names').then(r => r.json()).then(d => self.voyages = d);
             },
             loadVoyage(name) {
                 var self = this;
-                fetch('/Voygae?name=' + name).then(r => r.json()).then(d => self.crew = d);
+                fetch('/Voyage?name=' + name).then(r => r.json()).then(d => self.voyage = d);
+            },
+            showAdd() {
+                this.isAddVoyageVisible = true;
             },
             onAddVoyage(name) {
-                this.isAddVoyageVisible = !this.isAddVoyageVisible;
+                this.isAddVoyageVisible = false;
                 fetch('/Voyage/Create?name=' + name, { method: 'POST' }).then(r => {
                     if (r.status == 200) {
                         this.loadNames();
                     }
                 });
             },
-            onAddCrewCancel() {
+            onAddCancel() {
                 this.isAddVoyageVisible = false;
+            },
+            deleteVoyage(name) {
+                var self = this;
+                fetch('/Voyage/Delete?name=' + name, { method: 'DELETE' }).then(r => {
+                    if (r.status == 200) {
+                        self.loadNames();
+                        self.voyage = {};
+                    }
+                })
             }
         }
     }

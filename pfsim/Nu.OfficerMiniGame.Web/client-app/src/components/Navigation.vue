@@ -25,6 +25,11 @@
                         id: 1,
                         text: "Crew Members",
                         page: "/Crew"
+                    },
+                    {
+                        id: 2,
+                        text: "Voyages",
+                        page: "/Voyages"
                     }
                 ]
             }

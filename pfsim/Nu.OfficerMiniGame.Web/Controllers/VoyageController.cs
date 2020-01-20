@@ -8,7 +8,7 @@ namespace Nu.OfficerMiniGame.Web.Controllers
     [Route("[controller]")]
     public class VoyageController : BaseObjectController<PlanVoyage>
     {
-        public VoyageController(IObjectDal<PlanVoyage> dal) : base(new FilePlanVoyageDal(".\\client-app\\data"))
+        public VoyageController() : base(new FilePlanVoyageDal(".\\client-app\\data"))
         {
         }
 

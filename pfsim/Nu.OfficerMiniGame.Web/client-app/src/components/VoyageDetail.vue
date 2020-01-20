@@ -1,0 +1,154 @@
+﻿<template>
+    <div class="card">
+        <div class="container">
+            <div class="form-grid-container">
+                <div>
+                    <h3 style="display: inline">{{value.name}}</h3>
+                    <h3 style="display: inline" v-if="!canEdit"> - Voyage is Underweigh</h3>
+                </div>
+
+                <div>
+                    <button style="align-self:center" class="update-button" v-on:click="updateVoyage(value)" v-if="canEdit"> </button>
+                    <button style="align-self:center" class="delete-button" v-on:click="deleteVoyage()"></button>
+                </div>
+
+                <div>
+                    <table align="center">
+                        <tr>
+                            <td style="text-align:right">
+                                <label class="stat-label">Port: </label>
+                            </td>
+                            <td>
+                                <div><input type="text" style="float:left" v-model="value.port" /></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:right">
+                                <label class="stat-label">Destination Port: </label>
+                            </td>
+                            <td>
+                                <div><input type="text" style="float:left" v-model="value.destinationPort" /></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:right">
+                                <label class="stat-label">Days Planned: </label>
+                            </td>
+                            <td>
+                                <div><input type="text" style="float:left" v-model="value.daysPlanned" /></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:right">
+                                <label class="stat-label">Night Status: </label>
+                            </td>
+                            <td>
+                                <select v-model="value.nightStatus" style="float:left">
+                                    <option value="Anchored">Anchored</option>
+                                    <option value="Drifting">Drifting</option>
+                                    <option value="Underweigh">Underweigh</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:right">
+                                <label class="stat-label">Open Ocean: </label>
+                            </td>
+                            <td>
+                                <div><input type="checkbox" style="float:left" v-model="value.openOcean" /></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:right">
+                                <label class="stat-label">Shallow Water: </label>
+                            </td>
+                            <td>
+                                <div><input type="checkbox" style="float:left" v-model="value.shallowWater" /></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:right">
+                                <label class="stat-label">Narrow Passage: </label>
+                            </td>
+                            <td>
+                                <div><input type="checkbox" style="float:left" v-model="value.narrowPassage" /></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="stat-label">Ship Loadouts</span>
+                            </td>
+                            <td>
+                                <select multiple v-model="value.shipLoadouts">
+                                    <option v-for="l in loadouts" :value="l" v-bind:key="l">{{l}}</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div style="grid-column-start: 1">
+                    <button v-on:click="hoistAnchor" v-if="canEdit">Hoist Anchor!</button>
+                    <button v-on:click="gotoSailing" v-else>Continue Sailing.</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+    export default {
+        name: "VoyageDetail",
+        props: {
+            value: {}
+        },
+        data: function () {
+            return {
+                loadouts: []
+            }
+        },
+        computed: {
+            canEdit() {
+                return !this.value.underweigh;
+            }
+        },
+        mounted: function () {
+            var self = this;
+            fetch('/ShipLoadout/Names').then(r => r.json()).then(d => self.loadouts = d);
+        },
+        methods: {
+            updateVoyage(v) {
+                fetch('/Voyage/Update', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(v)
+                });
+            },
+            deleteVoyage() {
+                if (confirm("Do the thing?")) {
+                    this.$emit("delete-voyage", this.value.name);
+                    self.value = undefined;
+                }
+            },
+            gotoSailing() {
+                this.$router.push({ path: "Sailing/" + this.value.name, params: { id: this.value.name } });
+            },
+            hoistAnchor() {
+                if (this.value.shipLoadouts === undefined || this.value.shipLoadouts.length == 0) {
+                    alert("You must select at least one loadout.")
+                }
+                else if (this.value.daysPlanned <= 0) {
+                    alert("Days Planned must be greater than 0.")
+                }
+                else {
+                    if (confirm("Hoisting Anchor means the voyage can no logger be edited.")) {
+                        this.value.underweigh = true;
+                        this.updateVoyage(this.value);
+                        this.gotoSailing();
+                    }
+                }
+            }
+        }
+    }
+</script>

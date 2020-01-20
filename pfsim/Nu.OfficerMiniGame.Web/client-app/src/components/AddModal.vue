@@ -9,7 +9,7 @@
             <footer class="modal-footer">
                 <slot name="footer">
                     <button type="button" @click="onOk(name)">Ok</button>
-                    <button type="button" @click="OnCancel()">Cancel</button>
+                    <button type="button" @click="onCancel">Cancel</button>
                 </slot>
             </footer>
         </div>
@@ -27,10 +27,10 @@
         },
         methods: {
             onOk(name) {
-                this.$emit("add-item", name);
+                this.$emit("modal-ok", name);
             },
             onCancel() {
-                this.$emit("add-cancel");
+                this.$emit("modal-cancel");
             }
         },
     }

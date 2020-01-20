@@ -2,8 +2,8 @@
     <div class="grid-container">
 
         <AddModal v-model="isAddCrewVisible" 
-                      @add-crew="onAddCrew"
-                      @add-cancel="onAddCrewCancel"></AddModal>
+                      @modal-ok="onAddCrew"
+                      @modal-cancel="onAddCrewCancel"></AddModal>
         <div class="header-grid">
             <h3>Crew Members</h3>
         </div>
@@ -34,7 +34,7 @@
         name: "CrewList",
         components: {
             CrewDetail,
-            AddCrewModal
+            AddModal
         },
         props: {
             crewMembers: {},

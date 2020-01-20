@@ -19,5 +19,7 @@
         public bool ShallowWater { get; set; }
 
         public bool NarrowPassage { get; set; }
+
+        public bool Underweigh { get; set; }
     }
 }
