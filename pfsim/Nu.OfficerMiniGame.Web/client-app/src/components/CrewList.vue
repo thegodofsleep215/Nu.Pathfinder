@@ -3,7 +3,8 @@
 
         <AddModal v-model="isAddCrewVisible" 
                       @modal-ok="onAddCrew"
-                      @modal-cancel="onAddCrewCancel"></AddModal>
+                      @modal-cancel="onAddCrewCancel">
+                  </AddModal>
         <div class="header-grid">
             <h3>Crew Members</h3>
         </div>

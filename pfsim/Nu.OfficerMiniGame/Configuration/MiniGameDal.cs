@@ -34,12 +34,13 @@ namespace Nu.OfficerMiniGame
                 ShipQuality = ss.ShipQuality,
                 SpecialFeatures = ss.SpecialFeatures
             };
-            ship.ShipsCrew = sl.CrewMembers.Select(x => x.Name).Distinct().Select(x => crewMemberStatsDal.Get(x)).Select(cm => {
+            var crewNames = sl.CrewMembers.Select(x => x.Name.Replace("_", " ")).Distinct().ToList();
+            ship.ShipsCrew = crewNames.Select(x => crewMemberStatsDal.Get(x)).Select(cm => {
                 return new CrewMember
                 {
                     Name = cm.Name,
                     Skills = cm.Skills,
-                    Jobs = sl.CrewMembers.Where(x => x.Name == cm.Name).Select(x => new Job
+                    Jobs = sl.CrewMembers.Where(x => x.Name.Replace("_", " ") == cm.Name).Select(x => new Job
                     {
                         CrewName = cm.Name,
                         DutyType = x.DutyType,

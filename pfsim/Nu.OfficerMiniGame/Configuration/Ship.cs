@@ -485,7 +485,7 @@ namespace Nu.OfficerMiniGame
 
                 if (AssignedJobs.Exists(a => a.DutyType == DutyType.Command))
                 {
-                    string commanderName = AssignedJobs.First(a => a.DutyType == DutyType.Command).CrewName;
+                    string commanderName = AssignedJobs.First(a => a.DutyType == DutyType.Command && !a.IsAssistant).CrewName;
 
                     var commander = ShipsCrew.FirstOrDefault(a => a.Name == commanderName);
 
@@ -521,7 +521,7 @@ namespace Nu.OfficerMiniGame
 
                 if (AssignedJobs.Exists(a => a.DutyType == DutyType.Pilot))
                 {
-                    string pilotName = AssignedJobs.First(a => a.DutyType == DutyType.Pilot).CrewName;
+                    string pilotName = AssignedJobs.First(a => a.DutyType == DutyType.Pilot && !a.IsAssistant).CrewName;
 
                     var pilot = ShipsCrew.FirstOrDefault(a => a.Name == pilotName);
 
@@ -545,7 +545,7 @@ namespace Nu.OfficerMiniGame
 
                 if (AssignedJobs.Exists(a => a.DutyType == DutyType.Discipline))
                 {
-                    string bosunName = AssignedJobs.First(a => a.DutyType == DutyType.Discipline).CrewName;
+                    string bosunName = AssignedJobs.First(a => a.DutyType == DutyType.Discipline && !a.IsAssistant).CrewName;
 
                     var bosun = ShipsCrew.FirstOrDefault(a => a.Name == bosunName);
 
@@ -620,7 +620,7 @@ namespace Nu.OfficerMiniGame
 
                 if (AssignedJobs.Exists(a => a.DutyType == DutyType.Maintain))
                 {
-                    string fixitFelixName = AssignedJobs.First(a => a.DutyType == DutyType.Maintain).CrewName;
+                    string fixitFelixName = AssignedJobs.First(a => a.DutyType == DutyType.Maintain && !a.IsAssistant).CrewName;
 
                     var fixitFelix = ShipsCrew.FirstOrDefault(a => a.Name == fixitFelixName);
 
@@ -644,7 +644,7 @@ namespace Nu.OfficerMiniGame
 
                 if (AssignedJobs.Exists(a => a.DutyType == DutyType.Manage))
                 {
-                    string pointyHairedOneName = AssignedJobs.First(a => a.DutyType == DutyType.Manage).CrewName;
+                    string pointyHairedOneName = AssignedJobs.First(a => a.DutyType == DutyType.Manage && !a.IsAssistant).CrewName;
 
                     var pointyHairedOne = ShipsCrew.FirstOrDefault(a => a.Name == pointyHairedOneName);
 
@@ -668,7 +668,7 @@ namespace Nu.OfficerMiniGame
 
                 if (AssignedJobs.Exists(a => a.DutyType == DutyType.Navigate))
                 {
-                    string navigatorName = AssignedJobs.First(a => a.DutyType == DutyType.Navigate).CrewName;
+                    string navigatorName = AssignedJobs.First(a => a.DutyType == DutyType.Navigate && !a.IsAssistant).CrewName;
 
                     var navigator = ShipsCrew.FirstOrDefault(a => a.Name == navigatorName);
 
@@ -692,7 +692,7 @@ namespace Nu.OfficerMiniGame
 
                 if (AssignedJobs.Exists(a => a.DutyType == DutyType.Heal))
                 {
-                    string healerName = AssignedJobs.First(a => a.DutyType == DutyType.Heal).CrewName;
+                    string healerName = AssignedJobs.First(a => a.DutyType == DutyType.Heal && !a.IsAssistant).CrewName;
 
                     var healer = ShipsCrew.FirstOrDefault(a => a.Name == healerName);
 
@@ -716,7 +716,7 @@ namespace Nu.OfficerMiniGame
 
                 if (AssignedJobs.Exists(a => a.DutyType == DutyType.Cook))
                 {
-                    string cookName = AssignedJobs.First(a => a.DutyType == DutyType.Cook).CrewName;
+                    string cookName = AssignedJobs.First(a => a.DutyType == DutyType.Cook && !a.IsAssistant).CrewName;
 
                     var cook = ShipsCrew.FirstOrDefault(a => a.Name == cookName);
 
