@@ -44,12 +44,25 @@
                             </td>
                             <td>
                                 <select v-model="value.nightStatus" style="float:left">
-                                    <option value="Anchored">Anchored</option>
+                                    <option value="Anchored" selected>Anchored</option>
                                     <option value="Drifting">Drifting</option>
                                     <option value="Underweigh">Underweigh</option>
                                 </select>
                             </td>
                         </tr>
+                        <tr>
+                            <td style="text-align:right">
+                                <label class="stat-label">Discipline Standards: </label>
+                            </td>
+                            <td>
+                                <select v-model="value.disciplineStandards" style="float:left">
+                                    <option value="Normal" selected>Normal</option>
+                                    <option value="Lax">Lax</option>
+                                    <option value="Strict">Strict</option>
+                                </select>
+                            </td>
+                        </tr>
+
                         <tr>
                             <td style="text-align:right">
                                 <label class="stat-label">Open Ocean: </label>
@@ -79,12 +92,29 @@
                                 <span class="stat-label">Ship Loadouts</span>
                             </td>
                             <td>
-                                <select multiple v-model="value.shipLoadouts">
+                                <select id="msShipLoadouts" multiple v-model="value.shipLoadouts" v-on:change="shipLoadoutsChanged">
                                     <option v-for="l in loadouts" :value="l" v-bind:key="l">{{l}}</option>
                                 </select>
                             </td>
                         </tr>
                     </table>
+                </div>
+                <div style="grid-column-start:1">
+                    <div v-for="ship in value.swabbies" v-bind:key="ship.loadoutName" class="card">
+                        <div class="container">
+                            <h2>{{ship.loadoutName}}</h2>
+                            <table>
+                                <tr>
+                                    <td>
+                                        <label class="stat-label">Swabbies: </label>
+                                    </td>
+                                    <td>
+                                        <input type="number" v-model="ship.swabbies" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
                 </div>
                 <div style="grid-column-start: 1">
                     <button v-on:click="hoistAnchor" v-if="canEdit">Hoist Anchor!</button>
@@ -103,19 +133,41 @@
         },
         data: function () {
             return {
-                loadouts: []
+                loadouts: [],
             }
         },
         computed: {
             canEdit() {
                 return !this.value.underweigh;
-            }
+            },
         },
         mounted: function () {
             var self = this;
-            fetch('/ShipLoadout/Names').then(r => r.json()).then(d => self.loadouts = d);
+            fetch('/ShipLoadout/Names').then(r => r.json()).then(d => {
+                self.loadouts = d;
+            });
+            this.shipLoadoutsChanged();
+        },
+        updated: function () {
+            if (this.value.shipLoadouts == null) {
+                this.value.shipLoadouts = [];
+            }
+            // Was having trouble with vue clearing out the multi select when you jumped from one voyage to another.
+            Array.from(document.getElementById("msShipLoadouts").options).forEach(x => x.selected = this.value.shipLoadouts.includes(x.text));
         },
         methods: {
+            shipLoadoutsChanged() {
+                if (this.value.swabbies == null) {
+                    this.value.swabbies = [];
+                }
+
+                // add new ones
+                this.value.shipLoadouts.filter(x => !this.value.swabbies.map(x => x.loadoutName).includes(x))
+                    .forEach(x => this.value.swabbies.push({ loadoutName: x, swabbies: 0 }));
+
+                // remove old ones
+                this.value.swabbies = this.value.swabbies.filter(x => this.value.shipLoadouts.includes(x.loadoutName));
+            },
             updateVoyage(v) {
                 fetch('/Voyage/Update', {
                     method: 'POST',

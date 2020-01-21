@@ -1,4 +1,6 @@
-﻿namespace Nu.OfficerMiniGame.Dal.Dto
+﻿using System.Collections.Generic;
+
+namespace Nu.OfficerMiniGame.Dal.Dto
 {
     public class PlanVoyage
     {
@@ -21,5 +23,15 @@
         public bool NarrowPassage { get; set; }
 
         public bool Underweigh { get; set; }
+
+        public DisciplineStandards DisciplineStandards { get; set; }
+
+        public List<SwabbieCount> Swabbies { get; set; }
+    }
+
+    public class SwabbieCount
+    {
+        public string LoadoutName { get; set; }
+        public int Swabbies { get; set; }
     }
 }
