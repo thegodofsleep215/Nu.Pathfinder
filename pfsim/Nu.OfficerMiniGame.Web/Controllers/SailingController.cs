@@ -23,25 +23,33 @@ namespace Nu.OfficerMiniGame.Web.Controllers
 
             ships.ForEach(x => ProcessSailingParameters(sp, ref x));
 
-            var results = ships.Select(ship =>
+            var engine = new SailingEngine();
+            var results = engine.Sail(ships.ToArray());
+            voyage.AddEvents(results);
+            vd.Update(sp.VoyageName, voyage);
+
+            var shim = results.Select(kvp =>
             {
-                var game = new SailingEngine(ship, true);
-                return new { loadout = ship.CrewName, results = game.Run() };
+                return new { loadout = kvp.Key, results = kvp.Value.Select(x => x.ToString()).ToList() };
             }).ToList();
-            return new JsonResult(results);
+            return new JsonResult(shim);
         }
 
         private void ProcessSailingParameters(SailingParameters sp, ref Ship ship)
         {
-            if (sp.ShipModifiers != null && sp.ShipModifiers.ContainsKey(ship.CrewName))
+            if (sp.ShipModifiers != null)
             {
-                ship.CrewMorale.TemporaryMoralePenalty = sp.ShipModifiers[ship.CrewName].MoralModifier;
-                ship.CurrentVoyage.DisciplineModifier = sp.ShipModifiers[ship.CrewName].DisciplineModifier;
-                ship.CurrentVoyage.CommandModifier = sp.ShipModifiers[ship.CrewName].CommandModifier;
-                ship.CurrentVoyage.CrewUnfitForDuty = sp.ShipModifiers[ship.CrewName].NumberOfCrewUnfitForDuty;
-                ship.CurrentVoyage.DiseasedCrew = sp.ShipModifiers[ship.CrewName].NumberOfCrewDiseased;
-                ship.DisciplineStandards = sp.ShipModifiers[ship.CrewName].DisciplineStandards;
-                ship.Swabbies = sp.ShipModifiers[ship.CrewName].Swabbies;
+                var sm = sp.ShipModifiers.ToDictionary(x => x.LoadoutName, x => x);
+                if (sm.ContainsKey(ship.CrewName))
+                {
+                    ship.CrewMorale.TemporaryMoralePenalty = sm[ship.CrewName].MoraleModifier;
+                    ship.CurrentVoyage.DisciplineModifier = sm[ship.CrewName].DisciplineModifier;
+                    ship.CurrentVoyage.CommandModifier = sm[ship.CrewName].CommandModifier;
+                    ship.CurrentVoyage.CrewUnfitForDuty = sm[ship.CrewName].NumberOfCrewUnfitForDuty;
+                    ship.CurrentVoyage.DiseasedCrew = sm[ship.CrewName].NumberOfCrewDiseased;
+                    ship.DisciplineStandards = sm[ship.CrewName].DisciplineStandards;
+                    ship.Swabbies = sm[ship.CrewName].Swabbies;
+                }
             }
             ship.CurrentVoyage.NarrowPassage = sp.NarrowPassage;
             ship.CurrentVoyage.ShallowWater = sp.ShallowWater;
@@ -63,13 +71,14 @@ namespace Nu.OfficerMiniGame.Web.Controllers
 
         public NightStatus NightStatus { get; set; }
 
-        public Dictionary<string, ShipModifiers> ShipModifiers { get; set; }
+        public List<ShipModifiers> ShipModifiers { get; set; }
 
     }
 
     public class ShipModifiers
     {
-        public int MoralModifier { get; set; }
+        public string LoadoutName { get; set; }
+        public int MoraleModifier { get; set; }
 
         public int DisciplineModifier { get; set; }
 

@@ -7,6 +7,16 @@ namespace Nu.OfficerMiniGame
     {
         public SailingEngine(Ship ship, bool verbose) : base(ship, verbose)
         {
+            SetUpQueue();
+        }
+
+        public SailingEngine() : base(null, true)
+        {
+            SetUpQueue();
+        }
+
+        private void SetUpQueue()
+        {
             gameQueue.Enqueue(new Command());
             gameQueue.Enqueue(new Manage());
             gameQueue.Enqueue(new Watch());
@@ -19,6 +29,7 @@ namespace Nu.OfficerMiniGame
             gameQueue.Enqueue(new Maintain());
             gameQueue.Enqueue(new Cook());
             gameQueue.Enqueue(new Heal());
+
         }
     }
 }

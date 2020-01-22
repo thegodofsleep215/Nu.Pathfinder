@@ -1,7 +1,7 @@
 ﻿using Nu.Game.Common;
 using System.Collections.Generic;
 
-namespace  Nu.OfficerMiniGame
+namespace Nu.OfficerMiniGame
 {
     /// <summary>
     /// Discipline – If no one takes the Discipline job, there is a +4 chance of discipline 
@@ -26,7 +26,7 @@ namespace  Nu.OfficerMiniGame
     /// is modified by the crew’s morale bonus.
     public class Discipline : IDuty
     {
- 
+
         public void PerformDuty(Ship ship, bool verbose, ref MiniGameStatus status)
         {
             var tension = 6;

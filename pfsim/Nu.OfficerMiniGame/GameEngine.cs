@@ -29,10 +29,32 @@ namespace Nu.OfficerMiniGame
                     var duty = gameQueue.Dequeue();
                     duty.PerformDuty(ship, verbose, ref mgs);
                 }
-                validation.Messages.AddRange(mgs.DutyEvents.Select(x => x.ToString()));
             }
-
+            validation.Messages.AddRange(mgs.DutyEvents.Select(x => x.ToString()));
             return validation;
         }
+
+        public Dictionary<string, List<object>> Sail(Ship[] ships)
+        {
+            return ships.ToDictionary(x => x.CrewName, Sail);
+        }
+
+        public List<object> Sail(Ship ship)
+        {
+            var mgs = new MiniGameStatus();
+            BaseResponse validation = ship.ValidateAssignedJobs(sailing);
+            if (validation.Success)
+            {
+                while (gameQueue.Count > 0)
+                {
+                    var duty = gameQueue.Dequeue();
+                    duty.PerformDuty(ship, verbose, ref mgs);
+                }
+                return null;
+            }
+            return mgs.DutyEvents;
+
+        }
+
     }
 }
