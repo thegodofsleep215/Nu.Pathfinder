@@ -1,86 +1,104 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
-namespace  Nu.OfficerMiniGame
+namespace Nu.OfficerMiniGame
 {
-    public class EventProcessor
+    public class EventProcessorBundle
     {
-        public void Process(ref Ship currentShip, List<object> events)
+        public Ship Ship { get; set; }
+
+        public List<object> Events { get; set; }
+    }
+
+    public static class EventProcessor
+    {
+        public static VoyageProgress Process(Ship ship, List<object> events)
         {
-            var ship = currentShip;
+            var voyageProgress = new VoyageProgress
+            {
+                ShipName = ship.CrewName
+            };
+            var openOcean = false;
+            var nightStatus = NightStatus.Anchored;
             events.ForEach(evt =>
             {
                 switch (evt)
                 {
-                    case DailyEvent de:
-                        ProcessDailyEvent(ref ship, de);
+                    case DawnOfANewDayEvent doande:
+                        ship.CrewMorale.ClearTemporaryModifiers();
+                        openOcean = doande.OpenOcean;
+                        nightStatus = doande.NightStatus;
+                        AddDaysToVoyage(voyageProgress, ship, 1);
                         break;
-                    default:
-                        throw new NotImplementedException(); // This should never happen.
-                }
-            });
-        }
-
-        private void ProcessDailyEvent(ref Ship currentShip, DailyEvent de)
-        {
-            var ship = currentShip;
-            ship.CrewMorale.ClearTemporaryModifiers();
-
-            de.DutyResults.ForEach(evt => 
-            {
-                switch (evt)
-                {
                     case EpicCookingFailureEvent ecfe:
                         ship.CrewMorale.AddTemporaryModifier(MoralTypes.Wellbeing, ecfe.WellbeingPenalty);
                         // TODO: Add the penalty for the heal check?
                         break;
                     case UnrulyCrewEvent uce:
-                        ship.CrewMorale.ShipShape -= 1;
+                        ship.CrewMorale.AddTemporaryModifier(MoralTypes.Shipshape, -1);
                         break;
                     case SicknessEvent se:
-                        ship.CurrentVoyage.DiseasedCrew += se.NumberAffected;
+                        ship.DiseasedCrew += se.NumberAffected;
+                        voyageProgress.DiseasedCrew = ship.DiseasedCrew;
                         break;
                     case MismanagedSuppliesEvent mse:
-                        if(mse.SupplyType.HasValue)
-                            ship.ShipsCargo.ConsumeSupply(mse.SupplyType.Value, mse.QuantityLost);
+                        // TODO: Cargo is not currently being tracked.
+                        //if (mse.SupplyType.HasValue)
+                        //    ship.ShipsCargo.ConsumeSupply(mse.SupplyType.Value, mse.QuantityLost);
                         // TODO: Apply Penalty?
                         break;
                     case PoorMaintenanceEvent pme:
-                        ship.CurrentVoyage.AlterHullDamage(pme.Damage);
-                        ship.CurrentVoyage.AlterSailDamage(pme.Damage);
-                        break;
-                    case OffCourseEvent oce:
-                        // TODO: Alter the progress of the voyage.
-                        // TODO: How do you want to track progress?  Do we need to calculate ship speed?
+                        ship.AlterHullDamage(pme.Damage);
+                        ship.AlterSailDamage(pme.Damage);
                         break;
                     case PilotFailedEvent pfe:
-                        //TODO: Damage the ship.
-                        if(pfe.Damage > 0)
+                        if (pfe.Damage > 0)
                         {
-                            if (ship.CurrentVoyage.OpenOcean)
-                                ship.CurrentVoyage.AlterSailDamage(pfe.Damage);
+                            if (openOcean)
+                                ship.AlterSailDamage(pfe.Damage);
                             else
-                                ship.CurrentVoyage.AlterHullDamage(pfe.Damage);
+                                ship.AlterHullDamage(pfe.Damage);
                         }
-                        //TODO: Alter the progress of the voyage.
-                        //TODO: How do you want to track progress?  Do we need to calculate ship speed?
                         break;
-                    case PilotSuccessEvent pse:
-                        // TODO: Alter the progress of the voyage.
-                        // TODO: How do you want to track progress?  Do we need to calculate ship speed?
+                    case ProgressMadeEvent pme:
+                        voyageProgress.ProgressMade += pme.DaysofProgress;
                         break;
-                    case SeaShantyEvent sse:
-                    case SuppliesExhaustedEvent see:
-                    case PerformedDutyEvent pde:
-                        // General information events.
+                    case PilotSuccessEvent _:
+                    case OffCourseEvent _:
+                    case SeaShantyEvent _:
+                    case SuppliesExhaustedEvent _:
+                    case PerformedDutyEvent _:
+                    case WatchResultEvent _:
+                        // General information events. Avoiding the default case.
                         break;
+
                     default:
                         throw new NotImplementedException(); // This should never happen.
                 }
             });
-
-            ship.AddDaysToVoyage(1);
+            return voyageProgress;
         }
+
+        private static void AddDaysToVoyage(VoyageProgress voyageProgress, Ship ship, int days)
+        {
+            voyageProgress.AddDaysToVoyage(days);
+            var healCount = ship.AssignedJobs.Count(a => a.DutyType == DutyType.Heal && !a.IsAssistant);
+            var repairCount = ship.AssignedJobs.Count(a => (a.DutyType == DutyType.Maintain && !a.IsAssistant)
+                            || (a.DutyType == DutyType.RepairHull && !a.IsAssistant)
+                            || (a.DutyType == DutyType.RepairSails && !a.IsAssistant)
+                            || (a.DutyType == DutyType.RepairSeigeEngine && !a.IsAssistant));
+
+            ship.ShipsCargo.ConsumeSupplies(ship.TotalCrew, days);
+            if (healCount > 0) // Note, various medical supplies can be consumed by other than treating disease.  It's best to adjust this separately.
+                ship.ShipsCargo.ConsumeSupply(SupplyType.Medicine, (ship.DiseasedCrew + 1) * days * -1);
+            if (repairCount > 0)
+                ship.ShipsCargo.ConsumeSupply(SupplyType.ShipSupplies, repairCount * days * -1); // TODO: This should scale with ship size.
+            ship.ShipsCargo.ConsumeFodder(ship.ShipsCargo.AnimalUnitsAboard * days);
+            ship.ShipsCargo.ResetPassengers(ship.TotalCrew);
+            ship.ShipsCargo.AgeCargo(days);
+        }
+        
     }
 
 }

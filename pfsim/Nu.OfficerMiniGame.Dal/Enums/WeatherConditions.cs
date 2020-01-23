@@ -1,5 +1,9 @@
-﻿namespace Nu.OfficerMiniGame
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+
+namespace Nu.OfficerMiniGame
 {
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum WeatherConditions
     {
         FairWinds,

@@ -3,7 +3,7 @@ using System.IO;
 
 namespace Nu.OfficerMiniGame.Dal.Dal
 {
-    public interface IPlanVoyageDal : IObjectDal<PlanVoyage>
+    public interface IVoyageDal : IObjectDal<Voyage>
     {
 
     }

@@ -56,15 +56,15 @@ namespace Nu.OfficerMiniGame
                         if (shanty >= 0)
                         {
                             result += 2;
-                            status.DutyEvents.Add(new SeaShantyEvent(DutyType.Discipline));
+                            status.GameEvents.Add(new SeaShantyEvent(DutyType.Discipline));
                         }
                     }
                 }
                 if (verbose)
-                    status.DutyEvents.Add(new PerformedDutyEvent(DutyType.Discipline, job.CrewName, dc, 0, job.SkillBonus, result));
+                    status.GameEvents.Add(new PerformedDutyEvent(DutyType.Discipline, job.CrewName, dc, 0, job.SkillBonus, result));
                 if (result < 0 || !ship.HasDisciplineOfficer)
                 {
-                    status.DutyEvents.AddRange(RollUpDisciplineIssues(tension >= 20 ? 1 : 0));
+                    status.GameEvents.AddRange(RollUpDisciplineIssues(tension >= 20 ? 1 : 0));
                 }
             }
         }

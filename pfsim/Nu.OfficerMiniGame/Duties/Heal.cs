@@ -49,19 +49,19 @@ namespace  Nu.OfficerMiniGame
             santitation += status.CookResult <= -15 ? 4 : 0;
             santitation += ship.CrewMorale.WellBeing == 2 ? 2 : 0;
             santitation += ship.CrewMorale.WellBeing <= 1 ? 4 : 0;
-            santitation += ship.CurrentVoyage.DiseaseAboardShip ? 4 : 0;
+            santitation += ship.DiseaseAboardShip ? 4 : 0;
 
             var assistBonus = PerformAssists(ship.GetAssistance(DutyType.Heal));
             var job = ship.HealerJob;
             var result = DiceRoller.D20(1) + job.SkillBonus + assistBonus - santitation;
             if(verbose)
-                status.DutyEvents.Add(new PerformedDutyEvent(DutyType.Heal, job.CrewName, santitation, assistBonus, job.SkillBonus, result));
+                status.GameEvents.Add(new PerformedDutyEvent(DutyType.Heal, job.CrewName, santitation, assistBonus, job.SkillBonus, result));
 
             if (result < 0 || !ship.HasHealer)
             {
                 // The number of sick should scale better with the size of the crew.
                 var sickCount = santitation >= 20 ? DiceRoller.D3(1) * DiceRoller.Roll(ship.TotalCrew / 10, 1) : DiceRoller.Roll(ship.TotalCrew / 10, 1);
-                status.DutyEvents.Add(new SicknessEvent { NumberAffected = sickCount });
+                status.GameEvents.Add(new SicknessEvent { NumberAffected = sickCount });
             }
         }
 

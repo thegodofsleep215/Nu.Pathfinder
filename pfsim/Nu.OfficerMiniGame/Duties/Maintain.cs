@@ -22,14 +22,14 @@ namespace  Nu.OfficerMiniGame
     {
         public void PerformDuty(Ship ship, bool verbose, ref MiniGameStatus status)
         {
-            var weatherModifier = ship.CurrentVoyage.GetWeatherModifier(DutyType.Maintain);
+            var weatherModifier = ship.TemporaryMaintainModifier;
             var dc = 5 + ship.ShipDc - status.CommandModifier - status.ManageModifier - weatherModifier;
             dc += ship.IsShipOverburdened ? (int)Math.Ceiling(ship.OverburdenedFactor + 1) : 0;
             var assistBonus = PerformAssists(ship.GetAssistance(DutyType.Maintain), weatherModifier);
             var job = ship.MaintainJob;
             status.MaintainResult = DiceRoller.D20(1) + job.SkillBonus + assistBonus - dc;
             if(verbose)
-                status.DutyEvents.Add(new PerformedDutyEvent(DutyType.Maintain, job.CrewName, dc, assistBonus, job.SkillBonus, status.MaintainResult));
+                status.GameEvents.Add(new PerformedDutyEvent(DutyType.Maintain, job.CrewName, dc, assistBonus, job.SkillBonus, status.MaintainResult));
 
             if (status.MaintainResult < 0)
             {
@@ -53,7 +53,7 @@ namespace  Nu.OfficerMiniGame
                 }
                 damage = (int)Math.Ceiling(damage * ship.OverburdenedFactor);
 
-                status.DutyEvents.Add(new PoorMaintenanceEvent { Damage = damage });
+                status.GameEvents.Add(new PoorMaintenanceEvent { Damage = damage });
             }
         }
         

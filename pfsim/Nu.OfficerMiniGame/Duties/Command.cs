@@ -15,7 +15,7 @@ namespace  Nu.OfficerMiniGame
     {
         public void PerformDuty(Ship ship, bool verbose, ref MiniGameStatus status)
         {
-            var dc = 5 + ship.ShipDc + (ship.TotalCrew / 10) + ship.CurrentVoyage.CommandModifier;
+            var dc = 5 + ship.ShipDc + (ship.TotalCrew / 10) + ship.TemporaryCommandModifier;
             var assistBonus = PerformAssists(ship.GetAssistance(DutyType.Command));
             var job = ship.CommanderJob;
             status.CommandResult = (DiceRoller.D20(1) + job.SkillBonus + assistBonus) - dc;
@@ -32,12 +32,12 @@ namespace  Nu.OfficerMiniGame
                     if (shanty >= 0)
                     {
                         status.CommandResult += 2;
-                        status.DutyEvents.Add(new SeaShantyEvent(DutyType.Command));
+                        status.GameEvents.Add(new SeaShantyEvent(DutyType.Command));
                     }
                 }
             }
             if(verbose)
-                status.DutyEvents.Add(new PerformedDutyEvent(DutyType.Command, job.CrewName, dc, assistBonus, job.SkillBonus, status.CommandResult));
+                status.GameEvents.Add(new PerformedDutyEvent(DutyType.Command, job.CrewName, dc, assistBonus, job.SkillBonus, status.CommandResult));
         }
 
         private int PerformAssists(List<JobMessage> list)

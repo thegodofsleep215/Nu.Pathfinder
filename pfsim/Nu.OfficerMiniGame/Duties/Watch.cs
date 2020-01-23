@@ -15,7 +15,7 @@ namespace  Nu.OfficerMiniGame
     {
         public void PerformDuty(Ship ship, bool verbose, ref MiniGameStatus status)
         {
-            var weatherModifier = ship.CurrentVoyage.GetWeatherModifier(DutyType.Watch);
+            var weatherModifier = ship.TemporaryWatchModifier;
             var dc = 10 - weatherModifier - status.CommandModifier;
             var assistBonus = PerformAssists(ship.GetAssistance(DutyType.Watch), weatherModifier, status);
 
@@ -25,7 +25,7 @@ namespace  Nu.OfficerMiniGame
             if(ship.WatchBonuses.Count > watch)
                 result = (DiceRoller.D20(1) + ship.WatchBonuses[watch] + assistBonus) - dc;
             status.WatchResults.Add(result);
-            status.DutyEvents.Add(new WatchResultEvent
+            status.GameEvents.Add(new WatchResultEvent
             {
                 Watch = watch + 1,
                 Success = result >= 0

@@ -35,12 +35,12 @@ namespace  Nu.OfficerMiniGame
                     if (shanty >= 0)
                     { 
                         status.ManageResult += 2;
-                        status.DutyEvents.Add(new SeaShantyEvent(DutyType.Manage));
+                        status.GameEvents.Add(new SeaShantyEvent(DutyType.Manage));
                     }
                 }
             }
             if(verbose)
-                status.DutyEvents.Add(new PerformedDutyEvent(DutyType.Manage, job.CrewName, dc, assistBonus, job.SkillBonus, status.ManageResult));
+                status.GameEvents.Add(new PerformedDutyEvent(DutyType.Manage, job.CrewName, dc, assistBonus, job.SkillBonus, status.ManageResult));
 
             if (status.ManageResult < 0)
             { 
@@ -60,7 +60,7 @@ namespace  Nu.OfficerMiniGame
                 }
 
                 if(e.CausedConfusion || e.SupplyType.HasValue)
-                    status.DutyEvents.Add(e);
+                    status.GameEvents.Add(e);
             }
         }
 

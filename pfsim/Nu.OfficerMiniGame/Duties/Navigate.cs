@@ -15,21 +15,21 @@ namespace  Nu.OfficerMiniGame
     public class Navigate : IDuty
     {
         public void PerformDuty(Ship ship, bool verbose, ref MiniGameStatus status)
-        {        
-            var dc = ship.CurrentVoyage.NavigationDC - status.CommandModifier - ship.CurrentVoyage.GetWeatherModifier(DutyType.Navigate);
+        {
+            var dc = ship.TemporaryNavigationModifier - status.CommandModifier;
             var assistBonus = PerformAssists(ship.GetAssistance(DutyType.Navigate));
             var job = ship.NavigatorJob;
             status.NavigationResult = (DiceRoller.D20(1) + job.SkillBonus + assistBonus) - dc + 3; // The +3 because I am assuming compass + map
             if(verbose)
-                status.DutyEvents.Add(new PerformedDutyEvent(DutyType.Navigate, job.CrewName, dc, assistBonus, job.SkillBonus, status.NavigationResult));
+                status.GameEvents.Add(new PerformedDutyEvent(DutyType.Navigate, job.CrewName, dc, assistBonus, job.SkillBonus, status.NavigationResult));
 
             if (status.NavigationResult <= -5)
             {
-                status.DutyEvents.Add(new OffCourseEvent(true));
+                status.GameEvents.Add(new OffCourseEvent(true));
             }
             else if (status.NavigationResult < 0)
             {
-                status.DutyEvents.Add(new OffCourseEvent(false));
+                status.GameEvents.Add(new OffCourseEvent(false));
             }
         }
 

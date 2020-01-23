@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Nu.OfficerMiniGame.Dal.Dto
 {
-    public class PlanVoyage
+    public class Voyage
     {
         public string Name { get; set; }
 
@@ -32,6 +32,7 @@ namespace Nu.OfficerMiniGame.Dal.Dto
 
         public Dictionary<string, List<VoyageEvent>> Events { get; set; } = new Dictionary<string, List<VoyageEvent>>();
 
+
         public void AddEvents(Dictionary<string, List<object>> events)
         {
             events.ToList().ForEach(x => AddEvents(x.Key, x.Value));
@@ -44,7 +45,7 @@ namespace Nu.OfficerMiniGame.Dal.Dto
                 Events[shipName] = new List<VoyageEvent>();
             }
 
-            var nextNumber = Events[shipName].Max(x => x.EventNumber) + 1;
+            var nextNumber = !Events[shipName].Any() ? 1 : Events[shipName].Max(x => x.EventNumber) + 1;
             events.ForEach(x =>
             {
                 var ve = new VoyageEvent
@@ -57,29 +58,5 @@ namespace Nu.OfficerMiniGame.Dal.Dto
                 Events[shipName].Add(ve);
             });
         }
-    }
-
-    public class VoyageEvent
-    {
-        public string EventName { get; set; }
-
-        public int EventNumber { get; set; }
-
-        public string EventData { get; set; }
-
-        public object Event
-        {
-            get
-            {
-                var type = System.Type.GetType(EventName);
-                return JsonConvert.DeserializeObject(EventData, type);
-            }
-        }
-    }
-
-    public class SwabbieCount
-    {
-        public string LoadoutName { get; set; }
-        public int Swabbies { get; set; }
     }
 }

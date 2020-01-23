@@ -58,7 +58,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ActionContainers\OfficerMiniGameCommands.cs" />
     <Compile Include="CommandLineArgsReader.cs" />
     <Compile Include="Commands\AddCombatants.cs" />
     <Compile Include="Commands\StartCombat.cs" />

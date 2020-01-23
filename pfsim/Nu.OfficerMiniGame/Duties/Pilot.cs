@@ -27,17 +27,17 @@ namespace  Nu.OfficerMiniGame
     {
         public void PerformDuty(Ship ship, bool verbose, ref MiniGameStatus status)
         {
-            var weatherModifier = ship.CurrentVoyage.GetWeatherModifier(DutyType.Pilot);
+            var weatherModifier = ship.TemporaryPilotModifier;
             var dc = 7 + ship.ShipDc - status.CommandModifier - ship.CrewPilotModifier - weatherModifier + status.WatchModifier;
             var job = ship.PilotJob;
             var assistBonus = PerformAssists(ship.GetAssistance(DutyType.Pilot), weatherModifier);
             status.PilotResult = (DiceRoller.D20(1) + job.SkillBonus + assistBonus) - dc;
             if(verbose)
-                status.DutyEvents.Add(new PerformedDutyEvent(DutyType.Pilot, job.CrewName, dc, assistBonus, job.SkillBonus, status.PilotResult));
+                status.GameEvents.Add(new PerformedDutyEvent(DutyType.Pilot, job.CrewName, dc, assistBonus, job.SkillBonus, status.PilotResult));
 
             if (status.PilotResult >= 0)
             {
-                status.DutyEvents.Add(new PilotSuccessEvent());
+                status.GameEvents.Add(new PilotSuccessEvent());
             }
             if (status.PilotResult < 0)
             {
@@ -62,14 +62,14 @@ namespace  Nu.OfficerMiniGame
                             damage = DiceRoller.D8(8);
                             break;
                     }
-                    status.DutyEvents.Add(new PilotFailedEvent
+                    status.GameEvents.Add(new PilotFailedEvent
                     {
                         Damage = damage
                     });
                 }
                 else
                 {
-                    status.DutyEvents.Add(new PilotFailedEvent
+                    status.GameEvents.Add(new PilotFailedEvent
                     {
                         Damage = 0
                     });

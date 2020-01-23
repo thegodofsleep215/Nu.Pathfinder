@@ -26,7 +26,6 @@ namespace pfsim
 
             cp = CommandProcessor.GenerateCommandProcessor(new InteractiveCommandLineCommunicator("pfsim"));
             cp.RegisterObject(new PfSimCommands(messageRouter));
-            cp.RegisterObject(new OfficerMiniGameCommands());
 
             ce = new CombatManager(messageRouter, LoadAssets());
 

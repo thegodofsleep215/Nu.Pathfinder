@@ -25,13 +25,13 @@ namespace  Nu.OfficerMiniGame
             status.CookResult = result;
 
             if(verbose)
-                status.DutyEvents.Add(new PerformedDutyEvent(DutyType.Cook, job.CrewName, dc, assistBonus, job.SkillBonus, status.CookResult));
+                status.GameEvents.Add(new PerformedDutyEvent(DutyType.Cook, job.CrewName, dc, assistBonus, job.SkillBonus, status.CookResult));
 
             if (result < 0)
             {
                 var wm = Math.Abs(result) / 5 + 1;
                 wm = wm > ship.CrewMorale.WellBeing ? ship.CrewMorale.WellBeing : wm;
-                status.DutyEvents.Add(new EpicCookingFailureEvent
+                status.GameEvents.Add(new EpicCookingFailureEvent
                 {
                     WellbeingPenalty = wm * -1,
                     HealthCheckModifier = result <= -15 ? 4 : 0

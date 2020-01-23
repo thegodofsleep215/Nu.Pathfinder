@@ -15,7 +15,7 @@
                                     <label class="stat-label">Travel Progress: </label>
                                 </td>
                                 <td>
-                                    <label type="text" style="float:left">XXX / {{voyage.daysPlanned}}</label>
+                                    <label type="text" style="float:left">{{sailResult.state.progressMade}}/{{voyage.daysPlanned}}</label>
                                 </td>
                             </tr>
                             <tr>
@@ -130,9 +130,9 @@
             </div>
         </div>
 
-        <div v-for="sr in sailResult" v-bind:key="sr.name">
+        <div v-for="sr in sailResult.results" v-bind:key="sr.loadout">
             <h3>{{sr.loadout}}</h3>
-            <p style="text-align:left" v-for="msg in sr.results.messages" v-bind:key="msg">{{msg}}</p>
+            <p style="text-align:left" v-for="msg in sr.message" v-bind:key="msg">{{msg}}</p>
         </div>
     </div>
 </template>
@@ -142,7 +142,10 @@
         name: "Sailing",
         data: function () {
             return {
-                sailResult: {},
+                sailResult: {
+                    results: {},
+                    state: {}
+                },
                 voyage: {},
                 shipModifiers: {}
             }

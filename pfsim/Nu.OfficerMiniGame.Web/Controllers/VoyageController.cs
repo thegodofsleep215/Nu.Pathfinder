@@ -6,21 +6,21 @@ namespace Nu.OfficerMiniGame.Web.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class VoyageController : BaseObjectController<PlanVoyage>
+    public class VoyageController : BaseObjectController<Voyage>
     {
-        public VoyageController() : base(new FilePlanVoyageDal(".\\client-app\\data"))
+        public VoyageController() : base(new FileVoyageDal(".\\client-app\\data"))
         {
         }
 
-        protected override PlanVoyage CreateObject(string name)
+        protected override Voyage CreateObject(string name)
         {
-            return new PlanVoyage
+            return new Voyage
             {
                 Name = name
             };
         }
 
-        protected override string GetObjectName(PlanVoyage obj)
+        protected override string GetObjectName(Voyage obj)
         {
             return obj.Name;
         }

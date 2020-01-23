@@ -8,50 +8,21 @@ using System.Text;
 
 namespace Nu.OfficerMiniGame
 {
+    /// <summary>
+    /// This class helps sthe <see cref="GameEngine"/> run.
+    /// </summary>
     public class Ship
     {
-        private List<Job> _assignedJobs;
-        private List<CrewMember> _shipsCrew;
-
-        private int MaxPilotAssistants
-        {
-            get
-            {
-                switch (ShipSize)
-                {
-                    case ShipSize.Medium:
-                        return 1;
-                    case ShipSize.Large:
-                    case ShipSize.Huge:
-                        return 3;
-                    case ShipSize.Gargantuan:
-                    case ShipSize.Colossal:
-                        return 6;
-                    default:
-                        return 6;
-                }
-            }
-        }
-        private int MaxCookAssistants
-        {
-            get
-            {
-                return 1;
-            }
-        }
-        private int MaxClerks
-        {
-            get
-            {
-                return 2;
-            }
-        }
-
         public string CrewName { get; set; }
+
         public ShipType ShipType { get; set; }
+
         public ShipSize ShipSize { get; set; }
+
         public List<Propulsion> PropulsionTypes { get; set; } = new List<Propulsion>();
+
         public int HullHitPoints { get; set; }
+
         public int CrewSize { get; set; }
 
         // Below this number, the ship cannot be piloted successfully.
@@ -67,28 +38,17 @@ namespace Nu.OfficerMiniGame
         }
 
         public int ShipDc { get; set; } // General modifier to the difficulty to sail that increases with the size of the ship.
+
         public int ShipPilotingBonus { get; set; } // Bonus or penalty that the ship recieves for being especially easy to sail.
+
         public int ShipQuality { get; set; } // Place holder for generic bonus.
+
         public List<string> SpecialFeatures { get; set; } = new List<string>();
 
-        public List<CrewMember> ShipsCrew
-        {
-            get
-            {
-                if (_shipsCrew == null)
-                    _shipsCrew = new List<CrewMember>();
-
-                return _shipsCrew;
-            }
-            set
-            {
-                _shipsCrew = value;
-            }
-        }
+        public List<CrewMember> ShipsCrew { get; set; } = new List<CrewMember>();
 
         public Morale CrewMorale { get; set; } = new Morale();
 
-        
         public int CrewQuality
         {
             get
@@ -121,7 +81,7 @@ namespace Nu.OfficerMiniGame
                     return (int)retval;
             }
         }
-        
+
         public bool HasDisciplineOfficer
         {
             get
@@ -129,7 +89,7 @@ namespace Nu.OfficerMiniGame
                 return AssignedJobs.Exists(a => a.DutyType == DutyType.Discipline);
             }
         }
-        
+
         public bool HasHealer
         {
             get
@@ -137,13 +97,14 @@ namespace Nu.OfficerMiniGame
                 return AssignedJobs.Exists(a => a.DutyType == DutyType.Heal);
             }
         }
+
         public DisciplineStandards DisciplineStandards { get; set; }
-        
+
         public int CrewDisciplineModifier
         {
             get
             {
-                int retval = CurrentVoyage.DisciplineModifier;
+                int retval = TemporaryDisciplineModifier;
 
                 switch (DisciplineStandards)
                 {
@@ -168,12 +129,17 @@ namespace Nu.OfficerMiniGame
                 return retval;
             }
         }
+
         public Alignment ShipsAlignment { get; set; }
+
         public int Marines { get; set; }
+
         public int Passengers { get; set; }
+
         public int Swabbies { get; set; }
+
         public decimal AverageSwabbieQuality { get; set; }
-        
+
         public int TotalCrew
         {
             get
@@ -181,7 +147,7 @@ namespace Nu.OfficerMiniGame
                 return ShipsCrew.Count + Swabbies + Marines + Passengers;
             }
         }
-        
+
         public int AvailableCrew
         {
             get
@@ -191,13 +157,25 @@ namespace Nu.OfficerMiniGame
                     case ShipSize.Medium:
                     case ShipSize.Large:
                     case ShipSize.Huge:
-                        return ShipsCrew.Count + Swabbies - CurrentVoyage.DiseasedCrew - CurrentVoyage.CrewUnfitForDuty;  // Allow officers to serve as crew on boats.
+                        return ShipsCrew.Count + Swabbies - DiseasedCrew - CrewUnfitForDuty;  // Allow officers to serve as crew on boats.
                     default:
-                        return ShipsCrew.Count(a => a.CountsAsCrew) + Swabbies - CurrentVoyage.DiseasedCrew - CurrentVoyage.CrewUnfitForDuty;
+                        return ShipsCrew.Count(a => a.CountsAsCrew) + Swabbies - DiseasedCrew - CrewUnfitForDuty;
                 }
             }
         }
-        
+
+        public int CrewUnfitForDuty { get; set; }
+
+        public bool DiseaseAboardShip
+        {
+            get
+            {
+                return DiseasedCrew > 0;
+            }
+        }
+
+        public int DiseasedCrew { get; set; }
+
         public int SkeletonCrewPenalty
         {
             get
@@ -210,7 +188,7 @@ namespace Nu.OfficerMiniGame
                     return retval < -10 ? -10 : retval;
             }
         }
-        
+
         public bool HasMinimumCrew
         {
             get
@@ -219,28 +197,23 @@ namespace Nu.OfficerMiniGame
             }
         }
 
-        
+        private List<Job> assignedJobs;
         public List<Job> AssignedJobs
         {
             get
             {
-                if (_assignedJobs == null)
-                    _assignedJobs = CollectAssignedJobs();
+                if (assignedJobs == null)
+                {
+                    assignedJobs = new List<Job>();
 
-                return _assignedJobs;
+                    foreach (var matey in ShipsCrew)
+                    {
+                        assignedJobs.AddRange(matey.Jobs);
+                    }
+
+                }
+                return assignedJobs;
             }
-        }
-
-        private List<Job> CollectAssignedJobs()
-        {
-            _assignedJobs = new List<Job>();
-
-            foreach (var matey in ShipsCrew)
-            {
-                _assignedJobs.AddRange(matey.Jobs);
-            }
-
-            return _assignedJobs;
         }
 
         public string GetRandomCrewName(int count = 1)
@@ -277,129 +250,6 @@ namespace Nu.OfficerMiniGame
             }
 
             return sb.ToString();
-        }
-
-        public BaseResponse AssignJob(string crewname, DutyType duty, bool isAssistant)
-        {
-            BaseResponse retval = new BaseResponse();
-            retval.Success = false;
-            if (ShipsCrew.Exists(a => a.Name == crewname))
-            {
-                var mate = ShipsCrew.FirstOrDefault(a => a.Name == crewname);
-
-                mate.AddJob(duty, isAssistant);
-
-                _assignedJobs = null;
-                retval.Success = true;
-            }
-            else
-            {
-                retval.Messages.Add(string.Format("Can't find crewmember '{0}'.", crewname));
-            }
-
-            return retval;
-        }
-
-        public BaseResponse RemoveJob(string crewname, DutyType duty, bool isAssistant)
-        {
-            BaseResponse retval = new BaseResponse();
-            retval.Success = false;
-            if (ShipsCrew.Exists(a => a.Name == crewname))
-            {
-                var mate = ShipsCrew.FirstOrDefault(a => a.Name == crewname);
-
-                var response = mate.RemoveJob(duty, isAssistant);
-
-                if (response)
-                {
-                    _assignedJobs = null;
-                    retval.Success = true;
-                }
-                else
-                {
-                    retval.Messages.Add(string.Format("Crewmeber {0} already doesn't have duty {1}.", crewname, duty.ToString()));
-                }
-            }
-            else
-            {
-                retval.Messages.Add(string.Format("Can't find crewmember '{0}'.", crewname));
-            }
-
-            return retval;
-        }
-
-        public BaseResponse ValidateAssignedJobs(bool sailing = true)
-        {
-            BaseResponse retval = new BaseResponse();
-
-            if (ShipsCrew.Count != ShipsCrew.Select(a => a.Name).Distinct().Count())
-            {
-                retval.Messages.Add("Everyone in the crew must have a different name!");
-            }
-            // This is a bit of a simplification, as I can see situations where you could have different numbers of these, but for now
-            // this is complex enough.
-            if (AssignedJobs.Count(a => a.DutyType == DutyType.Command && !a.IsAssistant) > 1)
-            {
-                retval.Messages.Add("Can't have two commanders!");
-            }
-            if (AssignedJobs.Count(a => a.DutyType == DutyType.Command && !a.IsAssistant) > 2)
-            {
-                retval.Messages.Add("Too many leutinants!");
-            }
-            if (AssignedJobs.Count(a => a.DutyType == DutyType.Manage && !a.IsAssistant) > 1)
-            {
-                retval.Messages.Add("Can't have two pursurs!");
-            }
-            if (AssignedJobs.Count(a => a.DutyType == DutyType.Watch && !a.IsAssistant) > 3)
-            {
-                retval.Messages.Add("Too many helmsmen.  There are only three watches per day!");
-            }
-            if (AssignedJobs.Count(a => a.DutyType == DutyType.Manage && a.IsAssistant) > MaxClerks)
-            {
-                retval.Messages.Add("Too many clerks!");
-            }
-            if (AssignedJobs.Count(a => a.DutyType == DutyType.Pilot && !a.IsAssistant) > 1)
-            {
-                retval.Messages.Add("Can't have two masters!");
-            }
-            if (AssignedJobs.Count(a => a.DutyType == DutyType.Pilot && a.IsAssistant) > MaxPilotAssistants)
-            {
-                retval.Messages.Add("Too many hands for the ship's wheel!");
-            }
-            if (AssignedJobs.Count(a => a.DutyType == DutyType.Navigate && !a.IsAssistant) > 1)
-            {
-                retval.Messages.Add("Too many navigators!");
-            }
-            if (AssignedJobs.Count(a => a.DutyType == DutyType.Navigate && a.IsAssistant) > 1)
-            {
-                retval.Messages.Add("Too many quartermasters!");
-            }
-            if (AssignedJobs.Count(a => a.DutyType == DutyType.Cook && !a.IsAssistant) > 1)
-            {
-                retval.Messages.Add("Too many cooks spoil the pot!");
-            }
-            if (AssignedJobs.Count(a => a.DutyType == DutyType.Cook && a.IsAssistant) > MaxCookAssistants)
-            {
-                retval.Messages.Add("Too many cook's mates!");
-            }
-            if (AssignedJobs.Count(a => a.DutyType == DutyType.Discipline && !a.IsAssistant) > 1)
-            {
-                retval.Messages.Add("Can't have two discipline officers!");
-            }
-            if (AssignedJobs.Count(a => a.DutyType == DutyType.Discipline && a.IsAssistant) > 0)
-            {
-                retval.Messages.Add("Can't have an assistant discipline officer!");
-            }
-
-            foreach (var matey in ShipsCrew)
-            {
-                retval.Messages.AddRange(matey.ValidateJobs());
-            }
-
-            if (retval.Messages.Count == 0)
-                retval.Success = true;
-
-            return retval;
         }
 
         public List<JobMessage> GetAssistance(DutyType duty)
@@ -476,7 +326,6 @@ namespace Nu.OfficerMiniGame
             return assists;
         }
 
-        
         public JobMessage CommanderJob
         {
             get
@@ -503,16 +352,69 @@ namespace Nu.OfficerMiniGame
         /// <summary>
         /// In the engine, this adds to DC so the result needs to be inverse of a modification to a dice role.
         /// </summary>
-        
         public int CrewPilotModifier
         {
             get
             {
-                return (SkeletonCrewPenalty + ShipPilotingBonus + CrewQuality + CurrentVoyage.PilotingModifier);
+                return (SkeletonCrewPenalty + ShipPilotingBonus + CrewQuality + TemporaryPilotingModifier);
             }
         }
 
-        
+        public int TemporaryWatchModifier { get; set; }
+
+        public int TemporaryMaintainModifier { get; set; }
+
+        public int TemporaryPilotModifier { get; set; }
+
+        public int TemporaryDisciplineModifier { get; set; }
+
+        public int TemporaryCommandModifier { get; set; }
+
+        public int TemporaryPilotingModifier { get; set; }
+
+        public int TemporaryNavigationModifier { get; set; }
+
+        public int HullDamageSinceRefit { get; set; }
+
+        public int CurrentHullDamage { get; set; }
+
+        public int SailDamageSinceRefit { get; set; }
+
+        public int CurrentSailDamage { get; set; }
+
+        public void AlterHullDamage(int damage)
+        {
+            if (damage > 0)
+            {
+                CurrentHullDamage += damage;
+                HullDamageSinceRefit += damage;
+            }
+            else
+            {
+                if ((CurrentHullDamage - Math.Ceiling(HullDamageSinceRefit * .1)) >= Math.Abs(damage))
+                    CurrentHullDamage += damage;
+                else
+                    CurrentHullDamage = Convert.ToInt32((Math.Ceiling(HullDamageSinceRefit * .1)));
+            }
+        }
+
+        public void AlterSailDamage(int damage)
+        {
+            if (damage > 0)
+            {
+                CurrentSailDamage += damage;
+                SailDamageSinceRefit += damage;
+            }
+            else
+            {
+                if ((CurrentSailDamage - Math.Ceiling(SailDamageSinceRefit * .1)) >= Math.Abs(damage))
+                    CurrentSailDamage += damage;
+                else
+                    CurrentSailDamage = Convert.ToInt32((Math.Ceiling(SailDamageSinceRefit * .1)));
+            }
+        }
+
+
         public JobMessage PilotJob
         {
             get
@@ -536,7 +438,7 @@ namespace Nu.OfficerMiniGame
             }
         }
 
-        
+
         public JobMessage DisciplineJob
         {
             get
@@ -560,7 +462,7 @@ namespace Nu.OfficerMiniGame
             }
         }
 
-        
+
         public List<int> WatchBonuses
         {
             get
@@ -588,7 +490,7 @@ namespace Nu.OfficerMiniGame
             }
         }
 
-        
+
         public List<int> MinistrelBonuses
         {
             get
@@ -611,7 +513,7 @@ namespace Nu.OfficerMiniGame
             }
         }
 
-        
+
         public JobMessage MaintainJob
         {
             get
@@ -635,7 +537,7 @@ namespace Nu.OfficerMiniGame
             }
         }
 
-        
+
         public JobMessage ManagerJob
         {
             get
@@ -659,7 +561,7 @@ namespace Nu.OfficerMiniGame
             }
         }
 
-        
+
         public JobMessage NavigatorJob
         {
             get
@@ -683,7 +585,7 @@ namespace Nu.OfficerMiniGame
             }
         }
 
-        
+
         public JobMessage HealerJob
         {
             get
@@ -707,7 +609,7 @@ namespace Nu.OfficerMiniGame
             }
         }
 
-        
+
         public JobMessage CookJob
         {
             get
@@ -731,32 +633,10 @@ namespace Nu.OfficerMiniGame
             }
         }
 
-        public void AddDaysToVoyage(int days)
-        {
-            CurrentVoyage.AddDaysToVoyage(days);
-            var healCount = AssignedJobs.Count(a => a.DutyType == DutyType.Heal && !a.IsAssistant);
-            var repairCount = AssignedJobs.Count(a => (a.DutyType == DutyType.Maintain && !a.IsAssistant)
-                            || (a.DutyType == DutyType.RepairHull && !a.IsAssistant)
-                            || (a.DutyType == DutyType.RepairSails && !a.IsAssistant)
-                            || (a.DutyType == DutyType.RepairSeigeEngine && !a.IsAssistant));
-
-            ShipsCargo.ConsumeSupplies(TotalCrew, days);
-            if (healCount > 0) // Note, various medical supplies can be consumed by other than treating disease.  It's best to adjust this separately.
-                ShipsCargo.ConsumeSupply(SupplyType.Medicine, (CurrentVoyage.DiseasedCrew + 1) * days * -1);
-            if (repairCount > 0)
-                ShipsCargo.ConsumeSupply(SupplyType.ShipSupplies, repairCount * days * -1); // TODO: This should scale with ship size.
-            ShipsCargo.ConsumeFodder(ShipsCargo.AnimalUnitsAboard * days);
-            ShipsCargo.ResetPassengers(TotalCrew);
-            ShipsCargo.AgeCargo(days);
-        }
-
-        public Voyage CurrentVoyage { get; private set; } = new Voyage();
-
         public int CargoPoints { get; set; }
 
         public CargoHold ShipsCargo { get; private set; } = new CargoHold();
 
-        
         public bool IsShipOverburdened
         {
             get
@@ -765,11 +645,11 @@ namespace Nu.OfficerMiniGame
             }
         }
 
-        
         public decimal OverburdenedFactor
         {
             get
             {
+                return 1; // Not tracking cargo for now.
                 if (CargoPoints > ShipsCargo.TotalCargoPointsUsed)
                     return 1;
                 else if (CargoPoints == 0 && ShipsCargo.TotalCargoPointsUsed == 0)
@@ -779,11 +659,6 @@ namespace Nu.OfficerMiniGame
                 else
                     return 1 + ((ShipsCargo.TotalCargoPointsUsed - CargoPoints) / (decimal)CargoPoints);
             }
-        }
-
-        public Ship()
-        {
-
         }
     }
 }
