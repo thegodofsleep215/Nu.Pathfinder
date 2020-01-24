@@ -4,6 +4,7 @@ using System.Linq;
 
 namespace Nu.OfficerMiniGame
 {
+
     public class MultiShipGameEngine
     {
         private static Random rand = new Random();

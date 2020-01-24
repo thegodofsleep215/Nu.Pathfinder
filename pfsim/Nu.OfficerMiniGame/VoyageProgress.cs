@@ -45,7 +45,7 @@ namespace Nu.OfficerMiniGame
 
         public double ProgressMade { get; set; }
 
-        List<ShipsProgress> ShipsProgress { get; set; }
+        public List<ShipsProgress> ShipsProgress { get; set; }
     }
 
     public class ShipsProgress

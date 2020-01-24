@@ -11,6 +11,25 @@ namespace Nu.OfficerMiniGame.Web.Controllers
     {
         private readonly string rootDir = ".\\client-app\\data";
 
+        [HttpGet]
+        [Route("[action]")]
+        public IActionResult State(string name)
+        {
+            var vd = new FileVoyageDal(rootDir);
+            var mgd = new MiniGameDal(new FileShipLoadoutDal(rootDir), new FileShipStatsDal(rootDir), new FileCrewMemberStats(rootDir));
+
+            var voyage = vd.Get(name);
+            if(voyage == null)
+            {
+                return new NotFoundResult();
+            }
+            List<Ship> ships = voyage.ShipLoadouts.Select(x => mgd.GetLoadout(x)).ToList();
+
+            var fleetProgress= new FleetVoyageProgress(ships.Select(x => EventProcessor.Process(x, voyage.Events[x.CrewName].Select(y => y.Event).ToList())).ToList());
+
+            return new JsonResult(new { voyage = voyage, state = fleetProgress });
+        }
+
         [HttpPost]
         [Route("[action]")]
         public IActionResult Sail([FromBody] SailingParameters sp)
@@ -41,6 +60,7 @@ namespace Nu.OfficerMiniGame.Web.Controllers
             };
             return new JsonResult(anon);
         }
+
 
         private void ProcessSailingParameters(SailingParameters sp, ref Ship ship)
         {

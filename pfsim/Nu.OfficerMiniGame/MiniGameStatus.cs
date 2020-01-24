@@ -82,43 +82,43 @@ namespace Nu.OfficerMiniGame
 
         public List<ShipModifiers> ShipModifiers { get; set; }
 
-        public WeatherConditions WeatherConditions { get; set; }
+        public WeatherStatus WeatherConditions { get; set; }
 
         public int GetWeatherModifier(DutyType duty)
         {
             switch (WeatherConditions)
             {
-                case WeatherConditions.Clear:
+                case WeatherStatus.Clear:
                     if (duty == DutyType.Watch)
                         return 1;
                     else
                         return 0;
-                case WeatherConditions.Fog:
+                case WeatherStatus.Fog:
                     if (duty == DutyType.Watch)
                         return -4;
                     else
                         return 0;
-                case WeatherConditions.Drizzle:
+                case WeatherStatus.Drizzle:
                     return -1;
-                case WeatherConditions.FairWinds:
+                case WeatherStatus.FairWinds:
                     if (duty == DutyType.Pilot)
                         return 2;
                     else
                         return 0;
-                case WeatherConditions.Gales:
+                case WeatherStatus.Gales:
                     return -5;
-                case WeatherConditions.HeavyRain:
+                case WeatherStatus.HeavyRain:
                     return -3;
-                case WeatherConditions.HeavySeas:
+                case WeatherStatus.HeavySeas:
                     if (duty == DutyType.Watch)
                         return -1;
                     else
                         return -3;
-                case WeatherConditions.Hurricane:
+                case WeatherStatus.Hurricane:
                     return -10;
-                case WeatherConditions.Rain:
+                case WeatherStatus.Rain:
                     return -2;
-                case WeatherConditions.Storms:
+                case WeatherStatus.Storms:
                     return -3;
                 default:
                     return 0;

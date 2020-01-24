@@ -27,6 +27,16 @@ namespace Nu.Game.Common
             return Roll(12, quantity);
         }
 
+        public static int D24(int quantity)
+        {
+            return Roll(24, quantity);
+        }
+
+        public static int DPercentile()
+        {
+            return Roll(100, 1);
+        }
+
         public static int D10(int quantity)
         {
             return Roll(10, quantity);
@@ -50,6 +60,11 @@ namespace Nu.Game.Common
         public static int D3(int quantity)
         {
             return Roll(3, quantity);
+        }
+
+        public static int D2(int quantity)
+        {
+            return Roll(2, quantity);
         }
     }
 }

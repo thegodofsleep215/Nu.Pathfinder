@@ -180,8 +180,9 @@
         },
         mounted: function () {
             var self = this;
-            fetch('/Voyage?name=' + this.voyageName).then(r => r.json()).then(d => {
-                self.voyage = d;
+            fetch('/SailingEngine/State?name=' + this.voyageName).then(r => r.json()).then(d => {
+                self.voyage = d.voyage;
+                self.sailResult.state = d.state;
                 self.shipModifiers = Array.from(self.voyage.shipLoadouts).map(x => {
                     return {
                         name: x,
@@ -195,6 +196,7 @@
                         moraleModifier: 0
                     };
                 });
+                self.updateShipModifiersFromProgress(self.sailResult.state.shipsProgress);
             });
         },
         methods: {
@@ -206,7 +208,16 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(this.voyageParameters)
-                }).then(r => r.json()).then(d => self.sailResult = d);
+                }).then(r => r.json()).then(d => {
+                    self.sailResult = d
+                    self.updateShipModifiersFromProgress(self.sailResult.state.shipsProgress);
+                });
+            },
+            updateShipModifiersFromProgress(progress) {
+                progress.forEach(p => {
+                    var sm = this.shipModifiers.filter(mod => mod.name == p.shipName)[0];
+                    sm.diseasedCrew = p.diseasedCrew;
+                });
             }
         }
     }
