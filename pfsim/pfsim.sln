@@ -5,13 +5,15 @@ VisualStudioVersion = 16.0.29215.179
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pfsim", "pfsim\pfsim.csproj", "{4B5BAAF8-F508-4077-897F-626E851B1ADD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nu.OfficerMiniGame.Web", "Nu.OfficerMiniGame.Web\Nu.OfficerMiniGame.Web.csproj", "{89CB021A-B0B8-487E-B3FC-8A2BCBF7F53F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nu.OfficerMiniGame.Web", "Nu.OfficerMiniGame.Web\Nu.OfficerMiniGame.Web.csproj", "{89CB021A-B0B8-487E-B3FC-8A2BCBF7F53F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nu.OfficerMiniGame", "Nu.OfficerMiniGame\Nu.OfficerMiniGame.csproj", "{25466B31-691E-4628-BBF1-DA3C2D959A99}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nu.Game.Common", "Nu.Game.Common\Nu.Game.Common.csproj", "{A2E19A13-515C-48D6-BFA7-5602DE81B59A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nu.OfficerMiniGame.Dal", "Nu.OfficerMiniGame.Dal\Nu.OfficerMiniGame.Dal.csproj", "{877CFD76-2F21-46F6-8215-5D6C8EAE9678}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nu.OfficerMiniGame.Dal", "Nu.OfficerMiniGame.Dal\Nu.OfficerMiniGame.Dal.csproj", "{877CFD76-2F21-46F6-8215-5D6C8EAE9678}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nu.OfficerMiniGame.Test", "Nu.OfficerMiniGame.Test\Nu.OfficerMiniGame.Test.csproj", "{ABB85481-AEA9-46F2-871B-484E35F3F4DF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{877CFD76-2F21-46F6-8215-5D6C8EAE9678}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{877CFD76-2F21-46F6-8215-5D6C8EAE9678}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{877CFD76-2F21-46F6-8215-5D6C8EAE9678}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ABB85481-AEA9-46F2-871B-484E35F3F4DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABB85481-AEA9-46F2-871B-484E35F3F4DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABB85481-AEA9-46F2-871B-484E35F3F4DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABB85481-AEA9-46F2-871B-484E35F3F4DF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

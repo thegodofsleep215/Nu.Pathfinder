@@ -1,184 +1,8 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Nu.Game.Common;
+﻿using Nu.Game.Common;
 using System;
 
-namespace Nu.OfficerMiniGame
+namespace Nu.OfficerMiniGame.Weather
 {
-    public interface IWeatherEngine
-    {
-        WeatherConditions GetWeatherConditions(WeatherInput input);
-    }
-
-    public class WeatherConditions
-    {
-        public WeatherStatus WeatherStatus { get; set; }
-
-        public int TemperatureInF { get; set; }
-
-        public int DurationOfTemperature { get; set; }
-        public PrecipitationType PrecipitationType { get; internal set; }
-        public int PreciptationStartTime { get; internal set; }
-        public int PrecipitationHours { get; internal set; }
-    }
-
-    public class WeatherInput
-    {
-        public WeatherConditions LastConditions { get; set; }
-
-        public int ElevationFt { get; set; }
-
-        public Season CurrentSeason { get; set; }
-
-        public Region Region { get; set; }
-
-        public int DaysLeftOfTemperatue
-        {
-            get
-            {
-                int d = 0;
-                if (LastConditions != null)
-                {
-                    d = LastConditions.DurationOfTemperature - 1;
-                }
-                return d < 0 ? 0 : d;
-
-            }
-        }
-
-        public PrecipitationFrequency PrecipitationFrequency
-        {
-            get
-            {
-                switch (Region)
-                {
-                    case Region.Temperate:
-                    case Region.Cold:
-                        switch (CurrentSeason)
-                        {
-                            case Season.Winter:
-                                return PrecipitationFrequency.Rare;
-                            case Season.Spring:
-                                return PrecipitationFrequency.Intermittent;
-                            case Season.Summer:
-                                return PrecipitationFrequency.Common;
-                            case Season.Fall:
-                                return PrecipitationFrequency.Intermittent;
-                        }
-                        break;
-                    case Region.Tropical:
-                        switch (CurrentSeason)
-                        {
-                            case Season.Winter:
-                                return PrecipitationFrequency.Rare;
-                            case Season.Spring:
-                                return PrecipitationFrequency.Common;
-                            case Season.Summer:
-                                return PrecipitationFrequency.Intermittent;
-                            case Season.Fall:
-                                return PrecipitationFrequency.Common;
-                        }
-                        break;
-                }
-                throw new NotImplementedException();
-            }
-        }
-
-        public PrecipitationIntensity PrecipitationIntensity
-        {
-            get
-            {
-                if (ElevationFt < 1000)
-                {
-                    if (Region == Region.Cold)
-                    {
-                        return PrecipitationIntensity.Medium;
-                    }
-                    return PrecipitationIntensity.Heavy;
-                }
-                else if (ElevationFt < 5000)
-                {
-                    if (Region == Region.Cold)
-                    {
-                        return PrecipitationIntensity.Light;
-                    }
-                    else if (Region == Region.Tropical)
-                    {
-                        return PrecipitationIntensity.Heavy;
-                    }
-                    return PrecipitationIntensity.Medium;
-                }
-                else
-                {
-                    if (Region == Region.Tropical)
-                    {
-                        return PrecipitationIntensity.Medium;
-                    }
-                    return PrecipitationIntensity.Light;
-                }
-            }
-        }
-    }
-
-    [JsonConverter(typeof(StringEnumConverter))]
-    public enum Season
-    {
-        Spring,
-        Summer,
-        Fall,
-        Winter
-    }
-
-    [JsonConverter(typeof(StringEnumConverter))]
-    public enum Region
-    {
-        Cold,
-        Temperate,
-        Tropical,
-    }
-
-    [JsonConverter(typeof(StringEnumConverter))]
-    public enum PrecipitationFrequency
-    {
-        Drought,
-        Rare,
-        Intermittent,
-        Common,
-        Constant
-    }
-
-    [JsonConverter(typeof(StringEnumConverter))]
-    public enum PrecipitationIntensity
-    {
-        Light,
-        Medium,
-        Heavy,
-        Torrential
-    }
-
-    [JsonConverter(typeof(StringEnumConverter))]
-    public enum PrecipitationType
-    {
-        None,
-
-        LightFog,
-        MediumFog,
-        HeavyFog,
-
-        Drizzle,
-        LightRain,
-        Rain,
-        HeavyRain,
-        Thunderstorm,
-
-        Sleet,
-
-        LightSnow,
-        MediumSnow,
-        HeavySnow,
-        Blizard
-    }
-
     public class PathfinderWeatherGenerator : IWeatherEngine
     {
         public WeatherConditions GetWeatherConditions(WeatherInput input)
@@ -205,18 +29,29 @@ namespace Nu.OfficerMiniGame
                 cond.PrecipitationType = precipitation.type;
                 cond.PrecipitationHours = precipitation.hours;
                 cond.PreciptationStartTime = hasPrecipitation.timeOfDay;
+                cond.PrecipitationType = CheckForSeverWeather(cond.PrecipitationType);
+                if (cond.PrecipitationType == PrecipitationType.Blizzard)
+                {
+                    var p = DiceRoller.DPercentile();
+                    if (p <= 20)
+                    {
+                        cond.PrecipitationHours = DiceRoller.D12(2);
+                    }
+                }
             }
             else
             {
                 cond.PrecipitationType = PrecipitationType.None;
             }
 
-            // TODO: Wind
+            cond.WindSpeed = GetWindSpeed(cond.PrecipitationType);
 
-            // TODO: Cloud Cover
+            cond.CloudCover = GetCloudCover(cond.PrecipitationType);
 
-            // TODO: Severe Weather Events
-
+            if ((input.CurrentSeason == Season.Fall || input.CurrentSeason == Season.Winter) && cond.PrecipitationType == PrecipitationType.None)
+            {
+                cond.TemperatureInF += 10;
+            }
             return cond;
         }
 
@@ -624,5 +459,123 @@ namespace Nu.OfficerMiniGame
             throw new NotImplementedException();
         }
 
+        private WindSpeed GetWindSpeed(PrecipitationType pt)
+        {
+            var percent = DiceRoller.DPercentile();
+
+            if (pt == PrecipitationType.Hurricane || pt == PrecipitationType.Tornado)
+            {
+                return WindSpeed.Windstorm;
+            }
+
+            if (pt == PrecipitationType.Thunderstorm || pt == PrecipitationType.Blizzard ||
+                pt == PrecipitationType.Hail || pt == PrecipitationType.Sandstorm ||
+                pt == PrecipitationType.Thundersnow)
+            {
+                if (percent <= 50)
+                {
+                    return WindSpeed.Strong;
+                }
+                else if (percent <= 90)
+                {
+                    return WindSpeed.Severe;
+                }
+                else
+                {
+                    return WindSpeed.Windstorm;
+                }
+            }
+            if (percent <= 50)
+            {
+                return WindSpeed.Light;
+            }
+            else if (percent <= 80)
+            {
+                return WindSpeed.Moderate;
+            }
+            else if (percent <= 90)
+            {
+                return WindSpeed.Strong;
+            }
+            else if (percent <= 95)
+            {
+                return WindSpeed.Severe;
+            }
+            return WindSpeed.Windstorm;
+        }
+
+        private CloudCover GetCloudCover(PrecipitationType pt)
+        {
+            var percent = DiceRoller.DPercentile();
+            switch (pt)
+            {
+                case PrecipitationType.LightRain:
+                case PrecipitationType.Drizzle:
+                case PrecipitationType.LightSnow:
+                    percent += 50;
+                    break;
+                case PrecipitationType.Rain:
+                case PrecipitationType.MediumSnow:
+                    percent += 70;
+                    break;
+                case PrecipitationType.HeavyRain:
+                case PrecipitationType.HeavySnow:
+                case PrecipitationType.Blizzard:
+                case PrecipitationType.Thunderstorm:
+                case PrecipitationType.Sleet:
+                case PrecipitationType.Thundersnow:
+                case PrecipitationType.Hail:
+                case PrecipitationType.Tornado:
+                    percent += 100;
+                    break;
+            }
+
+
+            if (percent <= 50)
+            {
+                return CloudCover.None;
+            }
+            else if (percent <= 70)
+            {
+                return CloudCover.LightClouds;
+            }
+            else if (percent <= 85)
+            {
+                return CloudCover.MediumClouds;
+            }
+            else
+            {
+                return CloudCover.Overcast;
+            }
+        }
+
+        private PrecipitationType CheckForSeverWeather(PrecipitationType pt)
+        {
+            var percent = DiceRoller.DPercentile();
+            switch (pt)
+            {
+                case PrecipitationType.HeavySnow:
+                    if (percent <= 10)
+                    {
+                        return PrecipitationType.Thundersnow;
+                    }
+                    else if (percent <= 50)
+                    {
+                        return PrecipitationType.Blizzard;
+                    }
+                    break;
+                case PrecipitationType.Thunderstorm:
+                    if (percent <= 1)
+                    {
+                        return PrecipitationType.Hurricane;
+                    }
+                    else if (percent <= 6)
+                    {
+                        return PrecipitationType.Hail;
+                    }
+                    break;
+            }
+            return pt;
+        }
     }
 }
