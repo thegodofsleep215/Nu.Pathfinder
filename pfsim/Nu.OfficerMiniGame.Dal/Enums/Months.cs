@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace Nu.OfficerMiniGame.Calendar
+namespace Nu.OfficerMiniGame.Dal.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum Months

@@ -1,4 +1,6 @@
 ﻿using Nu.Game.Common;
+using Nu.OfficerMiniGame.Dal.Dto;
+using Nu.OfficerMiniGame.Dal.Enums;
 using System;
 
 namespace Nu.OfficerMiniGame.Weather
@@ -8,6 +10,7 @@ namespace Nu.OfficerMiniGame.Weather
         public WeatherConditions GetWeatherConditions(WeatherInput input)
         {
             var cond = new WeatherConditions();
+            cond.Date = input.Date;
             if (input.DaysLeftOfTemperatue == 0)
             {
                 cond.TemperatureInF = InitialTemp(input.Region, input.CurrentSeason);
@@ -28,7 +31,7 @@ namespace Nu.OfficerMiniGame.Weather
                 var precipitation = GetPrecipitationType(input.PrecipitationIntensity, cond.TemperatureInF);
                 cond.PrecipitationType = precipitation.type;
                 cond.PrecipitationHours = precipitation.hours;
-                cond.PreciptationStartTime = hasPrecipitation.timeOfDay;
+                cond.PrecipitationStartTime = hasPrecipitation.timeOfDay;
                 cond.PrecipitationType = CheckForSeverWeather(cond.PrecipitationType);
                 if (cond.PrecipitationType == PrecipitationType.Blizzard)
                 {
@@ -466,6 +469,11 @@ namespace Nu.OfficerMiniGame.Weather
             if (pt == PrecipitationType.Hurricane || pt == PrecipitationType.Tornado)
             {
                 return WindSpeed.Windstorm;
+            }
+
+            if(pt == PrecipitationType.HeavyFog || pt == PrecipitationType.MediumFog || pt == PrecipitationType.LightFog)
+            {
+                percent -= 50;
             }
 
             if (pt == PrecipitationType.Thunderstorm || pt == PrecipitationType.Blizzard ||

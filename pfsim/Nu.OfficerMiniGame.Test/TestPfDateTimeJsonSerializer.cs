@@ -1,6 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
-using Nu.OfficerMiniGame.Calendar;
+using Nu.OfficerMiniGame.Dal.Dto;
 using Should;
 
 namespace Nu.OfficerMiniGame.Test

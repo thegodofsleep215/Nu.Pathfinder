@@ -1,4 +1,4 @@
-﻿using Nu.OfficerMiniGame.Calendar;
+﻿using Nu.OfficerMiniGame.Dal.Dto;
 using System;
 
 namespace Nu.OfficerMiniGame.Weather
@@ -9,7 +9,7 @@ namespace Nu.OfficerMiniGame.Weather
 
         public int ElevationFt { get; set; }
 
-        public Season CurrentSeason => Date.Season;
+        public Season CurrentSeason { get { return Date.Season; } }
 
         public Region Region { get; set; }
 

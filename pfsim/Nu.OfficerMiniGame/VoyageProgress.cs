@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nu.OfficerMiniGame.Dal.Dto;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -21,37 +22,5 @@ namespace Nu.OfficerMiniGame
             DayOfVoyage += days;
             DaysSinceLastResupply += days;
         }
-    }
-
-    public class FleetVoyageProgress
-    {
-        public FleetVoyageProgress() { }
-
-        public FleetVoyageProgress(List<VoyageProgress> voyageProgresses)
-        {
-            DayOfVoyage = voyageProgresses.Max(x => x.DayOfVoyage);
-            DaysSinceLastResupply = voyageProgresses.Max(x => x.DaysSinceLastResupply);
-            ProgressMade = voyageProgresses.Max(x => x.ProgressMade);
-            ShipsProgress = voyageProgresses.Select(x => new ShipsProgress
-            {
-                ShipName = x.ShipName,
-                DiseasedCrew = x.DiseasedCrew,
-            }).ToList();
-        }
-
-        public int DayOfVoyage { get; set; }
-
-        public int DaysSinceLastResupply { get; set; }
-
-        public double ProgressMade { get; set; }
-
-        public List<ShipsProgress> ShipsProgress { get; set; }
-    }
-
-    public class ShipsProgress
-    {
-        public string ShipName { get; set; }
-
-        public int DiseasedCrew { get; internal set; }
     }
 }

@@ -360,12 +360,6 @@ namespace Nu.OfficerMiniGame
             }
         }
 
-        public int TemporaryWatchModifier { get; set; }
-
-        public int TemporaryMaintainModifier { get; set; }
-
-        public int TemporaryPilotModifier { get; set; }
-
         public int TemporaryDisciplineModifier { get; set; }
 
         public int TemporaryCommandModifier { get; set; }

@@ -13,10 +13,17 @@ namespace  Nu.OfficerMiniGame
     /// </summary>
     public class Watch : IDuty
     {
+        private WatchShift watchShift;
+
+        public Watch(WatchShift watchShift)
+        {
+            this.watchShift = watchShift;
+        }
+
         public void PerformDuty(Ship ship, bool verbose, ref MiniGameStatus status)
         {
-            var weatherModifier = ship.TemporaryWatchModifier;
-            var dc = 10 - weatherModifier - status.CommandModifier;
+            var weatherModifier =  status.GetWatchModifier(watchShift);
+            var dc = 10 + weatherModifier - status.CommandModifier;
             var assistBonus = PerformAssists(ship.GetAssistance(DutyType.Watch), weatherModifier, status);
 
             int watch = status.WatchResults.Count;

@@ -2,7 +2,7 @@
 using System;
 using System.Text.RegularExpressions;
 
-namespace Nu.OfficerMiniGame.Calendar
+namespace Nu.OfficerMiniGame.Dal.Dto
 {
     public class PfDateTimeJsonConverter : JsonConverter
     {
@@ -15,6 +15,10 @@ namespace Nu.OfficerMiniGame.Calendar
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             var v = (string)reader.Value;
+            if(v == null)
+            {
+                return null;
+            }
             var match = read.Match(v);
             var year = int.Parse(match.Groups["year"].Value);
             var month = int.Parse(match.Groups["month"].Value);

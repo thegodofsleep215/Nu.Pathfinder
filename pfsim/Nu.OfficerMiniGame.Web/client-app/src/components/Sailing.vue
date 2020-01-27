@@ -130,6 +130,10 @@
             </div>
         </div>
 
+        <div>
+            <WeatherResult v-model="sailResult.state.weatherConditions"></WeatherResult>
+        </div>
+
         <div v-for="sr in sailResult.results" v-bind:key="sr.loadout">
             <h3>{{sr.loadout}}</h3>
             <p style="text-align:left" v-for="msg in sr.message" v-bind:key="msg">{{msg}}</p>
@@ -138,8 +142,12 @@
 </template>
 
 <script>
+    import WeatherResult from './WeatherResult.vue'
     export default {
         name: "Sailing",
+        components: {
+            WeatherResult,
+        },
         data: function () {
             return {
                 sailResult: {

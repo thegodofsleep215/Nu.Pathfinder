@@ -1,9 +1,9 @@
 ﻿using Newtonsoft.Json;
-using Nu.OfficerMiniGame.Weather;
+using Nu.OfficerMiniGame.Dal.Enums;
 using System;
 using System.Collections.Generic;
 
-namespace Nu.OfficerMiniGame.Calendar
+namespace Nu.OfficerMiniGame.Dal.Dto
 {
     [JsonConverter(typeof(PfDateTimeJsonConverter))]
     public class PfDateTime

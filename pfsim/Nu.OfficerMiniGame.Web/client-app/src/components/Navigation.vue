@@ -1,6 +1,6 @@
 ﻿<template>
     <div class="header-grid">
-        <nav >
+        <nav>
             <router-link class="nav-item" v-for="routes in links"
                          v-bind:key="routes.id"
                          :to="`${routes.page}`">
@@ -30,7 +30,13 @@
                         id: 2,
                         text: "Voyages",
                         page: "/Voyages"
+                    },
+                    {
+                        id: 3,
+                        text: "Weather",
+                        page: "/Weather"
                     }
+
                 ]
             }
         }
@@ -38,8 +44,8 @@
 </script>
 
 <style>
-    nav{
-        list-style-type:none;
+    nav {
+        list-style-type: none;
         margin: 0;
         padding: 0;
         overflow: hidden;
@@ -55,7 +61,7 @@
         text-decoration: none;
     }
 
-    .nav-item:hover {
-        background-color:#111;
-    }
+        .nav-item:hover {
+            background-color: #111;
+        }
 </style>
