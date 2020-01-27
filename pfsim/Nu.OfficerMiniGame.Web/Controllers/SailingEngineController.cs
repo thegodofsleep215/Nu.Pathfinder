@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nu.OfficerMiniGame.Dal.Dal;
+using Nu.OfficerMiniGame.Dal.Dto;
+using Nu.OfficerMiniGame.Weather;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -19,13 +22,17 @@ namespace Nu.OfficerMiniGame.Web.Controllers
             var mgd = new MiniGameDal(new FileShipLoadoutDal(rootDir), new FileShipStatsDal(rootDir), new FileCrewMemberStats(rootDir));
 
             var voyage = vd.Get(name);
-            if(voyage == null)
+            if (voyage == null)
             {
                 return new NotFoundResult();
             }
             List<Ship> ships = voyage.ShipLoadouts.Select(x => mgd.GetLoadout(x)).ToList();
-
-            var fleetProgress= new FleetVoyageProgress(ships.Select(x => EventProcessor.Process(x, voyage.Events[x.CrewName].Select(y => y.Event).ToList())).ToList());
+            FleetVoyageProgress fleetProgress = new FleetVoyageProgress();
+            if (voyage.Events != null && voyage.Events.Any())
+            {
+                fleetProgress = new FleetVoyageProgress(ships.Select(x => EventProcessor.Process(x, voyage.Events[x.CrewName].Select(y => y.Event).ToList())).ToList(),
+                    null);
+            }
 
             return new JsonResult(new { voyage = voyage, state = fleetProgress });
         }
@@ -40,18 +47,47 @@ namespace Nu.OfficerMiniGame.Web.Controllers
             var voyage = vd.Get(sp.VoyageName);
             List<Ship> ships = voyage.ShipLoadouts.Select(x => mgd.GetLoadout(x)).ToList();
 
+            var cp = new List<VoyageProgress>();
             ships.ForEach(x =>
             {
-                EventProcessor.Process(x, voyage.Events[x.CrewName].Select(y => y.Event).ToList());
+                if (voyage.Events.ContainsKey(x.CrewName))
+                {
+                    var p = EventProcessor.Process(x, voyage.Events[x.CrewName].Select(y => y.Event).ToList());
+                    cp.Add(p);
+                }
                 ProcessSailingParameters(sp, ref x);
             });
+            var dov = 0;
+            if (cp.Any())
+            {
+                var fp = new FleetVoyageProgress(cp, null);
+                dov = fp.DayOfVoyage;
+            }
 
             var engine = new MultiShipGameEngine(true);
-            var results = engine.Sail(ships.ToArray(), sp);
+
+            var wg = new PathfinderWeatherGenerator();
+
+            WeatherConditions oldWc = null;
+            if (voyage.weatherConditions.Any())
+            {
+                oldWc = voyage.weatherConditions[voyage.weatherConditions.Count - 1];
+            }
+
+            var wc = wg.GetWeatherConditions(new WeatherInput
+            {
+                LastConditions = oldWc,
+                Date = voyage.StartDate + TimeSpan.FromDays(dov),
+                ElevationFt = 0,
+                Region = Region.Tropical
+            });
+            var results = engine.Sail(ships.ToArray(), sp, wc);
             voyage.AddEvents(results);
+            voyage.weatherConditions.Add(wc);
             vd.Update(sp.VoyageName, voyage);
 
-            var currentProgress = new FleetVoyageProgress(ships.Select(x => EventProcessor.Process(x, voyage.Events[x.CrewName].Select(y => y.Event).ToList())).ToList());
+            var currentProgress = new FleetVoyageProgress(ships.Select(x => EventProcessor.Process(x, voyage.Events[x.CrewName].Select(y => y.Event).ToList())).ToList(),
+                wc);
 
             var anon = new
             {
@@ -78,9 +114,6 @@ namespace Nu.OfficerMiniGame.Web.Controllers
                     ship.Swabbies = sm[ship.CrewName].Swabbies;
                     ship.TemporaryPilotingModifier = sp.PilotingModifier;
                     ship.TemporaryNavigationModifier = sp.NavigationModifier;
-                    ship.TemporaryPilotModifier = sp.GetWeatherModifier(DutyType.Pilot);
-                    ship.TemporaryMaintainModifier = sp.GetWeatherModifier(DutyType.Maintain);
-                    ship.TemporaryWatchModifier = sp.GetWeatherModifier(DutyType.Watch);
                 }
             }
         }

@@ -27,8 +27,8 @@ namespace  Nu.OfficerMiniGame
     {
         public void PerformDuty(Ship ship, bool verbose, ref MiniGameStatus status)
         {
-            var weatherModifier = ship.TemporaryPilotModifier;
-            var dc = 7 + ship.ShipDc - status.CommandModifier - ship.CrewPilotModifier - weatherModifier + status.WatchModifier;
+            var weatherModifier = status.GetWeatherModifier(DutyType.Pilot);
+            var dc = 7 + ship.ShipDc - status.CommandModifier - ship.CrewPilotModifier + weatherModifier + status.WatchModifier;
             var job = ship.PilotJob;
             var assistBonus = PerformAssists(ship.GetAssistance(DutyType.Pilot), weatherModifier);
             status.PilotResult = (DiceRoller.D20(1) + job.SkillBonus + assistBonus) - dc;
@@ -83,7 +83,7 @@ namespace  Nu.OfficerMiniGame
 
             foreach (var assist in list)
             {
-                retval += ((DiceRoller.D20(1) + assist.SkillBonus) >= (10 - modifier)) ? 2 : 0;
+                retval += ((DiceRoller.D20(1) + assist.SkillBonus) >= (10 + modifier)) ? 2 : 0;
             }
 
             return retval;

@@ -15,6 +15,31 @@
                 <div>
                     <table align="center">
                         <tr>
+                            <td>
+                                <label class="stat-label" style="float: right">Year:</label>
+                            </td>
+                            <td>
+                                <input type="text" style="float:left" v-model="date.year" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label class="stat-label" style="float: right">Month</label>
+                            </td>
+                            <td>
+                                <input type="text" style="float:left" v-model="date.month" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label class="stat-label" style="float: right">Day</label>
+                            </td>
+                            <td>
+                                <input type="text" style="float:left" v-model="date.day" />
+                            </td>
+                        </tr>
+
+                        <tr>
                             <td style="text-align:right">
                                 <label class="stat-label">Port: </label>
                             </td>
@@ -134,12 +159,16 @@
         data: function () {
             return {
                 loadouts: [],
+                date: {}
             }
         },
         computed: {
             canEdit() {
                 return !this.value.underweigh;
             },
+            serializedDate() {
+                return this.date.year + "/" + this.date.month + "/" + this.date.day + " 0:0:0";
+            }
         },
         mounted: function () {
             var self = this;
@@ -157,10 +186,16 @@
         },
         methods: {
             shipLoadoutsChanged() {
+                var date = /(\d+)\/(\d+)\/(\d+)/;
+                var match = this.value.startDate.match(date);
+                this.date.year = match[1];
+                this.date.month = match[2];
+                this.date.day = match[3];
+
+
                 if (this.value.swabbies == null) {
                     this.value.swabbies = [];
                 }
-
                 // add new ones
                 this.value.shipLoadouts.filter(x => !this.value.swabbies.map(x => x.loadoutName).includes(x))
                     .forEach(x => this.value.swabbies.push({ loadoutName: x, swabbies: 0 }));
@@ -169,6 +204,7 @@
                 this.value.swabbies = this.value.swabbies.filter(x => this.value.shipLoadouts.includes(x.loadoutName));
             },
             updateVoyage(v) {
+                v.startDate = this.serializedDate;
                 fetch('/Voyage/Update', {
                     method: 'POST',
                     headers: {

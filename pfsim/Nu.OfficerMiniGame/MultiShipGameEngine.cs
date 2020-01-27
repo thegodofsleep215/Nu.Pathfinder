@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nu.OfficerMiniGame.Dal.Dto;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -17,18 +18,18 @@ namespace Nu.OfficerMiniGame
             this.sailing = sailing;
         }
 
-        public Dictionary<string, List<object>> Sail(Ship[] ships, SailingParameters sailingParameters)
+        public Dictionary<string, List<object>> Sail(Ship[] ships, SailingParameters sailingParameters, WeatherConditions weatherConditions)
         {
-            var results = ships.ToDictionary(x => x.CrewName, x => Sail(x, sailingParameters));
+            var results = ships.ToDictionary(x => x.CrewName, x => Sail(x, sailingParameters, weatherConditions));
             var pe = GenerateProgressMadeEvent(results.SelectMany(x => x.Value).ToList(), sailingParameters.NightStatus);
             results.ToList().ForEach(x => x.Value.Add(pe));
             return results;
         }
 
-        private List<object> Sail(Ship ship, SailingParameters sailingParameters)
+        private List<object> Sail(Ship ship, SailingParameters sailingParameters, WeatherConditions weatherConditions)
         {
             var gameQueue = CreateSailingQueue(sailingParameters.NightStatus);
-            var mgs = new MiniGameStatus(sailingParameters.OpenOcean, sailingParameters.NightStatus);
+            var mgs = new MiniGameStatus(weatherConditions, sailingParameters.OpenOcean, sailingParameters.NightStatus);
             BaseResponse validation = ShipValidation.ValidateShip(ship);
             if (validation.Success)
             {
@@ -123,10 +124,10 @@ namespace Nu.OfficerMiniGame
             gameQueue.Enqueue(new Command());
 
             gameQueue.Enqueue(new Manage());
-            gameQueue.Enqueue(new Watch());
-            gameQueue.Enqueue(new Watch());
+            gameQueue.Enqueue(new Watch(WatchShift.First));
+            gameQueue.Enqueue(new Watch(WatchShift.Second));
             if (nightStatus == NightStatus.Underweigh)
-                gameQueue.Enqueue(new Watch());
+                gameQueue.Enqueue(new Watch(WatchShift.Third));
             gameQueue.Enqueue(new Pilot());
             gameQueue.Enqueue(new Navigate());
             gameQueue.Enqueue(new Discipline());
@@ -141,9 +142,9 @@ namespace Nu.OfficerMiniGame
             var gameQueue = new Queue<IDuty>();
             gameQueue.Enqueue(new Command());
             gameQueue.Enqueue(new Manage());
-            gameQueue.Enqueue(new Watch());
-            gameQueue.Enqueue(new Watch());
-            gameQueue.Enqueue(new Watch());
+            gameQueue.Enqueue(new Watch(WatchShift.First));
+            gameQueue.Enqueue(new Watch(WatchShift.Second));
+            gameQueue.Enqueue(new Watch(WatchShift.Third));
             gameQueue.Enqueue(new Discipline());
             gameQueue.Enqueue(new Maintain());
             gameQueue.Enqueue(new Cook());

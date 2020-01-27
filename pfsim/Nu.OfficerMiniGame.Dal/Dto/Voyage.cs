@@ -8,6 +8,8 @@ namespace Nu.OfficerMiniGame.Dal.Dto
     {
         public string Name { get; set; }
 
+        public PfDateTime StartDate { get; set; }
+
         public string Port { get; set; }
 
         public string DestinationPort { get; set; }
@@ -32,6 +34,7 @@ namespace Nu.OfficerMiniGame.Dal.Dto
 
         public Dictionary<string, List<VoyageEvent>> Events { get; set; } = new Dictionary<string, List<VoyageEvent>>();
 
+        public List<WeatherConditions> weatherConditions { get; set; } = new List<WeatherConditions>();
 
         public void AddEvents(Dictionary<string, List<object>> events)
         {

@@ -1,12 +1,22 @@
-﻿using System;
+﻿using Nu.OfficerMiniGame.Dal.Dto;
+using Nu.OfficerMiniGame.Dal.Enums;
+using System;
 using System.Collections.Generic;
 
 namespace Nu.OfficerMiniGame
 {
+    public enum WatchShift
+    {
+        First,
+        Second,
+        Third
+    }
+
     public class MiniGameStatus
     {
-        public MiniGameStatus(bool openOcean, NightStatus nightStatus)
+        public MiniGameStatus(WeatherConditions weatherConditions, bool openOcean, NightStatus nightStatus)
         {
+            WeatherConditions = weatherConditions;
             GameEvents = new List<object> {
                 new DawnOfANewDayEvent
                 {
@@ -14,6 +24,143 @@ namespace Nu.OfficerMiniGame
                     NightStatus = nightStatus
                 }
             };
+        }
+
+        public WeatherConditions WeatherConditions { get; set; }
+
+        public int GetWatchModifier(WatchShift watchNumber)
+        {
+            if (WeatherConditions == null)
+            {
+                return 0;
+            }
+            var temp = 0;
+
+            switch (WeatherConditions.PrecipitationType)
+            {
+                case PrecipitationType.None:
+                    temp -= 1;
+                    break;
+                case PrecipitationType.HeavyFog:
+                    if (watchNumber == WatchShift.First)
+                        temp += 20;
+                    break;
+                case PrecipitationType.MediumFog:
+                    if (watchNumber == WatchShift.First)
+                        temp += 4;
+                    break;
+                case PrecipitationType.LightFog:
+                    if (watchNumber == WatchShift.First)
+                        temp += 2;
+                    break;
+                case PrecipitationType.Sleet:
+                case PrecipitationType.LightSnow:
+                case PrecipitationType.Drizzle:
+                    temp += 2;
+                    break;
+                case PrecipitationType.MediumSnow:
+                case PrecipitationType.Rain:
+                    temp += 4;
+                    break;
+                case PrecipitationType.HeavySnow:
+                case PrecipitationType.HeavyRain:
+                case PrecipitationType.Sandstorm:
+                    temp += 6;
+                    break;
+                case PrecipitationType.Blizzard:
+                case PrecipitationType.Hail:
+                case PrecipitationType.Thundersnow:
+                case PrecipitationType.Thunderstorm:
+                    temp += 8;
+                    break;
+                case PrecipitationType.Hurricane:
+                case PrecipitationType.Tornado:
+                    temp += 20;
+                    break;
+
+            }
+
+            switch (WeatherConditions.WindSpeed)
+            {
+                case WindSpeed.Strong:
+                    temp += 2;
+                    break;
+                case WindSpeed.Severe:
+                    temp += 4;
+                    break;
+                case WindSpeed.Windstorm:
+                    temp += 8;
+                    break;
+
+            }
+
+            return temp;
+        }
+
+        public int GetWeatherModifier(DutyType duty)
+        {
+            if (WeatherConditions == null)
+            {
+                return 0;
+            }
+            if (duty == DutyType.Watch) throw new ArgumentException("Use GetWatchModifier");
+            var temp = 0;
+
+            if (duty != DutyType.Command && duty != DutyType.Cook && duty != DutyType.Discipline && duty != DutyType.Heal)
+            {
+                switch (WeatherConditions.PrecipitationType)
+                {
+                    case PrecipitationType.Sleet:
+                    case PrecipitationType.LightSnow:
+                    case PrecipitationType.Drizzle:
+                        temp += 1;
+                        break;
+                    case PrecipitationType.MediumSnow:
+                    case PrecipitationType.Rain:
+                        temp += 2;
+                        break;
+                    case PrecipitationType.HeavySnow:
+                    case PrecipitationType.HeavyRain:
+                    case PrecipitationType.Sandstorm:
+                        temp += 3;
+                        break;
+                    case PrecipitationType.Blizzard:
+                    case PrecipitationType.Hail:
+                    case PrecipitationType.Thundersnow:
+                    case PrecipitationType.Thunderstorm:
+                        temp += 4;
+                        break;
+                    case PrecipitationType.Hurricane:
+                    case PrecipitationType.Tornado:
+                        temp += 5;
+                        break;
+
+                }
+            }
+
+            switch (WeatherConditions.WindSpeed)
+            {
+                case WindSpeed.Light:
+                    if (duty == DutyType.Pilot)
+                    {
+                        temp -= 2;
+                    }
+                    break;
+                case WindSpeed.Strong:
+                    temp += 2;
+                    break;
+                case WindSpeed.Severe:
+                    temp += 4;
+                    break;
+                case WindSpeed.Windstorm:
+                    temp += 8;
+                    break;
+
+            }
+
+
+
+            return temp;
         }
 
         public int CommandResult { get; set; }
@@ -82,51 +229,6 @@ namespace Nu.OfficerMiniGame
 
         public List<ShipModifiers> ShipModifiers { get; set; }
 
-        public WeatherStatus WeatherConditions { get; set; }
-
-        public int GetWeatherModifier(DutyType duty)
-        {
-            switch (WeatherConditions)
-            {
-                case WeatherStatus.Clear:
-                    if (duty == DutyType.Watch)
-                        return 1;
-                    else
-                        return 0;
-                case WeatherStatus.Fog:
-                    if (duty == DutyType.Watch)
-                        return -4;
-                    else
-                        return 0;
-                case WeatherStatus.Drizzle:
-                    return -1;
-                case WeatherStatus.FairWinds:
-                    if (duty == DutyType.Pilot)
-                        return 2;
-                    else
-                        return 0;
-                case WeatherStatus.Gales:
-                    return -5;
-                case WeatherStatus.HeavyRain:
-                    return -3;
-                case WeatherStatus.HeavySeas:
-                    if (duty == DutyType.Watch)
-                        return -1;
-                    else
-                        return -3;
-                case WeatherStatus.Hurricane:
-                    return -10;
-                case WeatherStatus.Rain:
-                    return -2;
-                case WeatherStatus.Storms:
-                    return -3;
-                default:
-                    return 0;
-            }
-        }
-
-
-
         public int PilotingModifier
         {
             get
@@ -154,7 +256,7 @@ namespace Nu.OfficerMiniGame
         {
             get
             {
-                int dc = 12 + GetWeatherModifier(DutyType.Navigate);
+                int dc = 12;
 
                 dc += OpenOcean ? 5 : 0;
 
