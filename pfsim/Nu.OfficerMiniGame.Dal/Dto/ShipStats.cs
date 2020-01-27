@@ -15,7 +15,13 @@ namespace Nu.OfficerMiniGame.Dal.Dto
 
         public int HullHitPoints { get; set; }
 
+        public int OfficerSize { get; set; }
+
         public int CrewSize { get; set; }
+
+        public int CargoPoints { get; set; }
+
+        public int Passengers { get; set; }
 
         public int ShipDc { get; set; } // General modifier to the difficulty to sail that increases with the size of the ship.
 

@@ -6,6 +6,7 @@ import CrewList from '@/components/CrewList.vue'
 import Voyages from '@/components/Voyages.vue'
 import Sailing from '@/components/Sailing.vue'
 import WeatherGenerator from '@/components/WeatherGenerator.vue'
+import ShipStatList from '@/components/ShipStatList.vue'
 
 Vue.use(Router)
 
@@ -14,6 +15,10 @@ export default new Router({
         {
             path: '/',
             component: ShipLoadouts
+        },
+        {
+            path: '/ShipStats',
+            component: ShipStatList
         },
         {
             path: '/ShipLoadouts',

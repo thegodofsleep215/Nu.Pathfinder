@@ -1,18 +1,1 @@
-{
-  "Name": "Dogfish",
-  "ShipType": 16,
-  "ShipSize": 3,
-  "PropulsionTypes": [
-    {
-      "PropulsionType": 0,
-      "ShipSpeed": 90,
-      "PropulsionHitPoints": 452
-    }
-  ],
-  "HullHitPoints": 1090,
-  "CrewSize": 16,
-  "MinimumCrewSize": 8,
-  "ShipDc": 10,
-  "ShipPilotingBonus": 1,
-  "ShipQuality": 0
-}
+{"Name":"Dogfish","ShipType":"Barque","ShipSize":"Colossal","PropulsionTypes":[{"PropulsionType":"Sails","ShipSpeed":90,"PropulsionHitPoints":960}],"HullHitPoints":1750,"OfficerSize":4,"CrewSize":16,"CargoPoints":510,"Passengers":240,"ShipDc":11,"ShipPilotingBonus":1,"ShipQuality":0,"SpecialFeatures":["Captain's Cabin","Crow's Nest","Ship's Galley"]}

@@ -18,21 +18,27 @@
                 links: [
                     {
                         id: 0,
+                        text: "Ship Stats",
+                        page: "/ShipStats"
+
+                    },
+                    {
+                        id: 1,
                         text: "Ship Loadouts",
                         page: "/ShipLoadouts"
                     },
                     {
-                        id: 1,
+                        id: 2,
                         text: "Crew Members",
                         page: "/Crew"
                     },
                     {
-                        id: 2,
+                        id: 3,
                         text: "Voyages",
                         page: "/Voyages"
                     },
                     {
-                        id: 3,
+                        id: 4,
                         text: "Weather",
                         page: "/Weather"
                     }
