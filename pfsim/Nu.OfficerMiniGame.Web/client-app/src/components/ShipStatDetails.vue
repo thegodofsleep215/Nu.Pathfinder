@@ -3,7 +3,11 @@
         <div class="container">
             <div class="form-grid-container">
                 <div>
-                    <h3>{{updatedShip.name}}</h3>
+                    <h3>{{shipName}}</h3>
+                </div>
+                <div>
+                    <button style="align-self:center" class="update-button" v-on:click="saveShipStats"> </button>
+                    <button style="align-self:center" class="delete-button" v-on:click="deleteShipStats"></button>
                 </div>
                 <div style="grid-column-start: 1">
                     <table>
@@ -21,7 +25,7 @@
                                 <label class="stat-label" style="float:right">Ship Size:</label>
                             </td>
                             <td>
-                                <label style="float:left">{{updatedShip.shipSize}}</label>
+                                <label style="float:left">{{template.shipSize}}</label>
                             </td>
                         </tr>
                         <tr>
@@ -30,7 +34,7 @@
                                 <label class="stat-label" style="float:right">Hull Hit Points:</label>
                             </td>
                             <td>
-                                <label style="float:left">{{updatedShip.hullHitPoints}}</label>
+                                <label style="float:left">{{template.hullHitPoints}}</label>
                             </td>
                         </tr>
                         <tr>
@@ -38,7 +42,7 @@
                                 <label class="stat-label" style="float:right">Officer Size:</label>
                             </td>
                             <td>
-                                <label style="float:left">{{updatedShip.officerSize}}</label>
+                                <label style="float:left">{{template.officerSize}}</label>
                             </td>
                         </tr>
                         <tr>
@@ -46,7 +50,7 @@
                                 <label class="stat-label" style="float:right">Crew Size:</label>
                             </td>
                             <td>
-                                <label style="float:left">{{updatedShip.crewSize}}</label>
+                                <label style="float:left">{{template.crewSize}}</label>
                             </td>
                         </tr>
                         <tr>
@@ -54,7 +58,7 @@
                                 <label class="stat-label" style="float:right">Cargo Points:</label>
                             </td>
                             <td>
-                                <label style="float:left">{{updatedShip.cargoPoints}}</label>
+                                <label style="float:left">{{template.cargoPoints}}</label>
                             </td>
                         </tr>
                         <tr>
@@ -62,7 +66,7 @@
                                 <label class="stat-label" style="float:right">Passengers:</label>
                             </td>
                             <td>
-                                <label style="float:left">{{updatedShip.passengers}}</label>
+                                <label style="float:left">{{template.passengers}}</label>
                             </td>
                         </tr>
                         <tr>
@@ -70,7 +74,7 @@
                                 <label class="stat-label" style="float:right">Ship DC:</label>
                             </td>
                             <td>
-                                <label style="float:left">{{updatedShip.shipDc}}</label>
+                                <label style="float:left">{{template.shipDc}}</label>
                             </td>
                         </tr>
                         <tr>
@@ -105,30 +109,12 @@
                 </div>
             </div>
         </div>
-        <div class="modal-backdrop" v-show="value">
-            <div class="modal">
-                <section class="modal-body">
-                    <slot name="body">
-                        <label class="stat-label">Propulsion Type: </label>
-                        <select v-model="selectedPropulsionType">
-                            <option value="Sails">Sails</option>
-                            <option value="Oars">Oars</option>
-                        </select>
-                    </slot>
-                </section>
-                <footer class="modal-footer">
-                    <slot name="footer">
-                        <button type="button" @click="onOk">Ok</button>
-                        <button type="button" @click="onCancel">Cancel</button>
-                    </slot>
-                </footer>
-            </div>
-        </div>
     </div>
 </template>
 
 <script>
     import * as shipTemplates from '../scripts/ShipTypes.js'
+    import * as axios from '../scripts/axios.min.js'
     export default {
         name: 'ShipStatDetails',
         props: {
@@ -138,7 +124,7 @@
             return {
                 templates: shipTemplates.getShipTypes(),
                 stats: {},
-                template: {}
+                template: {},
             }
         },
         computed: {
@@ -161,33 +147,41 @@
         },
         watch: {
             shipName: function () {
+                this.loadShip(this.shipName);
+            },
+        },
+        methods: {
+            loadShip(name) {
                 var self = this;
                 if (this.shipName.length > 0) {
-                    fetch('/ShipStats?name=' + this.shipName).then(r => r.json()).then(d => {
-                        self.stats = d;
+                    axios.get('/ShipStats?name=' + name).then(r => {
+                        self.stats = r.data;
                         this.templateChanged();
                     });
                 }
+
             },
-            template: function () {
-                alert(JSON.stringify(this.template));
-            }
-        },
-        methods: {
             templateChanged() {
                 var t = JSON.stringify(this.templates.filter(x => x.shipType == this.stats.shipType)[0]);
                 this.template = JSON.parse(t);
             },
-            //saveShipStats() {
-            //    fetch('/ShipStats/Update', {
-            //        method: 'POST',
-            //        headers: {
-            //            'Content-Type': 'application/json'
-            //        },
-            //        body: JSON.stringify(this.updatedShip)
-            //    });
+            saveShipStats() {
+                fetch('/ShipStats/Update', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(this.updatedShip)
+                });
+            },
+            deleteShipStats() {
+                if (confirm("Do the thing?")) {
+                    this.$emit("delete-shipstats", this.shipName);
+                    self.stats = undefined;
+                    self.template = undefined;
+                }
+            }
 
-            //}
         }
     }
 </script>
