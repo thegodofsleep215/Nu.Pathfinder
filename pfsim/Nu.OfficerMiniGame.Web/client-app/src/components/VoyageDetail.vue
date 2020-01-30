@@ -176,7 +176,14 @@
                 self.loadouts = d;
             });
             this.shipLoadoutsChanged();
+            this.parseDate();
         },
+        watch: {
+            value: function () {
+                this.parseDate();
+            }
+        },
+
         updated: function () {
             if (this.value.shipLoadouts == null) {
                 this.value.shipLoadouts = [];
@@ -185,13 +192,20 @@
             Array.from(document.getElementById("msShipLoadouts").options).forEach(x => x.selected = this.value.shipLoadouts.includes(x.text));
         },
         methods: {
-            shipLoadoutsChanged() {
-                var date = /(\d+)\/(\d+)\/(\d+)/;
-                var match = this.value.startDate.match(date);
-                this.date.year = match[1];
-                this.date.month = match[2];
-                this.date.day = match[3];
+            parseDate() {
+                if (this.value.startDate != null) {
+                    var date = /(\d+)\/(\d+)\/(\d+)/;
+                    var match = this.value.startDate.match(date);
+                    this.date.year = match[1];
+                    this.date.month = match[2];
+                    this.date.day = match[3];
+                }
+                else {
+                    this.date = {};
+                }
 
+            },
+            shipLoadoutsChanged() {
 
                 if (this.value.swabbies == null) {
                     this.value.swabbies = [];
