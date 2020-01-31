@@ -4,10 +4,10 @@
             <div class="form-grid-container">
 
                 <div>
-                    <h3>{{value.name}}</h3>
+                    <h3>{{crew.name}}</h3>
                 </div>
                 <div>
-                    <button style="align-self:center" class="update-button" v-on:click="saveCrewMember(value)"> </button>
+                    <button style="align-self:center" class="update-button" v-on:click="saveCrewMember(crew)"> </button>
                     <button style="align-self:center" class="delete-button" v-on:click="deleteCrew()"></button>
                 </div>
 
@@ -18,7 +18,7 @@
                                 <label class="stat-label">Craft (Carpentry): </label>
                             </td>
                             <td>
-                                <div><input type="number" style="float:left" v-model="value.skills.craftCarpentry" /></div>
+                                <div><input type="number" style="float:left" v-model="crew.skills.craftCarpentry" /></div>
                             </td>
                         </tr>
                         <tr>
@@ -26,7 +26,7 @@
                                 <div><label class="stat-label">Craft (Cooking): </label></div>
                             </td>
                             <td>
-                                <div><input type="number" v-model="value.skills.craftCooking" /></div>
+                                <div><input type="number" v-model="crew.skills.craftCooking" /></div>
                             </td>
                         </tr>
                         <tr>
@@ -34,7 +34,7 @@
                                 <div><label class="stat-label">Craft (Sails): </label></div>
                             </td>
                             <td>
-                                <div><input type="number" v-model="value.skills.craftSails" /></div>
+                                <div><input type="number" v-model="crew.skills.craftSails" /></div>
                             </td>
                         </tr>
                         <tr>
@@ -42,7 +42,7 @@
                                 <div><label class="stat-label">Craft (Ship): </label></div>
                             </td>
                             <td>
-                                <div><input type="number" v-model="value.skills.craftShip" /></div>
+                                <div><input type="number" v-model="crew.skills.craftShip" /></div>
                             </td>
                         </tr>
                         <tr>
@@ -50,7 +50,7 @@
                                 <div><label class="stat-label">Diplomacy: </label></div>
                             </td>
                             <td>
-                                <div><input type="number" v-model="value.skills.diplomacy" /></div>
+                                <div><input type="number" v-model="crew.skills.diplomacy" /></div>
                             </td>
                         </tr>
                         <tr>
@@ -58,7 +58,7 @@
                                 <div><label class="stat-label">Heal: </label></div>
                             </td>
                             <td>
-                                <div><input type="number" v-model="value.skills.heal" /></div>
+                                <div><input type="number" v-model="crew.skills.heal" /></div>
                             </td>
                         </tr>
                         <tr>
@@ -66,7 +66,7 @@
                                 <div><label class="stat-label">Intimidate: </label></div>
                             </td>
                             <td>
-                                <div><input type="number" v-model="value.skills.intimidate" /></div>
+                                <div><input type="number" v-model="crew.skills.intimidate" /></div>
                             </td>
                         </tr>
                         <tr>
@@ -74,7 +74,7 @@
                                 <div><label class="stat-label">Knowledge (Engineering): </label></div>
                             </td>
                             <td>
-                                <div><input type="number" v-model="value.skills.knowledgeEngineering" /></div>
+                                <div><input type="number" v-model="crew.skills.knowledgeEngineering" /></div>
                             </td>
                         </tr>
                         <tr>
@@ -82,7 +82,7 @@
                                 <div><label class="stat-label">Perform: </label></div>
                             </td>
                             <td>
-                                <div><input type="number" v-model="value.skills.perform" /></div>
+                                <div><input type="number" v-model="crew.skills.perform" /></div>
                             </td>
                         </tr>
                         <tr>
@@ -90,7 +90,7 @@
                                 <div><label class="stat-label">Profession (Merchant): </label></div>
                             </td>
                             <td>
-                                <div><input type="number" v-model="value.skills.professionMerchant" /></div>
+                                <div><input type="number" v-model="crew.skills.professionMerchant" /></div>
                             </td>
                         </tr>
                         <tr>
@@ -98,7 +98,7 @@
                                 <div><label class="stat-label">Profession (Sailor): </label></div>
                             </td>
                             <td>
-                                <div><input type="number" v-model="value.skills.professionSailor" /></div>
+                                <div><input type="number" v-model="crew.skills.professionSailor" /></div>
                             </td>
                         </tr>
                         <tr>
@@ -106,7 +106,7 @@
                                 <div><label class="stat-label">Survival: </label></div>
                             </td>
                             <td>
-                                <div><input type="number" v-model="value.skills.survival" /></div>
+                                <div><input type="number" v-model="crew.skills.survival" /></div>
                             </td>
                         </tr>
                     </table>
@@ -121,9 +121,32 @@
     export default {
         name: "CrewDetail",
         props: {
-            value: { type: Object }
+            value: { type: String }
+        },
+        data: function () {
+            return {
+                crew: {}
+            }
+        },
+        watch: {
+            value: function () {
+                this.load(this.value);
+            }
+        },
+        mounted: function () {
+            this.load(this.value);
         },
         methods: {
+            load(name) {
+                var self = this;
+                if (this.value.length > 0) {
+                    fetch('/CrewMemberStats?name=' + name).then(r => r.json())
+                        .then(d => {
+                            self.crew = d
+                        });
+                }
+
+            },
             saveCrewMember(crewMember) {
                 fetch('/CrewMemberStats/Update', {
                     method: 'POST',
@@ -135,8 +158,7 @@
             },
             deleteCrew() {
                 if (confirm("Do the thing?")) {
-                    this.$emit("delete-crew", this.value.name);
-                    self.value = undefined;
+                    this.$emit("delete", this.value.name);
                 }
             }
         }

@@ -2,6 +2,8 @@
 {
     public class LoadoutCrewMember
     {
+        public string Key { get => $"{Name} - {DutyType}"; }
+
         public string Name { get; set; }
 
         public DutyType DutyType { get; set; }

@@ -4,7 +4,10 @@
             <div class="form-grid-container">
 
                 <div>
-                    <h3>{{ship.name}} - {{ship.shipName}}</h3>
+                    <h3 style="display:inline">{{value}} - </h3>
+                    <select id="selectShips" style="display:inline" v-model="ship.shipName" @change="updateShip">
+                        <option v-for="s in ships" :value="s" v-bind:key="s">{{s}}</option>
+                    </select>
                 </div>
 
                 <div class="card" style="grid-column-start: 1">
@@ -20,23 +23,7 @@
                                 <td>
                                     <label class="stat">Duty: </label>
                                     <select v-model="newCrewMember.dutyType">
-                                        <option value="Command">Command</option>
-                                        <option value="Manage">Manage</option>
-                                        <option value="Pilot">Pilot</option>
-                                        <option value="Watch">Watch</option>
-                                        <option value="Navigate">Navigate</option>
-                                        <option value="Maintain">Maintain</option>
-                                        <option value="Discipline">Discipline</option>
-                                        <option value="Cook">Cook</option>
-                                        <option value="Heal">Heal</option>
-                                        <option value="Stow">Stow</option>
-                                        <option value="Unload">Unload</option>
-                                        <option value="RepairHull">RepairHull</option>
-                                        <option value="RepairSails">RepairSails</option>
-                                        <option value="RepairSeigeEngine">RepairSeigeEngine</option>
-                                        <option value="Procure">Procure</option>
-                                        <option value="Ministrel">Ministrel</option>
-                                        <option value="Drill">Drill</option>
+                                        <option v-for="d in duties" v-bind:key="d" :value="d">{{d}}</option>
                                     </select>
                                 </td>
                                 <td>
@@ -54,10 +41,18 @@
                     </div>
                 </div>
                 <div style="grid-column-start: 1">
-                    <CrewMemberLoadout v-for="cm in ship.crewMembers"
-                                       v-bind:key="cm.name"
-                                       v-bind:crewMember="cm"
-                                       @delete_crew="removeCrewMember"></CrewMemberLoadout>
+                    <div v-for="d in duties" v-bind:key="d" class="card">
+                        <div style="padding-top: 10px; background-color: #EEE">{{d}}</div>
+                        <CrewMemberLoadout v-for="cm in crewForDuty(d)"
+                                           v-bind:key="cm.key"
+                                           v-bind:crewMember="cm"
+                                           @delete_crew="removeCrewMember"></CrewMemberLoadout>
+
+                        <CrewMemberLoadout v-for="cm in assitantsForDuty(d)"
+                                           v-bind:key="cm.key"
+                                           v-bind:crewMember="cm"
+                                           @delete_crew="removeCrewMember"></CrewMemberLoadout>
+                    </div>
                 </div>
             </div>
         </div>
@@ -71,24 +66,43 @@
         data: function () {
             return {
                 newCrewMember: { name: "", dutyType: "", isAssistant: false },
-                names: []
+                names: [],
+                ships: [],
+                ship: {},
+                duties: ["Command", "Manage", "Pilot", "Watch", "Navigate",
+                    "Maintain", "Discipline", "Cook", "Heal", "Ministrel",]
             };
         },
         mounted: function () {
+            this.load(this.value)
             var self = this;
             fetch('/CrewMemberStats/Names').then(r => r.json()).then(d => self.names = d);
-
+            fetch('/ShipStats/Names').then(r => r.json()).then(d => self.ships = d);
+        },
+        watch: {
+            value() {
+                this.load(this.value);
+            }
         },
         components: {
             CrewMemberLoadout
         },
         props: {
-            ship: {}
-
+            value: { type: String }
         },
         methods: {
+            crewForDuty(duty) {
+                return this.ship.crewMembers.filter(x => x.dutyType == duty && !x.isAssistant);
+            },
+            assitantsForDuty(duty) {
+                return this.ship.crewMembers.filter(x => x.dutyType == duty && x.isAssistant);
+            },
+            load(name) {
+                var self = this;
+                fetch('/ShipLoadout?name=' + name).then(r => r.json()).then(d => self.ship = d);
+            },
             closeNewCrewMember() {
-                    this.newCrewMember = { name: "", dutyType: "", isAssistant: false };
+                this.newCrewMember = { name: "", dutyType: "", isAssistant: false, key: "" };
             },
             updateShip() {
                 fetch('/ShipLoadout/Update', {
@@ -98,11 +112,22 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(this.ship)
+                }).then(r => {
+                    if (r.status != 200) {
+                        r.json().then(d => {
+                            var msg = "";
+                            d.forEach(x => msg += x + "\r\n");
+                            alert(msg);
+                            load(this.value);
+                        });
+                    }
                 });
             },
             saveNewCrewMember() {
 
                 if (this.names.includes(this.newCrewMember.name)) {
+                    var ncm = this.newCrewMember;
+                    ncm.key = ncm.name + " - " + ncm.dutyType;
                     this.ship.crewMembers.push(this.newCrewMember);
                     this.updateShip();
                     this.closeNewCrewMember();
@@ -113,7 +138,7 @@
             },
             removeCrewMember(crewMember) {
                 this.ship.crewMembers = this.ship.crewMembers
-                    .filter(cm => cm.name != crewMember.name);// && cm.dutyType != crewMember.dutyType && cm.isAssistant != crewMember.isAssistant);
+                    .filter(cm => cm.key != crewMember.key);
                 this.updateShip();
             }
         }

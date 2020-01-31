@@ -142,7 +142,7 @@
 </template>
 
 <script>
-    import WeatherResult from './WeatherResult.vue'
+    import WeatherResult from './Weather/WeatherResult.vue'
     export default {
         name: "Sailing",
         components: {

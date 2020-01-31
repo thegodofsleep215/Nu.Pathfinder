@@ -3,12 +3,12 @@
         <div class="container">
             <div class="form-grid-container">
                 <div>
-                    <h3 style="display: inline">{{value.name}}</h3>
+                    <h3 style="display: inline">{{voyage.name}}</h3>
                     <h3 style="display: inline" v-if="!canEdit"> - Voyage is Underweigh</h3>
                 </div>
 
                 <div>
-                    <button style="align-self:center" class="update-button" v-on:click="updateVoyage(value)" v-if="canEdit"> </button>
+                    <button style="align-self:center" class="update-button" v-on:click="updateVoyage(voyage)" v-if="canEdit"> </button>
                     <button style="align-self:center" class="delete-button" v-on:click="deleteVoyage()"></button>
                 </div>
 
@@ -44,7 +44,7 @@
                                 <label class="stat-label">Port: </label>
                             </td>
                             <td>
-                                <div><input type="text" style="float:left" v-model="value.port" /></div>
+                                <div><input type="text" style="float:left" v-model="voyage.port" /></div>
                             </td>
                         </tr>
                         <tr>
@@ -52,7 +52,7 @@
                                 <label class="stat-label">Destination Port: </label>
                             </td>
                             <td>
-                                <div><input type="text" style="float:left" v-model="value.destinationPort" /></div>
+                                <div><input type="text" style="float:left" v-model="voyage.destinationPort" /></div>
                             </td>
                         </tr>
                         <tr>
@@ -60,7 +60,7 @@
                                 <label class="stat-label">Days Planned: </label>
                             </td>
                             <td>
-                                <div><input type="text" style="float:left" v-model="value.daysPlanned" /></div>
+                                <div><input type="text" style="float:left" v-model="voyage.daysPlanned" /></div>
                             </td>
                         </tr>
                         <tr>
@@ -68,7 +68,7 @@
                                 <label class="stat-label">Night Status: </label>
                             </td>
                             <td>
-                                <select v-model="value.nightStatus" style="float:left">
+                                <select v-model="voyage.nightStatus" style="float:left">
                                     <option value="Anchored" selected>Anchored</option>
                                     <option value="Drifting">Drifting</option>
                                     <option value="Underweigh">Underweigh</option>
@@ -80,7 +80,7 @@
                                 <label class="stat-label">Discipline Standards: </label>
                             </td>
                             <td>
-                                <select v-model="value.disciplineStandards" style="float:left">
+                                <select v-model="voyage.disciplineStandards" style="float:left">
                                     <option value="Normal" selected>Normal</option>
                                     <option value="Lax">Lax</option>
                                     <option value="Strict">Strict</option>
@@ -93,7 +93,7 @@
                                 <label class="stat-label">Open Ocean: </label>
                             </td>
                             <td>
-                                <div><input type="checkbox" style="float:left" v-model="value.openOcean" /></div>
+                                <div><input type="checkbox" style="float:left" v-model="voyage.openOcean" /></div>
                             </td>
                         </tr>
                         <tr>
@@ -101,7 +101,7 @@
                                 <label class="stat-label">Shallow Water: </label>
                             </td>
                             <td>
-                                <div><input type="checkbox" style="float:left" v-model="value.shallowWater" /></div>
+                                <div><input type="checkbox" style="float:left" v-model="voyage.shallowWater" /></div>
                             </td>
                         </tr>
                         <tr>
@@ -109,7 +109,7 @@
                                 <label class="stat-label">Narrow Passage: </label>
                             </td>
                             <td>
-                                <div><input type="checkbox" style="float:left" v-model="value.narrowPassage" /></div>
+                                <div><input type="checkbox" style="float:left" v-model="voyage.narrowPassage" /></div>
                             </td>
                         </tr>
                         <tr>
@@ -117,7 +117,7 @@
                                 <span class="stat-label">Ship Loadouts</span>
                             </td>
                             <td>
-                                <select id="msShipLoadouts" multiple v-model="value.shipLoadouts" v-on:change="shipLoadoutsChanged">
+                                <select id="msShipLoadouts" multiple v-model="voyage.shipLoadouts" v-on:change="shipLoadoutsChanged">
                                     <option v-for="l in loadouts" :value="l" v-bind:key="l">{{l}}</option>
                                 </select>
                             </td>
@@ -125,7 +125,7 @@
                     </table>
                 </div>
                 <div style="grid-column-start:1">
-                    <div v-for="ship in value.swabbies" v-bind:key="ship.loadoutName" class="card">
+                    <div v-for="ship in voyage.swabbies" v-bind:key="ship.loadoutName" class="card">
                         <div class="container">
                             <h2>{{ship.loadoutName}}</h2>
                             <table>
@@ -154,17 +154,18 @@
     export default {
         name: "VoyageDetail",
         props: {
-            value: {}
+            value: { type: String }
         },
         data: function () {
             return {
+                voyage: {},
                 loadouts: [],
                 date: {}
             }
         },
         computed: {
             canEdit() {
-                return !this.value.underweigh;
+                return !this.voyage.underweigh;
             },
             serializedDate() {
                 return this.date.year + "/" + this.date.month + "/" + this.date.day + " 0:0:0";
@@ -172,6 +173,7 @@
         },
         mounted: function () {
             var self = this;
+            this.load(this.value);
             fetch('/ShipLoadout/Names').then(r => r.json()).then(d => {
                 self.loadouts = d;
             });
@@ -180,22 +182,33 @@
         },
         watch: {
             value: function () {
-                this.parseDate();
-            }
+                this.load(this.value);
+            },
         },
 
         updated: function () {
-            if (this.value.shipLoadouts == null) {
-                this.value.shipLoadouts = [];
+            if (this.voyage.shipLoadouts == null) {
+                this.voyage.shipLoadouts = [];
             }
             // Was having trouble with vue clearing out the multi select when you jumped from one voyage to another.
-            Array.from(document.getElementById("msShipLoadouts").options).forEach(x => x.selected = this.value.shipLoadouts.includes(x.text));
+            Array.from(document.getElementById("msShipLoadouts").options).forEach(x => x.selected = this.voyage.shipLoadouts.includes(x.text));
         },
         methods: {
+            load(name) {
+                var self = this;
+                if (this.value.length > 0) {
+                    fetch('/Voyage?name=' + name).then(r => r.json())
+                        .then(d => {
+                            self.voyage = d;
+                            self.parseDate();
+                        });
+                }
+
+            },
             parseDate() {
-                if (this.value.startDate != null) {
+                if (this.voyage.startDate != null) {
                     var date = /(\d+)\/(\d+)\/(\d+)/;
-                    var match = this.value.startDate.match(date);
+                    var match = this.voyage.startDate.match(date);
                     this.date.year = match[1];
                     this.date.month = match[2];
                     this.date.day = match[3];
@@ -207,15 +220,15 @@
             },
             shipLoadoutsChanged() {
 
-                if (this.value.swabbies == null) {
-                    this.value.swabbies = [];
+                if (this.voyage.swabbies == null) {
+                    this.voyage.swabbies = [];
                 }
                 // add new ones
-                this.value.shipLoadouts.filter(x => !this.value.swabbies.map(x => x.loadoutName).includes(x))
-                    .forEach(x => this.value.swabbies.push({ loadoutName: x, swabbies: 0 }));
+                this.voyage.shipLoadouts.filter(x => !this.voyage.swabbies.map(x => x.loadoutName).includes(x))
+                    .forEach(x => this.voyage.swabbies.push({ loadoutName: x, swabbies: 0 }));
 
                 // remove old ones
-                this.value.swabbies = this.value.swabbies.filter(x => this.value.shipLoadouts.includes(x.loadoutName));
+                this.voyage.swabbies = this.voyage.swabbies.filter(x => this.voyage.shipLoadouts.includes(x.loadoutName));
             },
             updateVoyage(v) {
                 v.startDate = this.serializedDate;
@@ -234,19 +247,19 @@
                 }
             },
             gotoSailing() {
-                this.$router.push({ path: "Sailing/" + this.value.name, params: { id: this.value.name } });
+                this.$router.push({ path: "Sailing/" + this.voyage.name, params: { id: this.voyage.name } });
             },
             hoistAnchor() {
-                if (this.value.shipLoadouts === undefined || this.value.shipLoadouts.length == 0) {
+                if (this.voyage.shipLoadouts === undefined || this.voyage.shipLoadouts.length == 0) {
                     alert("You must select at least one loadout.")
                 }
-                else if (this.value.daysPlanned <= 0) {
+                else if (this.voyage.daysPlanned <= 0) {
                     alert("Days Planned must be greater than 0.")
                 }
                 else {
                     if (confirm("Hoisting Anchor means the voyage can no logger be edited.")) {
-                        this.value.underweigh = true;
-                        this.updateVoyage(this.value);
+                        this.voyage.underweigh = true;
+                        this.updateVoyage(this.voyage);
                         this.gotoSailing();
                     }
                 }

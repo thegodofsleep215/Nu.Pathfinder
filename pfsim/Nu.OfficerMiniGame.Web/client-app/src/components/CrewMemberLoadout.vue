@@ -2,9 +2,8 @@
     <div>
         <div class="card">
             <div class="container">
-                <span>{{crewMember.name}}</span> - <span v-if="crewMember.isAssistant">Assistant to the </span>
-                <span>{{crewMember.dutyType}} </span>
-                <button style="float: right" class="small-delete-button" v-on:click="raiseDelete"></button>
+                <span>{{crewMember.name}}</span><span v-if="crewMember.isAssistant"> - Assistant</span>
+                <button style="float: right; margin-left: 10px" class="small-delete-button" v-on:click="raiseDelete"></button>
             </div>
         </div>
     </div>

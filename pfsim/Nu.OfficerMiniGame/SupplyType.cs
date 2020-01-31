@@ -10,4 +10,9 @@
         Ammunition = 6,
         Fodder = 7
     }
+
+    public enum ShipsSupplies
+    {
+
+    }
 }

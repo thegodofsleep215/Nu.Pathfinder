@@ -3,7 +3,7 @@
         <div class="container">
             <div class="form-grid-container">
                 <div>
-                    <h3>{{shipName}}</h3>
+                    <h3>{{stats.name}}</h3>
                 </div>
                 <div>
                     <button style="align-self:center" class="update-button" v-on:click="saveShipStats"> </button>
@@ -118,7 +118,7 @@
     export default {
         name: 'ShipStatDetails',
         props: {
-            shipName: String
+            value: { type: String }
         },
         data: function () {
             return {
@@ -144,16 +144,17 @@
                 option.text = x.shipType;
                 s.append(option);
             });
+            this.loadShip(this.value);
         },
         watch: {
-            shipName: function () {
-                this.loadShip(this.shipName);
+            value: function () {
+                this.loadShip(this.value);
             },
         },
         methods: {
             loadShip(name) {
                 var self = this;
-                if (this.shipName.length > 0) {
+                if (name.length > 0) {
                     axios.get('/ShipStats?name=' + name).then(r => {
                         self.stats = r.data;
                         this.templateChanged();
@@ -176,7 +177,7 @@
             },
             deleteShipStats() {
                 if (confirm("Do the thing?")) {
-                    this.$emit("delete-shipstats", this.shipName);
+                    this.$emit("delete", this.value);
                     self.stats = undefined;
                     self.template = undefined;
                 }
