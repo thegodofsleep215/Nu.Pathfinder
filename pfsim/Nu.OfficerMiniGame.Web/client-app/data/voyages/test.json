@@ -1,0 +1,1 @@
+{"Name":"test","StartDate":"2020/1/1 0:0:0","Port":"12","DestinationPort":"12","ShipLoadouts":["Dogfish Full Crew"],"DaysPlanned":2,"NightStatus":"Anchored","OpenOcean":false,"ShallowWater":false,"NarrowPassage":false,"Underweigh":true,"DisciplineStandards":"Lax","Swabbies":[{"LoadoutName":"Dogfish Full Crew","Swabbies":20}],"Events":{},"weatherConditions":[]}

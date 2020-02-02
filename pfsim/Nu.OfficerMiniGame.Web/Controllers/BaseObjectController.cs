@@ -35,7 +35,7 @@ namespace Nu.OfficerMiniGame.Web.Controllers
 
         [HttpPost]
         [Route("[action]")]
-        public IActionResult Update([FromBody] T obj)
+        public virtual IActionResult Update([FromBody] T obj)
         {
             dal.Update(GetObjectName(obj), obj);
             return new OkResult();

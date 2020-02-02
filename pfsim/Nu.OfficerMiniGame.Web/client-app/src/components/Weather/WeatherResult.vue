@@ -8,7 +8,7 @@
             <div>Precipitation Start: {{value.precipitationStartTime}}:00</div>
             <div>Precipitation Duration: {{value.precipitationHours}}</div>
             <div>Cloud Cover: {{value.cloudCover}}</div>
-            <div>Wind Seed: {{value.windSpeed}}</div>
+            <div>Wind Speed: {{value.windSpeed}}</div>
         </div>
     </div>
 </template>
