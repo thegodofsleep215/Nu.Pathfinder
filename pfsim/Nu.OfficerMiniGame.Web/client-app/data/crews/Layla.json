@@ -1,18 +1,1 @@
-{
-    "Name": "Layla",
-    "Skills": {
-        "ProfessionSailor": 10,
-        "Diplomacy": 3,
-        "KnowledgeEngineering": 0,
-        "Intimidate": 9,
-        "Perception": 2,
-        "CraftCarpentry": 0,
-        "CraftShip": 10,
-        "CraftSails": 0,
-        "Survival": 3,
-        "ProfessionMerchant": 0,
-        "CraftCooking": 6,
-        "Heal": 0,
-        "Perform": 0
-    }
-}
+{"Name":"Layla","Title":null,"Skills":{"ProfessionSailor":11,"Diplomacy":3,"KnowledgeEngineering":0,"Intimidate":10,"Perception":2,"CraftCarpentry":0,"CraftShip":11,"CraftSails":0,"Survival":4,"ProfessionMerchant":0,"CraftCooking":6,"Heal":0,"Perform":0}}

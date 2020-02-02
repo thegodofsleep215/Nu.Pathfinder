@@ -79,6 +79,15 @@
                         </tr>
                         <tr>
                             <td style="text-align:right">
+                                <div><label class="stat-label">Perception: </label></div>
+                            </td>
+                            <td>
+                                <div><input type="number" v-model="value.skills.perception" /></div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="text-align:right">
                                 <div><label class="stat-label">Perform: </label></div>
                             </td>
                             <td>

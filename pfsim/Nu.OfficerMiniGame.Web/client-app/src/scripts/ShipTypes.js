@@ -25,6 +25,18 @@
             propulsionTypes: [{ propulsionType: "Sails", propulsionHitPoints: 960, shipSpeed: 90 }]
         },
         {
+            shipType: "Corvette",
+            shipSize: "Colossal",
+            hullHitPoints: 1310,
+            officerSize: 3,
+            crewSize: 16,
+            shipDc: 9,
+            cargoPoints: 510,
+            passengers: 240,
+            specialFeatures: ["Captain's Cabin", "Crow's Nest", "Ship's Galley", "Fighting Tops", "Sick Bay"],
+            propulsionTypes: [{ propulsionType: "Sails", propulsionHitPoints: 440, shipSpeed: 90 }]
+        },
+        {
             shipType: "MerchantShip",
             shipSize: "Colossal",
             hullHitPoints: 1090,
