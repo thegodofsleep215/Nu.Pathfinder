@@ -1,8 +1,25 @@
 ﻿<template>
     <div>
+        <div class="modal-backdrop" v-show="isNewVoyageVisable">
+            <div class="modal">
+                <section class="modal-body">
+                    <slot name="body">
+                        <VoyageContent v-model="voyage"></VoyageContent>
+                    </slot>
+
+                </section>
+                <footer class="modal-footer">
+                    <slot name="footer">
+                        <button type="button" @click="onAlterVoyageOk">Ok</button>
+                        <button type="button" @click="onAlterVoyageCancel">Cancel</button>
+                    </slot>
+                </footer>
+            </div>
+        </div>
         <div>
             <h3>Sailing on the Voyage - {{voyageName}}</h3>
             <button v-on:click="sail">Sail!</button>
+            <button v-on:click="alterVoyage">Change Course</button>
         </div>
 
         <div class="grid-container">
@@ -11,6 +28,15 @@
                     <div class="container">
                         <table align="center">
                             <tr>
+                                <td style="text-align:right">
+                                    <label class="stat-label">Current Date: </label>
+                                </td>
+                                <td>
+                                    <label type="text" style="float:left">{{sailResult.state.currentDate}}</label>
+                                </td>
+                            </tr>
+                            <tr>
+
                                 <td style="text-align:right">
                                     <label class="stat-label">Travel Progress: </label>
                                 </td>
@@ -143,10 +169,12 @@
 
 <script>
     import WeatherResult from './Weather/WeatherResult.vue'
+    import VoyageContent from './VoyageContent.vue'
     export default {
         name: "Sailing",
         components: {
             WeatherResult,
+            VoyageContent
         },
         data: function () {
             return {
@@ -155,7 +183,8 @@
                     state: {}
                 },
                 voyage: {},
-                shipModifiers: {}
+                shipModifiers: {},
+                isNewVoyageVisable: false
             }
         },
         computed: {
@@ -187,27 +216,33 @@
             }
         },
         mounted: function () {
-            var self = this;
-            fetch('/SailingEngine/State?name=' + this.voyageName).then(r => r.json()).then(d => {
-                self.voyage = d.voyage;
-                self.sailResult.state = d.state;
-                self.shipModifiers = Array.from(self.voyage.shipLoadouts).map(x => {
+            this.loadState();
+        },
+        methods: {
+            loadState() {
+                var self = this;
+                fetch('/SailingEngine/State?name=' + this.voyageName).then(r => r.json()).then(d => {
+                    self.voyage = JSON.parse(JSON.stringify(d.voyage));
+                    self.sailResult.state = d.state;
+                    self.updateShipModifiers(d.voyage);
+                    self.updateShipModifiersFromProgress(self.sailResult.state.shipsProgress);
+                });
+            },
+            updateShipModifiers(voyage) {
+                this.shipModifiers = Array.from(voyage.shipLoadouts).map(x => {
                     return {
                         name: x,
-                        swabbies: self.voyage.swabbies.filter(x => x.loadoutName = x).map(x => x.swabbies)[0],
+                        swabbies: voyage.swabbies.find(x => x.loadoutName = x).swabbies,
                         moralModifer: 0,
                         disciplineModifier: 0,
                         commandModifier: 0,
                         numberOfCrewUnfitForDuty: 0,
                         diseasedCrew: 0,
-                        disciplineStandards: self.voyage.disciplineStandards,
+                        disciplineStandards: voyage.disciplineStandards,
                         moraleModifier: 0
                     };
                 });
-                self.updateShipModifiersFromProgress(self.sailResult.state.shipsProgress);
-            });
-        },
-        methods: {
+            },
             sail() {
                 var self = this;
                 fetch('/SailingEngine/Sail', {
@@ -226,6 +261,30 @@
                     var sm = this.shipModifiers.filter(mod => mod.name == p.shipName)[0];
                     sm.diseasedCrew = p.diseasedCrew;
                 });
+            },
+            alterVoyage() {
+                this.isNewVoyageVisable = true;
+            },
+            onAlterVoyageOk() {
+                var self = this;
+                fetch('/Voyage/Update', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(this.voyage)
+                }).then(() => {
+                    fetch('/SailingEngine/CourseChange?name=' + self.voyageName, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ startDate: self.voyage.startDate, daysPlanned: self.voyage.daysPlanned, shipLoadouts: self.voyage.shipLoadouts })
+                    }).then(() => self.loadState());
+                });
+                this.updateShipModifiers(JSON.parse(JSON.stringify(this.voyage)));
+                this.isNewVoyageVisable = false;
+            },
+            onAlterVoyageCancel() {
+                this.isNewVoyageVisable = false;
             }
         }
     }

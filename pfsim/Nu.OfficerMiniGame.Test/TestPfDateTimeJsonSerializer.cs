@@ -2,6 +2,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using Nu.OfficerMiniGame.Dal.Dto;
 using Should;
+using System;
 
 namespace Nu.OfficerMiniGame.Test
 {
@@ -48,6 +49,20 @@ namespace Nu.OfficerMiniGame.Test
             actual.DateTime.Minute.ShouldEqual(30);
             actual.DateTime.Second.ShouldEqual(23);
 
+        }
+    }
+
+    [TestClass]
+    public class PfDateTimeMath
+    {
+        [TestMethod]
+        public void AddOneDay()
+        {
+            var temp = new PfDateTime(2020, 1, 24, 5, 30, 23);
+            var actual = temp + TimeSpan.FromDays(1);
+            actual.Year.ShouldEqual(2020);
+            actual.Month.ShouldEqual(1);
+            actual.Day.ShouldEqual(25);
         }
     }
 

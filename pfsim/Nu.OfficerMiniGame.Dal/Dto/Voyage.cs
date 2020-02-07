@@ -26,7 +26,6 @@ namespace Nu.OfficerMiniGame.Dal.Dto
 
         public bool NarrowPassage { get; set; }
 
-        public bool Underweigh { get; set; }
 
         public DisciplineStandards DisciplineStandards { get; set; }
 
@@ -36,9 +35,23 @@ namespace Nu.OfficerMiniGame.Dal.Dto
 
         public List<WeatherConditions> weatherConditions { get; set; } = new List<WeatherConditions>();
 
+        public bool HoistingAnchor
+        {
+            get
+            {
+                return !Events.SelectMany(x => x.Value).Any();
+            }
+        }
+
+
         public void AddEvents(Dictionary<string, List<object>> events)
         {
             events.ToList().ForEach(x => AddEvents(x.Key, x.Value));
+        }
+
+        public void AddEventToAllShips(object evt)
+        {
+            ShipLoadouts.ToList().ForEach(x => AddEvents(x, new List<object> { evt }));
         }
 
         public void AddEvents(string shipName, List<object> events)

@@ -1,4 +1,6 @@
-﻿namespace  Nu.OfficerMiniGame
+﻿using Nu.OfficerMiniGame.Dal.Dto;
+
+namespace Nu.OfficerMiniGame
 {
     public class WatchResultEvent
     {

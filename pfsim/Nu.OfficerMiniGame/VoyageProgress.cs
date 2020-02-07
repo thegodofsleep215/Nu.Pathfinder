@@ -9,6 +9,10 @@ namespace Nu.OfficerMiniGame
     {
         public string ShipName { get; set; }
 
+        public PfDateTime StartDate { get; set; }
+
+        public PfDateTime CurrentDate { get; set; }
+
         public int DayOfVoyage { get; set; }
 
         public int DaysSinceLastResupply { get; set; }
@@ -21,6 +25,13 @@ namespace Nu.OfficerMiniGame
         {
             DayOfVoyage += days;
             DaysSinceLastResupply += days;
+            CurrentDate = StartDate + TimeSpan.FromDays(DayOfVoyage);
+        }
+
+        public void ResetProgress()
+        {
+            DayOfVoyage = 0;
+            ProgressMade = 0;
         }
     }
 }

@@ -14,12 +14,15 @@ namespace Nu.OfficerMiniGame
             DaysSinceLastResupply = voyageProgresses.Max(x => x.DaysSinceLastResupply);
             ProgressMade = voyageProgresses.Max(x => x.ProgressMade);
             WeatherConditions = weatherConditions;
+            CurrentDate = voyageProgresses.First().CurrentDate;
             ShipsProgress = voyageProgresses.Select(x => new ShipsProgress
             {
                 ShipName = x.ShipName,
                 DiseasedCrew = x.DiseasedCrew,
             }).ToList();
         }
+
+        public PfDateTime CurrentDate { get; set; }
 
         public int DayOfVoyage { get; set; }
 

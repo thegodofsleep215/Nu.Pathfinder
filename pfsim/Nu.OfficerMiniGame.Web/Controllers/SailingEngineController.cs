@@ -30,11 +30,22 @@ namespace Nu.OfficerMiniGame.Web.Controllers
             FleetVoyageProgress fleetProgress = new FleetVoyageProgress();
             if (voyage.Events != null && voyage.Events.Any())
             {
-                fleetProgress = new FleetVoyageProgress(ships.Select(x => EventProcessor.Process(x, voyage.Events[x.CrewName].Select(y => y.Event).ToList())).ToList(),
+                fleetProgress = new FleetVoyageProgress(ships.Select(x => EventProcessor.Process(x, voyage, voyage.Events[x.CrewName].Select(y => y.Event).ToList())).ToList(),
                     null);
             }
 
             return new JsonResult(new { voyage = voyage, state = fleetProgress });
+        }
+
+        [HttpPost]
+        [Route("[action]")]
+        public IActionResult CourseChange([FromQuery] string name, [FromBody] VoyageUpdateEvent vue)
+        {
+            var vd = new FileVoyageDal(rootDir);
+            var voyage = vd.Get(name);
+            voyage.AddEventToAllShips(vue);
+            vd.Update(voyage.Name, voyage);
+            return new OkResult();
         }
 
         [HttpPost]
@@ -47,12 +58,22 @@ namespace Nu.OfficerMiniGame.Web.Controllers
             var voyage = vd.Get(sp.VoyageName);
             List<Ship> ships = voyage.ShipLoadouts.Select(x => mgd.GetLoadout(x)).ToList();
 
+            if (voyage.HoistingAnchor)
+            {
+                voyage.AddEventToAllShips(new VoyageUpdateEvent
+                {
+                    DaysPlanned = voyage.DaysPlanned,
+                    StartDate = voyage.StartDate,
+                    ShipLoadouts = voyage.ShipLoadouts
+                });
+            }
+
             var cp = new List<VoyageProgress>();
             ships.ForEach(x =>
             {
                 if (voyage.Events.ContainsKey(x.CrewName))
                 {
-                    var p = EventProcessor.Process(x, voyage.Events[x.CrewName].Select(y => y.Event).ToList());
+                    var p = EventProcessor.Process(x, voyage, voyage.Events[x.CrewName].Select(y => y.Event).ToList());
                     cp.Add(p);
                 }
                 ProcessSailingParameters(sp, ref x);
@@ -86,7 +107,7 @@ namespace Nu.OfficerMiniGame.Web.Controllers
             voyage.weatherConditions.Add(wc);
             vd.Update(sp.VoyageName, voyage);
 
-            var currentProgress = new FleetVoyageProgress(ships.Select(x => EventProcessor.Process(x, voyage.Events[x.CrewName].Select(y => y.Event).ToList())).ToList(),
+            var currentProgress = new FleetVoyageProgress(ships.Select(x => EventProcessor.Process(x, voyage, voyage.Events[x.CrewName].Select(y => y.Event).ToList())).ToList(),
                 wc);
 
             var anon = new

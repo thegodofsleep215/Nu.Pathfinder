@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nu.OfficerMiniGame.Dal.Dto;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -13,10 +14,11 @@ namespace Nu.OfficerMiniGame
 
     public static class EventProcessor
     {
-        public static VoyageProgress Process(Ship ship, List<object> events)
+        public static VoyageProgress Process(Ship ship, Voyage voyage, List<object> events)
         {
             var voyageProgress = new VoyageProgress
             {
+                StartDate = voyage.StartDate,
                 ShipName = ship.CrewName
             };
             var openOcean = false;
@@ -25,6 +27,10 @@ namespace Nu.OfficerMiniGame
             {
                 switch (evt)
                 {
+                    case VoyageUpdateEvent vue:
+                        voyageProgress.StartDate = vue.StartDate;
+                        voyageProgress.ResetProgress();
+                        break;
                     case DawnOfANewDayEvent doande:
                         ship.CrewMorale.ClearTemporaryModifiers();
                         openOcean = doande.OpenOcean;
