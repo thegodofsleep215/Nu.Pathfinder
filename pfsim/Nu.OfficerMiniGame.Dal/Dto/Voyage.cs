@@ -8,41 +8,8 @@ namespace Nu.OfficerMiniGame.Dal.Dto
     {
         public string Name { get; set; }
 
-        public PfDateTime StartDate { get; set; }
-
-        public string Port { get; set; }
-
-        public string DestinationPort { get; set; }
-
         public string[] ShipLoadouts { get; set; }
-
-        public int DaysPlanned { get; set; }
-
-        public NightStatus NightStatus { get; set; }
-
-        public bool OpenOcean { get; set; }
-
-        public bool ShallowWater { get; set; }
-
-        public bool NarrowPassage { get; set; }
-
-
-        public DisciplineStandards DisciplineStandards { get; set; }
-
-        public List<SwabbieCount> Swabbies { get; set; }
-
         public Dictionary<string, List<VoyageEvent>> Events { get; set; } = new Dictionary<string, List<VoyageEvent>>();
-
-        public List<WeatherConditions> weatherConditions { get; set; } = new List<WeatherConditions>();
-
-        public bool HoistingAnchor
-        {
-            get
-            {
-                return !Events.SelectMany(x => x.Value).Any();
-            }
-        }
-
 
         public void AddEvents(Dictionary<string, List<object>> events)
         {

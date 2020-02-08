@@ -5,15 +5,6 @@
                 <div>
                     <h3 style="display: inline">{{value}}</h3>
                 </div>
-
-                <div>
-                    <button style="align-self:center" class="update-button" v-on:click="updateVoyage(voyage)"> </button>
-                    <button style="align-self:center" class="delete-button" v-on:click="deleteVoyage()"></button>
-                </div>
-
-                <div>
-                    <VoyageContent v-model="voyage"></VoyageContent>
-               </div>
                 <div style="grid-column-start: 1">
                     <button v-on:click="gotoSailing">Go Sailing!</button>
                 </div>
@@ -23,14 +14,14 @@
 </template>
 
 <script>
-    import VoyageContent from "./VoyageContent.vue"
+    import Sailing from './Sailing.vue'
     export default {
         name: "VoyageDetail",
-        components: {
-            VoyageContent
-        },
         props: {
             value: { type: String }
+        },
+        components: {
+            Sailing
         },
         data: function () {
             return {

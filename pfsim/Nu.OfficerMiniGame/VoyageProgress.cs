@@ -21,6 +21,10 @@ namespace Nu.OfficerMiniGame
 
         public double ProgressMade { get; set; }
 
+        public bool OpenOcean { get; set; }
+
+        public NightStatus NightStatus { get; set; }
+
         public void AddDaysToVoyage(int days)
         {
             DayOfVoyage += days;

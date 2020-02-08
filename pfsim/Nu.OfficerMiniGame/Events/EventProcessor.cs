@@ -5,83 +5,79 @@ using System.Linq;
 
 namespace Nu.OfficerMiniGame
 {
-    public class EventProcessorBundle
-    {
-        public Ship Ship { get; set; }
-
-        public List<object> Events { get; set; }
-    }
-
     public static class EventProcessor
     {
+        public static void Update(ref VoyageProgress voyageProgress, Ship ship, object evt)
+        {
+            switch (evt)
+            {
+                case SetCourse sc:
+                    voyageProgress.ResetProgress();
+                    voyageProgress.StartDate = sc.StartDate;
+                    break;
+                case DawnOfANewDayEvent doande:
+                    ship.CrewMorale.ClearTemporaryModifiers();
+                    voyageProgress.OpenOcean = doande.OpenOcean;
+                    voyageProgress.NightStatus = doande.NightStatus;
+                    AddDaysToVoyage(voyageProgress, ship, 1);
+                    break;
+                case EpicCookingFailureEvent ecfe:
+                    ship.CrewMorale.AddTemporaryModifier(MoralTypes.Wellbeing, ecfe.WellbeingPenalty);
+                    // TODO: Add the penalty for the heal check?
+                    break;
+                case UnrulyCrewEvent uce:
+                    ship.CrewMorale.AddTemporaryModifier(MoralTypes.Shipshape, -1);
+                    break;
+                case SicknessEvent se:
+                    ship.DiseasedCrew += se.NumberAffected;
+                    voyageProgress.DiseasedCrew = ship.DiseasedCrew;
+                    break;
+                case MismanagedSuppliesEvent mse:
+                    // TODO: Cargo is not currently being tracked.
+                    //if (mse.SupplyType.HasValue)
+                    //    ship.ShipsCargo.ConsumeSupply(mse.SupplyType.Value, mse.QuantityLost);
+                    // TODO: Apply Penalty?
+                    break;
+                case PoorMaintenanceEvent pme:
+                    ship.AlterHullDamage(pme.Damage);
+                    ship.AlterSailDamage(pme.Damage);
+                    break;
+                case PilotFailedEvent pfe:
+                    if (pfe.Damage > 0)
+                    {
+                        if (voyageProgress.OpenOcean)
+                            ship.AlterSailDamage(pfe.Damage);
+                        else
+                            ship.AlterHullDamage(pfe.Damage);
+                    }
+                    break;
+                case ProgressMadeEvent pme:
+                    voyageProgress.ProgressMade += pme.DaysofProgress;
+                    break;
+                case PilotSuccessEvent _:
+                case OffCourseEvent _:
+                case SeaShantyEvent _:
+                case SuppliesExhaustedEvent _:
+                case PerformedDutyEvent _:
+                case WatchResultEvent _:
+                    // General information events. Avoiding the default case.
+                    break;
+
+                default:
+                    throw new NotImplementedException(); // This should never happen.
+            }
+
+        }
+
         public static VoyageProgress Process(Ship ship, Voyage voyage, List<object> events)
         {
             var voyageProgress = new VoyageProgress
             {
-                StartDate = voyage.StartDate,
                 ShipName = ship.CrewName
             };
-            var openOcean = false;
-            var nightStatus = NightStatus.Anchored;
             events.ForEach(evt =>
             {
-                switch (evt)
-                {
-                    case VoyageUpdateEvent vue:
-                        voyageProgress.StartDate = vue.StartDate;
-                        voyageProgress.ResetProgress();
-                        break;
-                    case DawnOfANewDayEvent doande:
-                        ship.CrewMorale.ClearTemporaryModifiers();
-                        openOcean = doande.OpenOcean;
-                        nightStatus = doande.NightStatus;
-                        AddDaysToVoyage(voyageProgress, ship, 1);
-                        break;
-                    case EpicCookingFailureEvent ecfe:
-                        ship.CrewMorale.AddTemporaryModifier(MoralTypes.Wellbeing, ecfe.WellbeingPenalty);
-                        // TODO: Add the penalty for the heal check?
-                        break;
-                    case UnrulyCrewEvent uce:
-                        ship.CrewMorale.AddTemporaryModifier(MoralTypes.Shipshape, -1);
-                        break;
-                    case SicknessEvent se:
-                        ship.DiseasedCrew += se.NumberAffected;
-                        voyageProgress.DiseasedCrew = ship.DiseasedCrew;
-                        break;
-                    case MismanagedSuppliesEvent mse:
-                        // TODO: Cargo is not currently being tracked.
-                        //if (mse.SupplyType.HasValue)
-                        //    ship.ShipsCargo.ConsumeSupply(mse.SupplyType.Value, mse.QuantityLost);
-                        // TODO: Apply Penalty?
-                        break;
-                    case PoorMaintenanceEvent pme:
-                        ship.AlterHullDamage(pme.Damage);
-                        ship.AlterSailDamage(pme.Damage);
-                        break;
-                    case PilotFailedEvent pfe:
-                        if (pfe.Damage > 0)
-                        {
-                            if (openOcean)
-                                ship.AlterSailDamage(pfe.Damage);
-                            else
-                                ship.AlterHullDamage(pfe.Damage);
-                        }
-                        break;
-                    case ProgressMadeEvent pme:
-                        voyageProgress.ProgressMade += pme.DaysofProgress;
-                        break;
-                    case PilotSuccessEvent _:
-                    case OffCourseEvent _:
-                    case SeaShantyEvent _:
-                    case SuppliesExhaustedEvent _:
-                    case PerformedDutyEvent _:
-                    case WatchResultEvent _:
-                        // General information events. Avoiding the default case.
-                        break;
-
-                    default:
-                        throw new NotImplementedException(); // This should never happen.
-                }
+                Update(ref voyageProgress, ship, evt);
             });
             return voyageProgress;
         }
@@ -104,7 +100,7 @@ namespace Nu.OfficerMiniGame
             ship.ShipsCargo.ResetPassengers(ship.TotalCrew);
             ship.ShipsCargo.AgeCargo(days);
         }
-        
+
     }
 
 }

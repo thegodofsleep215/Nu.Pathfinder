@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nu.OfficerMiniGame.Dal.Dal;
 using Nu.OfficerMiniGame.Dal.Dto;
+using Nu.OfficerMiniGame.Web.Model;
 
 namespace Nu.OfficerMiniGame.Web.Controllers
 {
