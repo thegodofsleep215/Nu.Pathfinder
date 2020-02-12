@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Nu.OfficerMiniGame.Dal.Dto
 {
-    public class SetCourse
+    public class SetCourseEvent
     {
         public PfDateTime StartDate { get; set; }
 

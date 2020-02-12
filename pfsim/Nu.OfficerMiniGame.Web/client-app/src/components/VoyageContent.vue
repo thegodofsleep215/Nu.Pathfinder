@@ -6,6 +6,15 @@
                     <table align="center">
                         <tr>
                             <td>
+                                <label class="stat-label" style="float: right">Name:</label>
+                            </td>
+                            <td>
+                                <input type="text" style="float:left" v-model="value.name" />
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td>
                                 <label class="stat-label" style="float: right">Year:</label>
                             </td>
                             <td>

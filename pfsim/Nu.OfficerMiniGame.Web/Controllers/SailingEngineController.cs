@@ -39,7 +39,7 @@ namespace Nu.OfficerMiniGame.Web.Controllers
 
         [HttpPost]
         [Route("[action]")]
-        public IActionResult CourseChange([FromQuery] string name, [FromBody] SetCourse sc)
+        public IActionResult CourseChange([FromQuery] string name, [FromBody] SetCourseEvent sc)
         {
             var vd = new FileVoyageDal(rootDir);
             var voyage = vd.Get(name);

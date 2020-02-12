@@ -36,16 +36,16 @@ namespace Microsoft.AspNetCore.SpaServices.VueDevelopmentServer
                 throw new ArgumentException("Cannot be null or empty", nameof(scriptName));
             }
 
-            // Start create-react-app and attach to middleware pipeline
+            // Start create-vue-app and attach to middleware pipeline
             var appBuilder = spaBuilder.ApplicationBuilder;
             var logger = LoggerFinder.GetOrCreateLogger(appBuilder, LogCategoryName);
             var portTask = StartCreateVueDevServerAsync(sourcePath, scriptName, devServerPort, logger);
 
             // Everything we proxy is hardcoded to target http://localhost because:
             // - the requests are always from the local machine (we're not accepting remote
-            //   requests that go directly to the create-react-app server)
+            //   requests that go directly to the create-vue-app server)
             // - given that, there's no reason to use https, and we couldn't even if we
-            //   wanted to, because in general the create-react-app server has no certificate
+            //   wanted to, because in general the create-vue-app server has no certificate
             var targetUriTask = portTask.ContinueWith(
                 task => new UriBuilder("http", "localhost", task.Result).Uri);
 
@@ -55,7 +55,7 @@ namespace Microsoft.AspNetCore.SpaServices.VueDevelopmentServer
                 // the first request times out, subsequent requests could still work.
                 var timeout = spaBuilder.Options.StartupTimeout;
                 return targetUriTask.WithTimeout(timeout,
-                    $"The create-react-app server did not start listening for requests " +
+                    $"The create-vue-app server did not start listening for requests " +
                     $"within the timeout period of {timeout.Seconds} seconds. " +
                     $"Check the log output for error information.");
             });
@@ -68,7 +68,7 @@ namespace Microsoft.AspNetCore.SpaServices.VueDevelopmentServer
             {
                 portNumber = TcpPortFinder.FindAvailablePort();
             }
-            logger.LogInformation($"Starting create-react-app server on port {portNumber}...");
+            logger.LogInformation($"Starting create-vue-app server on port {portNumber}...");
 
             var scriptRunner = new NpmScriptRunner(sourcePath, scriptName, $"--port {portNumber} --host localhost", null);
             scriptRunner.AttachToLogger(logger);
@@ -84,8 +84,12 @@ namespace Microsoft.AspNetCore.SpaServices.VueDevelopmentServer
                 {
                     throw new InvalidOperationException(
                         $"The script '{scriptName}' exited without indicating that the " +
-                        $"create-react-app server was listening for requests. The error output was: " +
+                        $"create-vue-app server was listening for requests. The error output was: " +
                         $"{stdErrReader.ReadAsString()}", ex);
+                }
+                catch(Exception ex)
+                {
+                    throw ex;
                 }
             }
 

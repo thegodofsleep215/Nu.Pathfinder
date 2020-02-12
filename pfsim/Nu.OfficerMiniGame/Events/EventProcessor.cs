@@ -11,7 +11,7 @@ namespace Nu.OfficerMiniGame
         {
             switch (evt)
             {
-                case SetCourse sc:
+                case SetCourseEvent sc:
                     voyageProgress.ResetProgress();
                     voyageProgress.StartDate = sc.StartDate;
                     break;
