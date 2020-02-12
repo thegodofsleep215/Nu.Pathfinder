@@ -2,6 +2,7 @@
 {
     public class SicknessEvent
     {
+        public string ShipName { get; set; }
         public int NumberAffected { get; set; }
 
         public override string ToString()

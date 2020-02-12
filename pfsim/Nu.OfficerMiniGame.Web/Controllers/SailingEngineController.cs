@@ -18,33 +18,34 @@ namespace Nu.OfficerMiniGame.Web.Controllers
         [Route("[action]")]
         public IActionResult State(string name)
         {
-            var vd = new FileVoyageDal(rootDir);
-            var mgd = new MiniGameDal(new FileShipLoadoutDal(rootDir), new FileShipStatsDal(rootDir), new FileCrewMemberStats(rootDir));
+            //var vd = new FileVoyageDal(rootDir);
+            //var mgd = new MiniGameDal(new FileShipLoadoutDal(rootDir), new FileShipStatsDal(rootDir), new FileCrewMemberStats(rootDir));
 
-            var voyage = vd.Get(name);
-            if (voyage == null)
-            {
-                return new NotFoundResult();
-            }
-            List<Ship> ships = voyage.ShipLoadouts.Select(x => mgd.GetLoadout(x)).ToList();
-            FleetVoyageProgress fleetProgress = new FleetVoyageProgress();
-            if (voyage.Events != null && voyage.Events.Any())
-            {
-                fleetProgress = new FleetVoyageProgress(ships.Select(x => EventProcessor.Process(x, voyage, voyage.Events[x.CrewName].Select(y => y.Event).ToList())).ToList(),
-                    null);
-            }
+            //var voyage = vd.Get(name);
+            //if (voyage == null)
+            //{
+            //    return new NotFoundResult();
+            //}
+            //List<Ship> ships = voyage.ShipLoadouts.Select(x => mgd.GetLoadout(x)).ToList();
+            //FleetVoyageProgress fleetProgress = new FleetVoyageProgress();
+            //if (voyage.Events != null && voyage.Events.Any())
+            //{
+            //    fleetProgress = new FleetVoyageProgress(ships.Select(x => EventProcessor.Process(x, voyage, voyage.Events[x.CrewName].Select(y => y.Event).ToList())).ToList(),
+            //        null);
+            //}
 
-            return new JsonResult(new { voyage = voyage, state = fleetProgress });
+            //return new JsonResult(new { voyage = voyage, state = fleetProgress });
+            return new OkResult();
         }
 
         [HttpPost]
         [Route("[action]")]
         public IActionResult CourseChange([FromQuery] string name, [FromBody] SetCourseEvent sc)
         {
-            var vd = new FileVoyageDal(rootDir);
-            var voyage = vd.Get(name);
-            voyage.AddEventToAllShips(sc);
-            vd.Update(voyage.Name, voyage);
+            //var vd = new FileVoyageDal(rootDir);
+            //var voyage = vd.Get(name);
+            //voyage.AddEventToAllShips(sc);
+            //vd.Update(voyage.Name, voyage);
             return new OkResult();
         }
 

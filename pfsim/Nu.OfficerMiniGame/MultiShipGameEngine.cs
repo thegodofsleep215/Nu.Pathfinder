@@ -29,7 +29,7 @@ namespace Nu.OfficerMiniGame
         private List<object> Sail(Ship ship, SailingParameters sailingParameters, WeatherConditions weatherConditions)
         {
             var gameQueue = CreateSailingQueue(sailingParameters.NightStatus);
-            var mgs = new MiniGameStatus(weatherConditions, sailingParameters.OpenOcean, sailingParameters.NightStatus);
+            var mgs = new MiniGameStatus(weatherConditions);
             BaseResponse validation = ShipValidation.ValidateShip(ship);
             if (validation.Success)
             {

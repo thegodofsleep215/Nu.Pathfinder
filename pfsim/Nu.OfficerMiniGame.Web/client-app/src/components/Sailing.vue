@@ -4,7 +4,7 @@
             <div class="modal">
                 <section class="modal-body">
                     <slot name="body">
-                        <VoyageContent v-model="voyage"></VoyageContent>
+                        <SetCourse v-model="voyage"></SetCourse>
                     </slot>
 
                 </section>
@@ -169,12 +169,12 @@
 
 <script>
     import WeatherResult from './Weather/WeatherResult.vue'
-    import VoyageContent from './VoyageContent.vue'
+    import SetCourse from './SetCourse.vue'
     export default {
         name: "Sailing",
         components: {
             WeatherResult,
-            VoyageContent
+            SetCourse
         },
         data: function () {
             return {

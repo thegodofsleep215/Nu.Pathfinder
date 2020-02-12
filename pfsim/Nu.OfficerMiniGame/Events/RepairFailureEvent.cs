@@ -8,5 +8,6 @@ namespace  Nu.OfficerMiniGame.Events
 {
     public class RepairFailureEvent
     {
+        public string ShipName { get; set; }
     }
 }

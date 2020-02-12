@@ -2,6 +2,7 @@
 {
     public class PoorMaintenanceEvent
     {
+        public string ShipName { get; set; }
         public int Damage { get; set; }
         public bool IsOverburdened { get; set; }
 

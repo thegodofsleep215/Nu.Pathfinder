@@ -2,6 +2,7 @@
 {
     public class EpicCookingFailureEvent
     {
+        public string ShipName { get; set; }
         public int WellbeingPenalty { get; set; }
 
         public int HealthCheckModifier { get; set; }

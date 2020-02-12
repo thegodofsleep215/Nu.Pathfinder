@@ -8,27 +8,11 @@ namespace Nu.OfficerMiniGame.Dal.Dto
     {
         public string Name { get; set; }
 
-        public string[] ShipLoadouts { get; set; }
-        public Dictionary<string, List<VoyageEvent>> Events { get; set; } = new Dictionary<string, List<VoyageEvent>>();
+        public List<VoyageEvent> Events { get; set; } = new List<VoyageEvent>();
 
-        public void AddEvents(Dictionary<string, List<object>> events)
+        public void AddEvents(List<object> events)
         {
-            events.ToList().ForEach(x => AddEvents(x.Key, x.Value));
-        }
-
-        public void AddEventToAllShips(object evt)
-        {
-            ShipLoadouts.ToList().ForEach(x => AddEvents(x, new List<object> { evt }));
-        }
-
-        public void AddEvents(string shipName, List<object> events)
-        {
-            if (!Events.ContainsKey(shipName))
-            {
-                Events[shipName] = new List<VoyageEvent>();
-            }
-
-            var nextNumber = !Events[shipName].Any() ? 1 : Events[shipName].Max(x => x.EventNumber) + 1;
+            var nextNumber = !Events.Any() ? 1 : Events.Max(x => x.EventNumber) + 1;
             events.ForEach(x =>
             {
                 var ve = new VoyageEvent
@@ -38,8 +22,22 @@ namespace Nu.OfficerMiniGame.Dal.Dto
                     EventNumber = nextNumber
                 };
                 nextNumber++;
-                Events[shipName].Add(ve);
+                Events.Add(ve);
             });
+        }
+
+        public void AddEvent(object evt)
+        {
+            var nextNumber = !Events.Any() ? 1 : Events.Max(x => x.EventNumber) + 1;
+            var ve = new VoyageEvent
+            {
+                EventName = evt.GetType().AssemblyQualifiedName,
+                EventData = JsonConvert.SerializeObject(evt),
+                EventNumber = nextNumber
+            };
+            nextNumber++;
+            Events.Add(ve);
+
         }
     }
 }

@@ -11,6 +11,19 @@ namespace Nu.OfficerMiniGame.Web.Controllers
         public VoyageController() : base(new FileVoyageDal(".\\client-app\\data"))
         {
         }
+        protected override Voyage CreateObject(string name)
+        {
+            return new Voyage
+            {
+                Name = name
+            };
+        }
+
+        protected override string GetObjectName(Voyage obj)
+        {
+            return obj.Name;
+        }
+
 
         [HttpPost]
         [Route("[action]")]
@@ -29,23 +42,9 @@ namespace Nu.OfficerMiniGame.Web.Controllers
             {
                 voyage = dal.Get(name); 
             }
-            voyage.ShipLoadouts = course.ShipLoadouts;
-            voyage.AddEventToAllShips(course);
+            voyage.AddEvent(course);
             dal.Update(name, voyage);
             return new OkResult();
-        }
-
-        protected override Voyage CreateObject(string name)
-        {
-            return new Voyage
-            {
-                Name = name
-            };
-        }
-
-        protected override string GetObjectName(Voyage obj)
-        {
-            return obj.Name;
         }
     }
 }

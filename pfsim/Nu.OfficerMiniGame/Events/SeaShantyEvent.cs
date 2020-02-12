@@ -10,6 +10,7 @@ namespace  Nu.OfficerMiniGame
     {
         DutyType _duty;
 
+        public string ShipName { get; set; }
         public SeaShantyEvent(DutyType duty)
         {
             _duty = duty;

@@ -2,6 +2,7 @@
 {
     public class OffCourseEvent
     {
+        public string ShipName { get; set; }
         private bool _lost = false;
         public OffCourseEvent()
         {

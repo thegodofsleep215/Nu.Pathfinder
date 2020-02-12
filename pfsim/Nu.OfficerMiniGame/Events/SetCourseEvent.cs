@@ -12,11 +12,7 @@ namespace Nu.OfficerMiniGame.Dal.Dto
 
         public string DestinationPort { get; set; }
 
-        public string[] ShipLoadouts { get; set; }
-
         public int DaysPlanned { get; set; }
-
-        public NightStatus NightStatus { get; set; }
 
         public bool OpenOcean { get; set; }
 
@@ -24,8 +20,7 @@ namespace Nu.OfficerMiniGame.Dal.Dto
 
         public bool NarrowPassage { get; set; }
 
-        public DisciplineStandards DisciplineStandards { get; set; }
 
-        public List<SwabbieCount> Swabbies { get; set; }
+        public List<ShipState> InitialShipStates { get; set; }
     }
 }

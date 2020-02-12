@@ -16,6 +16,7 @@ namespace  Nu.OfficerMiniGame
         private int _assist;
         private int _skill;
 
+        public string ShipName { get; set; }
         public PerformedDutyEvent(DutyType duty, string crew, int dc, int assist, int skill, int result)
         {
             _duty = duty;

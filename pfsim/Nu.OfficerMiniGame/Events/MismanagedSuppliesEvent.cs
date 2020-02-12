@@ -2,6 +2,7 @@
 {
     public class MismanagedSuppliesEvent
     {
+        public string ShipName { get; set; }
         public SupplyType? SupplyType { get; set; }
 
         public bool CausedConfusion { get; set; }

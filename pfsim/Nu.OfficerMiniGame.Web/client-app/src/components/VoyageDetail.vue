@@ -1,31 +1,29 @@
 ﻿<template>
     <div class="card">
-        <div class="container">
-            <div class="form-grid-container">
-                <div>
-                    <h3 style="display: inline">{{value}}</h3>
-                </div>
-                <div style="grid-column-start: 1">
-                    <button v-on:click="gotoSailing">Go Sailing!</button>
-                </div>
-            </div>
+        <SetCourse v-model="isSetCourseVisable"
+                   @setcourse-ok="onSetCourseOk"
+                   @setcourse-cancel="onSetCourseCancel">
+        </SetCourse>
+        <div>
+            <button v-on:click="showAdd()">Set Course</button>
         </div>
     </div>
 </template>
 
 <script>
-    import Sailing from './Sailing.vue'
+    import SetCourse from './SetCourse.vue'
     export default {
         name: "VoyageDetail",
         props: {
             value: { type: String }
         },
         components: {
-            Sailing
+            SetCourse
         },
         data: function () {
             return {
                 voyage: {},
+                isSetCourseVisable: false,
             }
         },
         mounted: function () {
@@ -63,23 +61,14 @@
                     self.value = undefined;
                 }
             },
-            gotoSailing() {
-                this.$router.push({ path: "Sailing/" + this.voyage.name, params: { id: this.voyage.name } });
+            showAdd() {
+                this.isSetCourseVisable = true;
             },
-            hoistAnchor() {
-                if (this.voyage.shipLoadouts === undefined || this.voyage.shipLoadouts.length == 0) {
-                    alert("You must select at least one loadout.")
-                }
-                else if (this.voyage.daysPlanned <= 0) {
-                    alert("Days Planned must be greater than 0.")
-                }
-                else {
-                    if (confirm("Hoisting Anchor means the voyage can no logger be edited.")) {
-                        this.voyage.underweigh = true;
-                        this.updateVoyage(this.voyage);
-                        this.gotoSailing();
-                    }
-                }
+            onSetCourseOk() {
+                this.isSetCourseVisable = false;
+            },
+            onSetCourseCancel() {
+                this.isSetCourseVisable = false;
             }
         }
     }

@@ -39,6 +39,7 @@ namespace  Nu.OfficerMiniGame
             {8, "A crew member has been carefully plotting to undermine the authority of one of the officers whom they despise through a coordinated campaign of gossip, slander, japes, and sabotage. Each day thereafter, the officer or officer in charge of Discipline must make a Sense Motive check with DC 15 to notice the insubordinate smirks and barely concealed disdain almost all of the crew now has for the officer who has been the target of this campaign. Until the situation is remedied in some fashion that causes the officer to regain the respect of the crew, all skill checks by that officer pertaining to shipboard matters have a -2 penalty."},
         };
 
+        public string ShipName { get; set; }
         public int Roll { get; set; }
 
         public bool IsSerious { get; set; }

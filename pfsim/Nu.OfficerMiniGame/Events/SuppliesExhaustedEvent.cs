@@ -8,5 +8,6 @@ namespace  Nu.OfficerMiniGame
 {
     public class SuppliesExhaustedEvent
     {
+        public string ShipName { get; set; }
     }
 }

@@ -5,9 +5,11 @@ namespace Nu.OfficerMiniGame
 {
     public class DawnOfANewDayEvent
     {
+        public string ShipName { get; set; }
+
         public bool OpenOcean { get; set; }
 
-        public NightStatus NightStatus { get; internal set; }
+        public List<ShipState> CurrentShipStates { get; set; }
 
         public WeatherConditions WeatherConditions { get; set; }
 
@@ -16,5 +18,4 @@ namespace Nu.OfficerMiniGame
             return "A new day of sailing has begun.";
         }
     }
-
 }

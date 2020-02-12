@@ -2,6 +2,7 @@
 {
     public class PilotFailedEvent
     {
+        public string ShipName { get; set; }
         public int Damage { get; set; }
 
         public override string ToString()

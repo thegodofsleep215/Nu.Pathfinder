@@ -14,16 +14,9 @@ namespace Nu.OfficerMiniGame
 
     public class MiniGameStatus
     {
-        public MiniGameStatus(WeatherConditions weatherConditions, bool openOcean, NightStatus nightStatus)
+        public MiniGameStatus(WeatherConditions weatherConditions)
         {
             WeatherConditions = weatherConditions;
-            GameEvents = new List<object> {
-                new DawnOfANewDayEvent
-                {
-                    OpenOcean = openOcean,
-                    NightStatus = nightStatus
-                }
-            };
         }
 
         public WeatherConditions WeatherConditions { get; set; }
