@@ -20,6 +20,7 @@ namespace Nu.OfficerMiniGame.Dal.Dto
 
         public bool NarrowPassage { get; set; }
 
+        public NightStatus NightStatus { get; set; }
 
         public List<ShipState> InitialShipStates { get; set; }
     }

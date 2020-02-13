@@ -82,6 +82,18 @@
                                             </td>
                                         </tr>
                                         <tr>
+                                            <td style="text-align:right">
+                                                <label class="stat-label">Night Status: </label>
+                                            </td>
+                                            <td>
+                                                <select v-model="course.nightStatus" style="float:left">
+                                                    <option value="Anchored" selected>Anchored</option>
+                                                    <option value="Drifting">Drifting</option>
+                                                    <option value="Underweigh">Underweigh</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
                                             <td>
                                                 <span class="stat-label">Ship Loadouts</span>
                                             </td>
@@ -118,18 +130,6 @@
                                                 </tr>
                                                 <tr>
                                                     <td style="text-align:right">
-                                                        <label class="stat-label">Night Status: </label>
-                                                    </td>
-                                                    <td>
-                                                        <select v-model="ship.nightStatus" style="float:left">
-                                                            <option value="Anchored" selected>Anchored</option>
-                                                            <option value="Drifting">Drifting</option>
-                                                            <option value="Underweigh">Underweigh</option>
-                                                        </select>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td style="text-align:right">
                                                         <label class="stat-label">Discipline Standards: </label>
                                                     </td>
                                                     <td>
@@ -151,7 +151,7 @@
             </section>
             <footer class="modal-footer">
                 <slot name="footer">
-                    <button type="button" @click="oneOk">Ok</button>
+                    <button type="button" @click="onOk">Ok</button>
                     <button type="button" @click="onCancel">Cancel</button>
                 </slot>
             </footer>
@@ -164,7 +164,7 @@
     export default {
         name: "SetCourse",
         props: {
-            value: {required:false}
+            value: { required: false }
         },
         data: function () {
             return {
@@ -187,10 +187,6 @@
             this.parseDate();
         },
         watch: {
-            value: function () {
-                this.shipLoadoutsChanged();
-                this.parseDate();
-            },
             serializedDate: function () {
                 this.course.startDate = this.serializedDate;
             }

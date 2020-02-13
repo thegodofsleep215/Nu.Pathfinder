@@ -6,10 +6,9 @@
 
         public int DiseasedCrew { get; set; }
 
-        public NightStatus NightStatus { get; set; }
-
         public DisciplineStandards DisciplineStandards { get; set; }
 
         public int SwabbieCount { get; set; }
     }
+
 }

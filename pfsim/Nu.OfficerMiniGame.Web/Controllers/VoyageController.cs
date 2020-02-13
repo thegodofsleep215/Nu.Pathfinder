@@ -46,5 +46,14 @@ namespace Nu.OfficerMiniGame.Web.Controllers
             dal.Update(name, voyage);
             return new OkResult();
         }
+
+        [HttpPost]
+        [Route("[action]")]
+        public IActionResult GetCurrentProgress(string name)
+        {
+            var voyage = dal.Get(name);
+            return new OkResult();
+        }
+
     }
 }

@@ -8,22 +8,106 @@ using System.Text;
 
 namespace Nu.OfficerMiniGame
 {
+    public class ShipsCrew
+    {
+        private List<CrewMember> crew = new List<CrewMember>();
+
+        public void Add(CrewMember crewMember)
+        {
+            crew.Add(crewMember);
+        }
+
+        public int Count => crew.Count();
+
+        public int CountAsCrew => crew.Count(x => x.CountsAsCrew);
+
+        public int GetAssistance(DutyType duty)
+        {
+            List<JobMessage> assists = new List<JobMessage>();
+            var jobs = AssignedJobs.Where(a => a.DutyType == duty && a.IsAssistant);
+
+            foreach (var job in jobs)
+            {
+                JobMessage assistance = new JobMessage();
+
+                assistance.DutyType = duty;
+
+                var mate = crew.FirstOrDefault(a => a.Name == job.CrewName);
+
+                if (mate != null)
+                {
+                    switch (duty)
+                    {
+                        case DutyType.Command:
+                            assistance.SkillBonus = mate.CommanderSkillBonus;
+                            break;
+                        case DutyType.Cook:
+                            assistance.SkillBonus = mate.CookSkillBonus;
+                            break;
+                        case DutyType.Discipline:
+                            assistance.SkillBonus = mate.DisciplineSkillBonus;
+                            break;
+                        case DutyType.Heal:
+                            assistance.SkillBonus = mate.HealerSkillBonus;
+                            break;
+                        case DutyType.Maintain:
+                            assistance.SkillBonus = mate.DisciplineSkillBonus;
+                            break;
+                        case DutyType.Manage:
+                            assistance.SkillBonus = mate.ManagerSkillBonus;
+                            break;
+                        case DutyType.Ministrel:
+                            assistance.SkillBonus = mate.MinistrelSkillBonus;
+                            break;
+                        case DutyType.Navigate:
+                            assistance.SkillBonus = mate.NavigatorSkillBonus;
+                            break;
+                        case DutyType.Pilot:
+                            assistance.SkillBonus = mate.PilotSkillBonus;
+                            break;
+                        case DutyType.Procure:
+                            assistance.SkillBonus = mate.ProcureSkillBonus;
+                            break;
+                        case DutyType.RepairHull:
+                            assistance.SkillBonus = mate.RepairSkillBonus;
+                            break;
+                        case DutyType.RepairSails:
+                            assistance.SkillBonus = mate.RepairSkillBonus;
+                            break;
+                        case DutyType.RepairSeigeEngine:
+                            assistance.SkillBonus = mate.RepairSkillBonus;
+                            break;
+                        case DutyType.Stow:
+                            assistance.SkillBonus = mate.StowSkillBonus;
+                            break;
+                        case DutyType.Unload:
+                            assistance.SkillBonus = mate.UnloadSkillBonus;
+                            break;
+                        case DutyType.Watch:
+                            assistance.SkillBonus = mate.WatchSkillBonus;
+                            break;
+                    }
+                }
+
+                assists.Add(assistance);
+            }
+
+            return assists;
+        }
+
+
+    }
+
     /// <summary>
     /// This class helps sthe <see cref="GameEngine"/> run.
     /// </summary>
     public class Ship
     {
-        public string CrewName { get; set; }
-
-        public ShipType ShipType { get; set; }
-
         public ShipSize ShipSize { get; set; }
 
-        public List<Propulsion> PropulsionTypes { get; set; } = new List<Propulsion>();
-
-        public int HullHitPoints { get; set; }
-
         public int CrewSize { get; set; }
+
+        public int TotalCrew => CrewSize + ShipsCrew.Count + Marines + Passengers;
 
         // Below this number, the ship cannot be piloted successfully.
         public int MinimumCrewSize
@@ -43,9 +127,7 @@ namespace Nu.OfficerMiniGame
 
         public int ShipQuality { get; set; } // Place holder for generic bonus.
 
-        public List<string> SpecialFeatures { get; set; } = new List<string>();
-
-        public List<CrewMember> ShipsCrew { get; set; } = new List<CrewMember>();
+        public ShipsCrew ShipsCrew { get; set; } = new ShipsCrew();
 
         public Morale CrewMorale { get; set; } = new Morale();
 
@@ -54,24 +136,8 @@ namespace Nu.OfficerMiniGame
             get
             {
                 double retval = 0;
-                List<CrewMember> namedCrew;
-                // For ships boats, everyone counts as crew
-                switch (ShipSize)
-                {
-                    case ShipSize.Medium:
-                    case ShipSize.Large:
-                    case ShipSize.Huge:
-                        namedCrew = ShipsCrew.ToList();
-                        break;
-                    default:
-                        namedCrew = ShipsCrew.Where(a => a.CountsAsCrew).ToList();
-                        break;
-                }
 
-                if (namedCrew != null && namedCrew.Count > 0)
-                    retval = namedCrew.Select(a => a.ProfessionSailorSkill).Sum();
-
-                retval = Math.Floor(((retval * namedCrew.Count) + (Convert.ToDouble(AverageSwabbieQuality) * Swabbies)) / (namedCrew.Count + Swabbies)) - 4;
+                retval = Math.Floor(((retval * ShipsCrew.CountAsCrew) + (Convert.ToDouble(AverageSwabbieQuality) * Swabbies)) / (ShipsCrew.Count + Swabbies)) - 4;
 
                 if (retval > 4)
                     return 4;
@@ -140,27 +206,12 @@ namespace Nu.OfficerMiniGame
 
         public decimal AverageSwabbieQuality { get; set; }
 
-        public int TotalCrew
-        {
-            get
-            {
-                return ShipsCrew.Count + Swabbies + Marines + Passengers;
-            }
-        }
 
         public int AvailableCrew
         {
             get
             {
-                switch (this.ShipSize)
-                {
-                    case ShipSize.Medium:
-                    case ShipSize.Large:
-                    case ShipSize.Huge:
-                        return ShipsCrew.Count + Swabbies - DiseasedCrew - CrewUnfitForDuty;  // Allow officers to serve as crew on boats.
-                    default:
-                        return ShipsCrew.Count(a => a.CountsAsCrew) + Swabbies - DiseasedCrew - CrewUnfitForDuty;
-                }
+                return ShipsCrew.CountAsCrew + Swabbies - DiseasedCrew - CrewUnfitForDuty;
             }
         }
 
@@ -198,6 +249,7 @@ namespace Nu.OfficerMiniGame
         }
 
         private List<Job> assignedJobs;
+
         public List<Job> AssignedJobs
         {
             get
@@ -251,81 +303,6 @@ namespace Nu.OfficerMiniGame
 
             return sb.ToString();
         }
-
-        public List<JobMessage> GetAssistance(DutyType duty)
-        {
-            List<JobMessage> assists = new List<JobMessage>();
-            var jobs = AssignedJobs.Where(a => a.DutyType == duty && a.IsAssistant);
-
-            foreach (var job in jobs)
-            {
-                JobMessage assistance = new JobMessage();
-
-                assistance.DutyType = duty;
-
-                var mate = ShipsCrew.FirstOrDefault(a => a.Name == job.CrewName);
-
-                if (mate != null)
-                {
-                    switch (duty)
-                    {
-                        case DutyType.Command:
-                            assistance.SkillBonus = mate.CommanderSkillBonus;
-                            break;
-                        case DutyType.Cook:
-                            assistance.SkillBonus = mate.CookSkillBonus;
-                            break;
-                        case DutyType.Discipline:
-                            assistance.SkillBonus = mate.DisciplineSkillBonus;
-                            break;
-                        case DutyType.Heal:
-                            assistance.SkillBonus = mate.HealerSkillBonus;
-                            break;
-                        case DutyType.Maintain:
-                            assistance.SkillBonus = mate.DisciplineSkillBonus;
-                            break;
-                        case DutyType.Manage:
-                            assistance.SkillBonus = mate.ManagerSkillBonus;
-                            break;
-                        case DutyType.Ministrel:
-                            assistance.SkillBonus = mate.MinistrelSkillBonus;
-                            break;
-                        case DutyType.Navigate:
-                            assistance.SkillBonus = mate.NavigatorSkillBonus;
-                            break;
-                        case DutyType.Pilot:
-                            assistance.SkillBonus = mate.PilotSkillBonus;
-                            break;
-                        case DutyType.Procure:
-                            assistance.SkillBonus = mate.ProcureSkillBonus;
-                            break;
-                        case DutyType.RepairHull:
-                            assistance.SkillBonus = mate.RepairSkillBonus;
-                            break;
-                        case DutyType.RepairSails:
-                            assistance.SkillBonus = mate.RepairSkillBonus;
-                            break;
-                        case DutyType.RepairSeigeEngine:
-                            assistance.SkillBonus = mate.RepairSkillBonus;
-                            break;
-                        case DutyType.Stow:
-                            assistance.SkillBonus = mate.StowSkillBonus;
-                            break;
-                        case DutyType.Unload:
-                            assistance.SkillBonus = mate.UnloadSkillBonus;
-                            break;
-                        case DutyType.Watch:
-                            assistance.SkillBonus = mate.WatchSkillBonus;
-                            break;
-                    }
-                }
-
-                assists.Add(assistance);
-            }
-
-            return assists;
-        }
-
         public JobMessage CommanderJob
         {
             get
@@ -431,7 +408,6 @@ namespace Nu.OfficerMiniGame
                 return retval;
             }
         }
-
 
         public JobMessage DisciplineJob
         {

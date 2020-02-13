@@ -64,7 +64,13 @@
             showAdd() {
                 this.isSetCourseVisable = true;
             },
-            onSetCourseOk() {
+            onSetCourseOk(course) {
+                var self = this;
+                fetch('/Voyage/SetCourse?name=' + self.value, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(course)
+                });
                 this.isSetCourseVisable = false;
             },
             onSetCourseCancel() {

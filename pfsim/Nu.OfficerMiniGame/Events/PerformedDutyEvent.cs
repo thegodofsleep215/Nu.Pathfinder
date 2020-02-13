@@ -11,7 +11,6 @@ namespace  Nu.OfficerMiniGame
         private DutyType _duty;
         private string _crew;
         private int _dc;
-        private int _roll;
         private int _result;
         private int _assist;
         private int _skill;

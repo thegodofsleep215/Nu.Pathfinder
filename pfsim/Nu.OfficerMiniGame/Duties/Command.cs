@@ -1,9 +1,31 @@
 ﻿using Nu.Game.Common;
+using Nu.OfficerMiniGame.Dal.Dto;
 using System;
 using System.Collections.Generic;
 
-namespace  Nu.OfficerMiniGame
+namespace Nu.OfficerMiniGame
 {
+    public abstract class BaseDuty : IDuty 
+    {
+        public abstract void PerformDuty(Ship ship, ref MiniGameStatus status);
+
+        protected int PerformAssists(List<JobMessage> list)
+        {
+            int retval = 0;
+
+            foreach (var assist in list)
+            {
+                retval += (DiceRoller.D20(1) + assist.SkillBonus >= 10) ? 2 : 0;
+            }
+
+            return retval;
+        }
+
+        protected int GetSkillBonus(DutyType dutyType)
+        {
+        }
+    }
+
     /// <summary>
     /// Command – Issue instructions to crew.  Always first check of day.  DC is 5 + Ship’s difficulty modifier + 1 / 10 crew.
     /// The ship’s morale bonus is a bonus or penalty to any command check.   Failure by 5 or more results in a -2 check on
@@ -11,15 +33,15 @@ namespace  Nu.OfficerMiniGame
     /// -2 penalty.  Failure by 15 or more additionally results in a +4 chance of discipline problems.  Success by 5 or more
     /// results in a +2 bonus on all job checks for that day.  You may have up to two assistants, however.
     /// </summary>
-    public class Command : IDuty
+    public class Command : BaseDuty
     {
-        public void PerformDuty(Ship ship, bool verbose, ref MiniGameStatus status)
+        public override void PerformDuty(Ship ship, ref MiniGameStatus status)
         {
             var dc = 5 + ship.ShipDc + (ship.TotalCrew / 10) + ship.TemporaryCommandModifier;
             var assistBonus = PerformAssists(ship.GetAssistance(DutyType.Command));
             var job = ship.CommanderJob;
             status.CommandResult = (DiceRoller.D20(1) + job.SkillBonus + assistBonus) - dc;
-            if(status.CommandResult < 0 && status.CommandResult >= -2)
+            if (status.CommandResult < 0 && status.CommandResult >= -2)
             {
                 // Use a ministrel.
                 int ministrel = status.MinistrelResults.Count;
@@ -36,20 +58,7 @@ namespace  Nu.OfficerMiniGame
                     }
                 }
             }
-            if(verbose)
-                status.GameEvents.Add(new PerformedDutyEvent(DutyType.Command, job.CrewName, dc, assistBonus, job.SkillBonus, status.CommandResult));
-        }
-
-        private int PerformAssists(List<JobMessage> list)
-        {
-            int retval = 0;
-
-            foreach(var assist in list)
-            {
-                retval += (DiceRoller.D20(1) + assist.SkillBonus >= 10) ? 2 : 0;
-            }
-
-            return retval;
+            status.GameEvents.Add(new PerformedDutyEvent(DutyType.Command, job.CrewName, dc, assistBonus, job.SkillBonus, status.CommandResult));
         }
     }
 }
