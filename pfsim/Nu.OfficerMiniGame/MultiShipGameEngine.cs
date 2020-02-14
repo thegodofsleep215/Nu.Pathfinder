@@ -20,7 +20,7 @@ namespace Nu.OfficerMiniGame
 
         public Dictionary<string, List<object>> Sail(Ship[] ships, SailingParameters sailingParameters, WeatherConditions weatherConditions)
         {
-            var results = ships.ToDictionary(x => x.CrewName, x => Sail(x, sailingParameters, weatherConditions));
+            var results = ships.ToDictionary(x => x.Name, x => Sail(x, sailingParameters, weatherConditions));
             var pe = GenerateProgressMadeEvent(results.SelectMany(x => x.Value).ToList(), sailingParameters.NightStatus);
             results.ToList().ForEach(x => x.Value.Add(pe));
             return results;

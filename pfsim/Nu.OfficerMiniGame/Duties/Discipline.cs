@@ -24,64 +24,55 @@ namespace Nu.OfficerMiniGame
     /// in charge of discipline must immediately make a successful Intimidate check versus 
     /// DC 10 + 1/10 crew, or the crew shipshape is reduced by 1.  The DC of this check 
     /// is modified by the crew’s morale bonus.
-    public class Discipline : IDuty
+    public class Discipline : BaseDuty
     {
 
-        public void PerformDuty(Ship ship, bool verbose, ref MiniGameStatus status)
+        public override List<object> PerformDuty(Ship ship, FleetState state)
         {
+            var events = new List<object>();
             var tension = 6;
-            tension += (ship.HasDisciplineOfficer ? 0 : 4);
-            tension += status.CommandResult <= -15 ? 4 : 0;
-            tension += status.ManageResult <= -10 ? 2 : 0;
+            var hasDisciplineOfficer = ship.ShipsCrew.JobHasAssignedCrewMember(DutyType.Discipline, out _);
+            tension += hasDisciplineOfficer ? 0 : 4;
+            tension += state.ShipStates[ship.Name].CommandResult <= -15 ? 4 : 0;
+            tension += state.ShipStates[ship.Name].ManageResult <= -10 ? 2 : 0;
             tension += ship.CrewDisciplineModifier;
-            tension -= (ship.CrewMorale.MoraleBonus);
+            tension -= ship.CrewMorale.MoraleBonus;
 
             var roll = DiceRoller.D20(1);
 
             if (roll <= tension)
             {
-                var dc = 10 + (ship.TotalCrew / 10) - status.CommandModifier;
-                var job = ship.DisciplineJob;
+                var dc = 10 + (ship.TotalCrew / 10) - state.ShipStates[ship.Name].CommandModifier;
+                var job = GetDutyBonus(ship, DutyType.Discipline);
                 var result = DiceRoller.D20(1) + job.SkillBonus - dc;
                 if (result < 0 && result >= -2)
                 {
-                    // Use a ministrel.
-                    int ministrel = status.MinistrelResults.Count;
-
-                    if (ship.MinistrelBonuses.Count > ministrel)
-                    {
-                        dc = 10 + (ship.TotalCrew / 10) > 15 ? 10 + (ship.TotalCrew / 10) : 15;
-                        var shanty = DiceRoller.D20(1) + ship.MinistrelBonuses[ministrel] - dc;
-                        status.MinistrelResults.Add(shanty);
-                        if (shanty >= 0)
-                        {
-                            result += 2;
-                            status.GameEvents.Add(new SeaShantyEvent(DutyType.Discipline));
-                        }
-                    }
+                    result += UseMinstrel(ship, state, events, DutyType.Discipline);
                 }
-                if (verbose)
-                    status.GameEvents.Add(new PerformedDutyEvent(DutyType.Discipline, job.CrewName, dc, 0, job.SkillBonus, result));
-                if (result < 0 || !ship.HasDisciplineOfficer)
+                events.Add(new PerformedDutyEvent(ship.Name, DutyType.Discipline, job.CrewName, dc, 0, job.SkillBonus, result));
+                if (result < 0 || !hasDisciplineOfficer)
                 {
-                    status.GameEvents.AddRange(RollUpDisciplineIssues(tension >= 20 ? 1 : 0));
+                    events.AddRange(RollUpDisciplineIssues(ship.Name, tension >= 20 ? 1 : 0));
                 }
             }
+
+            return events;
         }
 
-        List<UnrulyCrewEvent> RollUpDisciplineIssues(int modifier)
+        List<UnrulyCrewEvent> RollUpDisciplineIssues(string shipName, int modifier)
         {
             var result = new List<UnrulyCrewEvent>();
             var roll = DiceRoller.D20(1) + modifier;
             if (roll == 20)
             {
-                result.AddRange(RollUpDisciplineIssues(modifier));
-                result.AddRange(RollUpDisciplineIssues(modifier));
+                result.AddRange(RollUpDisciplineIssues(shipName, modifier));
+                result.AddRange(RollUpDisciplineIssues(shipName, modifier));
             }
             else if (roll == 21)
             {
                 result.Add(new UnrulyCrewEvent
                 {
+                    ShipName = shipName,
                     Roll = DiceRoller.D8(1),
                     IsSerious = true
                 });
@@ -90,6 +81,7 @@ namespace Nu.OfficerMiniGame
             {
                 result.Add(new UnrulyCrewEvent
                 {
+                    ShipName = shipName,
                     Roll = roll,
                     IsSerious = false
                 });

@@ -12,37 +12,26 @@ namespace  Nu.OfficerMiniGame
     /// that the crew believes.  Without proper compass, maps and other tools give a -5 penalty 
     /// to this check.  Masterwork versions of the same on the other hand give a +2 bonus on the 
     /// check.  You may have 1 assistant.
-    public class Navigate : IDuty
+    public class Navigate : BaseDuty
     {
-        public void PerformDuty(Ship ship, bool verbose, ref MiniGameStatus status)
+        public override List<object> PerformDuty(Ship ship, FleetState state)
         {
-            var dc = ship.TemporaryNavigationModifier - status.CommandModifier;
-            var assistBonus = PerformAssists(ship.GetAssistance(DutyType.Navigate));
-            var job = ship.NavigatorJob;
-            status.NavigationResult = (DiceRoller.D20(1) + job.SkillBonus + assistBonus) - dc + 3; // The +3 because I am assuming compass + map
-            if(verbose)
-                status.GameEvents.Add(new PerformedDutyEvent(DutyType.Navigate, job.CrewName, dc, assistBonus, job.SkillBonus, status.NavigationResult));
+            var events = new List<object>();
+            var dc = state.ShipStates[ship.Name].TemporaryNavigationModifier - state.ShipStates[ship.Name].CommandModifier;
+            var assistBonus = PerformAssists(ship, DutyType.Navigate);
+            var job = GetDutyBonus(ship, DutyType.Navigate);
+            var result = (DiceRoller.D20(1) + job.SkillBonus + assistBonus) - dc + 3; // The +3 because I am assuming compass + map
+            events.Add(new PerformedDutyEvent(ship.Name, DutyType.Navigate, job.CrewName, dc, assistBonus, job.SkillBonus, result));
 
-            if (status.NavigationResult <= -5)
+            if (result <= -5)
             {
-                status.GameEvents.Add(new OffCourseEvent(true));
+               events.Add(new OffCourseEvent(true) { ShipName = ship.Name });
             }
-            else if (status.NavigationResult < 0)
+            else if (result < 0)
             {
-                status.GameEvents.Add(new OffCourseEvent(false));
+                events.Add(new OffCourseEvent(false) { ShipName = ship.Name });
             }
-        }
-
-        private int PerformAssists(List<JobMessage> list)
-        {
-            int retval = 0;
-
-            foreach (var assist in list)
-            {
-                retval += ((DiceRoller.D20(1) + assist.SkillBonus) >= 10) ? 2 : 0;
-            }
-
-            return retval;
+            return events;
         }
     }
 }

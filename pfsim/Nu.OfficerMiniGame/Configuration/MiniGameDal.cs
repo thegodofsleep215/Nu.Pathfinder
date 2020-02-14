@@ -23,23 +23,17 @@ namespace Nu.OfficerMiniGame
             var ss = shipStatsDal.Get(sl.ShipName);
             var ship = new Ship()
             {
-                CrewName = name,
-                ShipType = ss.ShipType,
+                Name = name,
                 ShipSize = ss.ShipSize,
-                PropulsionTypes = ss.PropulsionTypes,
-                HullHitPoints = ss.HullHitPoints,
                 CrewSize = ss.CrewSize,
                 ShipDc = ss.ShipDc,
                 ShipPilotingBonus = ss.ShipPilotingBonus,
                 ShipQuality = ss.ShipQuality,
-                SpecialFeatures = ss.SpecialFeatures
             };
             var crewNames = sl.CrewMembers.Select(x => x.Name.Replace("_", " ")).Distinct().ToList();
-            ship.ShipsCrew = crewNames.Select(x => crewMemberStatsDal.Get(x)).Select(cm => {
-                return new CrewMember
+            ship.ShipsCrew = new ShipsCrew(crewNames.Select(x => crewMemberStatsDal.Get(x)).Select(cm => {
+                return new CrewMember(cm.Name, cm.Title, cm.Skills)
                 {
-                    Name = cm.Name,
-                    Skills = cm.Skills,
                     Jobs = sl.CrewMembers.Where(x => x.Name.Replace("_", " ") == cm.Name).Select(x => new Job
                     {
                         CrewName = cm.Name,
@@ -47,7 +41,7 @@ namespace Nu.OfficerMiniGame
                         IsAssistant = x.IsAssistant
                     }).ToList()
                 };
-           }).ToList();
+           }).ToList());
             return ship;
         }
     }

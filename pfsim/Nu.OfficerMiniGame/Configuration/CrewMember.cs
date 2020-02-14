@@ -1,117 +1,109 @@
-﻿using Newtonsoft.Json;
-using Nu.OfficerMiniGame.Dal.Dto;
+﻿using Nu.OfficerMiniGame.Dal.Dto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Nu.OfficerMiniGame
 {
     public class CrewMember
     {
-        public string Name { get; set; }
-        public string Title { get; set; }
-        public CrewSkills Skills { get; set; } = new CrewSkills();
+        public CrewMember(string name, string title, CrewSkills skills)
+        {
+            Name = name;
+            this.skills = skills;
+            this.Title = title;
+        }
 
-        
-        public int PerformSkill => Skills.Perform + WorkModifier + ExternalModifiers.Perform;
+        public string Name { get; private set; }
 
-        
-        public int ProfessionSailorSkill => Skills.ProfessionSailor + WorkModifier + ExternalModifiers.ProfessionSailor;
+        public string Title { get; private set; }
 
-        
-        public int DiplomacySkill => Skills.Diplomacy + WorkModifier + ExternalModifiers.Diplomacy;
+        public List<Job> Jobs { get; set; } = new List<Job>();
 
-        
-        public int KnowledgeEngineeringSkill => Skills.KnowledgeEngineering + WorkModifier + ExternalModifiers.KnowledgeEngineering;
+        private CrewSkills skills;
 
-        
-        public int IntimidateSkill => Skills.Intimidate + WorkModifier + ExternalModifiers.Intimidate;
+        public int GetDutyBonus(DutyType duty)
+        {
+            switch (duty)
+            {
+                case DutyType.Command:
+                    return CommanderSkillBonus;
+                case DutyType.Cook:
+                   return CookSkillBonus;
+                case DutyType.Discipline:
+                    return DisciplineSkillBonus;
+                case DutyType.Heal:
+                    return HealerSkillBonus;
+                case DutyType.Maintain:
+                    return DisciplineSkillBonus;
+                case DutyType.Manage:
+                    return ManagerSkillBonus;
+                case DutyType.Ministrel:
+                    return MinistrelSkillBonus;
+                case DutyType.Navigate:
+                    return NavigatorSkillBonus;
+                case DutyType.Pilot:
+                    return PilotSkillBonus;
+                case DutyType.Procure:
+                    return ProcureSkillBonus;
+                case DutyType.RepairHull:
+                    return RepairSkillBonus;
+                case DutyType.RepairSails:
+                    return RepairSkillBonus;
+                case DutyType.RepairSeigeEngine:
+                    return RepairSkillBonus;
+                case DutyType.Stow:
+                    return StowSkillBonus;
+                case DutyType.Unload:
+                    return UnloadSkillBonus;
+                case DutyType.Watch:
+                    return WatchSkillBonus;
+            }
+            throw new NotImplementedException();
+        }
 
-        
-        public int PerceptionSkill => Skills.Perception + WorkModifier + ExternalModifiers.Perception;
+        public int CommanderSkillBonus => (skills.ProfessionSailor > skills.Diplomacy ? skills.ProfessionSailor : skills.Diplomacy) + WorkModifier;
 
-        
-        public int CraftCarpentrySkill => Skills.CraftCarpentry + WorkModifier + ExternalModifiers.CraftCarpentry;
+        public int CrewPilotModifier => skills.ProfessionSailor + WorkModifier;
 
-        
-        public int CraftShipSkill => Skills.CraftShip + WorkModifier + ExternalModifiers.CraftShip;
+        public int DisciplineSkillBonus => skills.Intimidate + WorkModifier;
 
-        
-        public int CraftCookingSkill => Skills.CraftCooking + WorkModifier + ExternalModifiers.CraftCooking;
+        public int WatchSkillBonus => skills.Perception + WorkModifier;
 
-        
-        public int HealSkill => Skills.Heal + WorkModifier + ExternalModifiers.Heal;
+        public int MaintainSkillBonus => (skills.CraftCarpentry > skills.CraftShip ? skills.CraftCarpentry : skills.CraftShip) + WorkModifier;
 
-        
-        public int SurvivalSkill => Skills.Survival + WorkModifier + ExternalModifiers.Survival;
-
-        
-        public int ProfessionMerchantSkill => Skills.ProfessionMerchant + WorkModifier + ExternalModifiers.ProfessionMerchant;
-
-        
-        public int CommanderSkillBonus => ProfessionSailorSkill > DiplomacySkill ? ProfessionSailorSkill : DiplomacySkill;
-
-        
-        public int CrewPilotModifier => ProfessionSailorSkill;
-
-        
-        public int DisciplineSkillBonus => IntimidateSkill;
-
-        
-        public int WatchSkillBonus => PerceptionSkill;
-
-        
-        public int MaintainSkillBonus => CraftCarpentrySkill > CraftShipSkill ? CraftCarpentrySkill : CraftShipSkill;
-
-        
         public int ManagerSkillBonus
         {
             get
             {
-                int retval = KnowledgeEngineeringSkill > ProfessionMerchantSkill ? KnowledgeEngineeringSkill : ProfessionMerchantSkill;
+                int retval = skills.KnowledgeEngineering > skills.ProfessionMerchant ? skills.KnowledgeEngineering : skills.ProfessionMerchant;
 
-                retval = ProfessionSailorSkill > retval ? ProfessionSailorSkill : retval;
+                retval = skills.ProfessionSailor > retval ? skills.ProfessionSailor : retval;
 
-                return retval;
+                return retval + WorkModifier;
             }
         }
 
-        
-        public int NavigatorSkillBonus => ProfessionSailorSkill > SurvivalSkill ? ProfessionSailorSkill : SurvivalSkill;
+        public int NavigatorSkillBonus => (skills.ProfessionSailor > skills.Survival ? skills.ProfessionSailor : skills.Survival) + WorkModifier;
 
-        
-        public int PilotSkillBonus => ProfessionSailorSkill;
+        public int PilotSkillBonus => skills.ProfessionSailor + WorkModifier;
 
-        
-        public int CookSkillBonus => CraftCookingSkill;
+        public int CookSkillBonus => skills.CraftCooking + WorkModifier;
 
-        
-        public int HealerSkillBonus => HealSkill;
+        public int HealerSkillBonus => skills.Heal + WorkModifier;
 
-        
-        public int MinistrelSkillBonus => PerformSkill;
+        public int MinistrelSkillBonus => skills.Perform + WorkModifier;
 
-        
-        public int ProcureSkillBonus => SurvivalSkill;
+        public int ProcureSkillBonus => skills.Survival + WorkModifier;
 
-        // TODO: RepairSail, RepairSiegeEngine
-        
-        public int RepairSkillBonus => CraftShipSkill > CraftCarpentrySkill ? CraftShipSkill : CraftCarpentrySkill;
+        public int RepairSkillBonus => (skills.CraftShip > skills.CraftCarpentry ? skills.CraftShip : skills.CraftCarpentry) + WorkModifier;
 
-        
-        public int RepairHullSkillBonus => CraftShipSkill > CraftCarpentrySkill ? CraftShipSkill : CraftCarpentrySkill;
+        public int RepairHullSkillBonus => (skills.CraftShip > skills.CraftCarpentry ? skills.CraftShip : skills.CraftCarpentry) + WorkModifier;
 
-        
-        public int StowSkillBonus => ProfessionSailorSkill > KnowledgeEngineeringSkill ? ProfessionSailorSkill : KnowledgeEngineeringSkill;
+        public int StowSkillBonus => (skills.ProfessionSailor > skills.KnowledgeEngineering ? skills.ProfessionSailor : skills.KnowledgeEngineering) + WorkModifier;
 
-        
-        public int UnloadSkillBonus => ProfessionSailorSkill > KnowledgeEngineeringSkill ? ProfessionSailorSkill : KnowledgeEngineeringSkill;
+        public int UnloadSkillBonus => (skills.ProfessionSailor > skills.KnowledgeEngineering ? skills.ProfessionSailor : skills.KnowledgeEngineering) + WorkModifier;
 
-        public List<Job> Jobs { get; set; } = new List<Job>();
-
-        
         public bool CountsAsCrew
         {
             get
@@ -125,7 +117,6 @@ namespace Nu.OfficerMiniGame
             }
         }
 
-        
         public int NumberOfJobs
         {
             get
@@ -137,7 +128,6 @@ namespace Nu.OfficerMiniGame
             }
         }
 
-        
         public int WorkModifier
         {
             get
@@ -152,88 +142,6 @@ namespace Nu.OfficerMiniGame
                 else
                     return -9;
             }
-        }
-
-        public CrewSkills ExternalModifiers { get; set; } = new CrewSkills();
-
-        public void AddJob(DutyType duty, bool isAssistant)
-        {
-            Job job = new Job
-            {
-                CrewName = Name,
-                DutyType = duty,
-                IsAssistant = isAssistant
-            };
-
-            Jobs.Add(job);
-        }
-
-        public void AddJob(Job job)
-        {
-            job.CrewName = Name;
-            Jobs.Add(job);
-        }
-
-        public bool RemoveJob(DutyType duty, bool isAssistant)
-        {
-            var job = Jobs.FirstOrDefault(a => a.DutyType == duty && a.IsAssistant == isAssistant);
-
-            if (job != null)
-            {
-                return Jobs.Remove(job);
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        internal IEnumerable<string> ValidateJobs()
-        {
-            List<string> messages = new List<string>();
-
-            if (Jobs.Count(a => a.DutyType == DutyType.RepairHull || a.DutyType == DutyType.RepairSails || a.DutyType == DutyType.RepairSeigeEngine) > 2)
-            {
-                messages.Add(string.Format("Not enough time in the day for {0} {1} to repair everything!", Title, Name));
-            }
-            if (Jobs.Count(a => a.DutyType == DutyType.Stow) > 2)
-            {
-                messages.Add(string.Format("Not enough time in the day for {0} {1} to put it all away!", Title, Name));
-            }
-            if (Jobs.Count(a => a.DutyType == DutyType.Heal) > 2)
-            {
-                messages.Add(string.Format("Not enough time in the day for {0} {1} to heal everyone!", Title, Name));
-            }
-            if (Jobs.Count(a => a.DutyType == DutyType.Cook) > 1)
-            {
-                messages.Add(string.Format("{0} {1} forgot that cooking twice is just cooking once, in smaller batches!", Title, Name));
-            }
-            if (Jobs.Count(a => a.DutyType == DutyType.Ministrel) > 2)
-            {
-                messages.Add(string.Format("{0} {1}'s voice would get tired!", Title, Name));
-            }
-            if (Jobs.Count(a => a.DutyType == DutyType.Procure) > 2)
-            {
-                messages.Add(string.Format("Not enough time in the day for {0} {1} to catch all the fish!", Title, Name));
-            }
-            if (Jobs.Count(a => a.DutyType == DutyType.Procure ||
-                                a.DutyType == DutyType.Ministrel ||
-                                a.DutyType == DutyType.Heal ||
-                                a.DutyType == DutyType.Stow ||
-                                a.DutyType == DutyType.Unload ||
-                                a.DutyType == DutyType.RepairHull ||
-                                a.DutyType == DutyType.RepairSails ||
-                                a.DutyType == DutyType.RepairSeigeEngine) > 2)
-            {
-                messages.Add(string.Format("{0} {1} can't do all the work by himself!", Title, Name));
-            }
-
-            return messages;
-        }
-
-        public CrewMember()
-        {
-
         }
     }
 }

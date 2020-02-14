@@ -12,43 +12,32 @@ namespace  Nu.OfficerMiniGame
     /// more results in effective wellbeing being 2 less than normal, by 10 or more 3 less than normal, and so 
     /// forth to a minimum of zero(equivalent to starving).  Additionally, if the check fails by 15 or more, 
     /// there is a +4 chance of medical problems the next day.You may have 1 assistant.
-    public class Cook : IDuty
+    public class Cook : BaseDuty
     {
-        public void PerformDuty(Ship ship, bool verbose, ref MiniGameStatus status)
+        public override List<object> PerformDuty(Ship ship, FleetState state)
         {
-            var dc = 7 + (ship.TotalCrew / 10) - status.ManageModifier - ship.CrewMorale.WellBeing;
+            var events = new List<object>();
+            var dc = 7 + (ship.TotalCrew / 10) - state.ShipStates[ship.Name].ManageModifier - ship.CrewMorale.WellBeing;
             if (dc < 10)
                 dc = 10;
-            var assistBonus = PerformAssists(ship.GetAssistance(DutyType.Cook));
-            var job = ship.CookJob;
+            var assistBonus = PerformAssists(ship, DutyType.Cook);
+            var job = GetDutyBonus(ship, DutyType.Cook);
             var result = DiceRoller.D20(1) + assistBonus + job.SkillBonus - dc;
-            status.CookResult = result;
 
-            if(verbose)
-                status.GameEvents.Add(new PerformedDutyEvent(DutyType.Cook, job.CrewName, dc, assistBonus, job.SkillBonus, status.CookResult));
+            events.Add(new PerformedDutyEvent(ship.Name, DutyType.Cook, job.CrewName, dc, assistBonus, job.SkillBonus, result));
 
             if (result < 0)
             {
                 var wm = Math.Abs(result) / 5 + 1;
                 wm = wm > ship.CrewMorale.WellBeing ? ship.CrewMorale.WellBeing : wm;
-                status.GameEvents.Add(new EpicCookingFailureEvent
+                events.Add(new EpicCookingFailureEvent
                 {
+                    ShipName = ship.Name,
                     WellbeingPenalty = wm * -1,
                     HealthCheckModifier = result <= -15 ? 4 : 0
                 });
             }
-        }
-
-        private int PerformAssists(List<JobMessage> list)
-        {
-            int retval = 0;
-
-            foreach (var assist in list)
-            {
-                retval += (DiceRoller.D20(1) + assist.SkillBonus >= 10) ? 2 : 0;
-            }
-
-            return retval;
+            return events;
         }
     }
 }

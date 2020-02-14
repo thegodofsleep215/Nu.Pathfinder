@@ -1,4 +1,5 @@
 ﻿using Nu.OfficerMiniGame.Dal.Enums;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Nu.OfficerMiniGame
@@ -42,63 +43,60 @@ namespace Nu.OfficerMiniGame
             }
             // This is a bit of a simplification, as I can see situations where you could have different numbers of these, but for now
             // this is complex enough.
-            if (ship.AssignedJobs.Count(a => a.DutyType == DutyType.Command && !a.IsAssistant) > 1)
+            if (ship.ShipsCrew.CountJobs(a => a.DutyType == DutyType.Command && !a.IsAssistant) > 1)
             {
                 retval.Messages.Add("Can't have two commanders!");
             }
-            if (ship.AssignedJobs.Count(a => a.DutyType == DutyType.Command && !a.IsAssistant) > 2)
+            if (ship.ShipsCrew.CountJobs(a => a.DutyType == DutyType.Command && !a.IsAssistant) > 2)
             {
                 retval.Messages.Add("Too many leutinants!");
             }
-            if (ship.AssignedJobs.Count(a => a.DutyType == DutyType.Manage && !a.IsAssistant) > 1)
+            if (ship.ShipsCrew.CountJobs(a => a.DutyType == DutyType.Manage && !a.IsAssistant) > 1)
             {
                 retval.Messages.Add("Can't have two pursurs!");
             }
-            if (ship.AssignedJobs.Count(a => a.DutyType == DutyType.Watch && !a.IsAssistant) > 3)
+            if (ship.ShipsCrew.CountJobs(a => a.DutyType == DutyType.Watch && !a.IsAssistant) > 3)
             {
                 retval.Messages.Add("Too many helmsmen.  There are only three watches per day!");
             }
-            if (ship.AssignedJobs.Count(a => a.DutyType == DutyType.Manage && a.IsAssistant) > MaxClerks())
+            if (ship.ShipsCrew.CountJobs(a => a.DutyType == DutyType.Manage && a.IsAssistant) > MaxClerks())
             {
                 retval.Messages.Add("Too many clerks!");
             }
-            if (ship.AssignedJobs.Count(a => a.DutyType == DutyType.Pilot && !a.IsAssistant) > 1)
+            if (ship.ShipsCrew.CountJobs(a => a.DutyType == DutyType.Pilot && !a.IsAssistant) > 1)
             {
                 retval.Messages.Add("Can't have two masters!");
             }
-            if (ship.AssignedJobs.Count(a => a.DutyType == DutyType.Pilot && a.IsAssistant) > MaxPilotAssistants(ship.ShipSize))
+            if (ship.ShipsCrew.CountJobs(a => a.DutyType == DutyType.Pilot && a.IsAssistant) > MaxPilotAssistants(ship.ShipSize))
             {
                 retval.Messages.Add("Too many hands for the ship's wheel!");
             }
-            if (ship.AssignedJobs.Count(a => a.DutyType == DutyType.Navigate && !a.IsAssistant) > 1)
+            if (ship.ShipsCrew.CountJobs(a => a.DutyType == DutyType.Navigate && !a.IsAssistant) > 1)
             {
                 retval.Messages.Add("Too many navigators!");
             }
-            if (ship.AssignedJobs.Count(a => a.DutyType == DutyType.Navigate && a.IsAssistant) > 1)
+            if (ship.ShipsCrew.CountJobs(a => a.DutyType == DutyType.Navigate && a.IsAssistant) > 1)
             {
                 retval.Messages.Add("Too many quartermasters!");
             }
-            if (ship.AssignedJobs.Count(a => a.DutyType == DutyType.Cook && !a.IsAssistant) > 1)
+            if (ship.ShipsCrew.CountJobs(a => a.DutyType == DutyType.Cook && !a.IsAssistant) > 1)
             {
                 retval.Messages.Add("Too many cooks spoil the pot!");
             }
-            if (ship.AssignedJobs.Count(a => a.DutyType == DutyType.Cook && a.IsAssistant) > MaxCookAssistants())
+            if (ship.ShipsCrew.CountJobs(a => a.DutyType == DutyType.Cook && a.IsAssistant) > MaxCookAssistants())
             {
                 retval.Messages.Add("Too many cook's mates!");
             }
-            if (ship.AssignedJobs.Count(a => a.DutyType == DutyType.Discipline && !a.IsAssistant) > 1)
+            if (ship.ShipsCrew.CountJobs(a => a.DutyType == DutyType.Discipline && !a.IsAssistant) > 1)
             {
                 retval.Messages.Add("Can't have two discipline officers!");
             }
-            if (ship.AssignedJobs.Count(a => a.DutyType == DutyType.Discipline && a.IsAssistant) > 0)
+            if (ship.ShipsCrew.CountJobs(a => a.DutyType == DutyType.Discipline && a.IsAssistant) > 0)
             {
                 retval.Messages.Add("Can't have an assistant discipline officer!");
             }
 
-            foreach (var matey in ship.ShipsCrew)
-            {
-                retval.Messages.AddRange(matey.ValidateJobs());
-            }
+            retval.Messages.AddRange(ship.ShipsCrew.SelectMany(x => ValidateJobs(x)));
 
             if (retval.Messages.Count == 0)
                 retval.Success = true;
@@ -106,7 +104,48 @@ namespace Nu.OfficerMiniGame
             return retval;
         }
 
+        private static IEnumerable<string> ValidateJobs(CrewMember crewMember)
+        {
+            List<string> messages = new List<string>();
 
+            if (crewMember.Jobs.Count(a => a.DutyType == DutyType.RepairHull || a.DutyType == DutyType.RepairSails || a.DutyType == DutyType.RepairSeigeEngine) > 2)
+            {
+                messages.Add(string.Format("Not enough time in the day for {0} {1} to repair everything!", crewMember.Title, crewMember.Name));
+            }
+            if (crewMember.Jobs.Count(a => a.DutyType == DutyType.Stow) > 2)
+            {
+                messages.Add(string.Format("Not enough time in the day for {0} {1} to put it all away!", crewMember.Title, crewMember.Name));
+            }
+            if (crewMember.Jobs.Count(a => a.DutyType == DutyType.Heal) > 2)
+            {
+                messages.Add(string.Format("Not enough time in the day for {0} {1} to heal everyone!", crewMember.Title, crewMember.Name));
+            }
+            if (crewMember.Jobs.Count(a => a.DutyType == DutyType.Cook) > 1)
+            {
+                messages.Add(string.Format("{0} {1} forgot that cooking twice is just cooking once, in smaller batches!", crewMember.Title, crewMember.Name));
+            }
+            if (crewMember.Jobs.Count(a => a.DutyType == DutyType.Ministrel) > 2)
+            {
+                messages.Add(string.Format("{0} {1}'s voice would get tired!", crewMember.Title, crewMember.Name));
+            }
+            if (crewMember.Jobs.Count(a => a.DutyType == DutyType.Procure) > 2)
+            {
+                messages.Add(string.Format("Not enough time in the day for {0} {1} to catch all the fish!", crewMember.Title, crewMember.Name));
+            }
+            if (crewMember.Jobs.Count(a => a.DutyType == DutyType.Procure ||
+                                a.DutyType == DutyType.Ministrel ||
+                                a.DutyType == DutyType.Heal ||
+                                a.DutyType == DutyType.Stow ||
+                                a.DutyType == DutyType.Unload ||
+                                a.DutyType == DutyType.RepairHull ||
+                                a.DutyType == DutyType.RepairSails ||
+                                a.DutyType == DutyType.RepairSeigeEngine) > 2)
+            {
+                messages.Add(string.Format("{0} {1} can't do all the work by himself!", crewMember.Title, crewMember.Name));
+            }
+
+            return messages;
+        }
 
     }
 }

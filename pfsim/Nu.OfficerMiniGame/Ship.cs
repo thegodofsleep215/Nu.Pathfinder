@@ -8,101 +8,14 @@ using System.Text;
 
 namespace Nu.OfficerMiniGame
 {
-    public class ShipsCrew
-    {
-        private List<CrewMember> crew = new List<CrewMember>();
-
-        public void Add(CrewMember crewMember)
-        {
-            crew.Add(crewMember);
-        }
-
-        public int Count => crew.Count();
-
-        public int CountAsCrew => crew.Count(x => x.CountsAsCrew);
-
-        public int GetAssistance(DutyType duty)
-        {
-            List<JobMessage> assists = new List<JobMessage>();
-            var jobs = AssignedJobs.Where(a => a.DutyType == duty && a.IsAssistant);
-
-            foreach (var job in jobs)
-            {
-                JobMessage assistance = new JobMessage();
-
-                assistance.DutyType = duty;
-
-                var mate = crew.FirstOrDefault(a => a.Name == job.CrewName);
-
-                if (mate != null)
-                {
-                    switch (duty)
-                    {
-                        case DutyType.Command:
-                            assistance.SkillBonus = mate.CommanderSkillBonus;
-                            break;
-                        case DutyType.Cook:
-                            assistance.SkillBonus = mate.CookSkillBonus;
-                            break;
-                        case DutyType.Discipline:
-                            assistance.SkillBonus = mate.DisciplineSkillBonus;
-                            break;
-                        case DutyType.Heal:
-                            assistance.SkillBonus = mate.HealerSkillBonus;
-                            break;
-                        case DutyType.Maintain:
-                            assistance.SkillBonus = mate.DisciplineSkillBonus;
-                            break;
-                        case DutyType.Manage:
-                            assistance.SkillBonus = mate.ManagerSkillBonus;
-                            break;
-                        case DutyType.Ministrel:
-                            assistance.SkillBonus = mate.MinistrelSkillBonus;
-                            break;
-                        case DutyType.Navigate:
-                            assistance.SkillBonus = mate.NavigatorSkillBonus;
-                            break;
-                        case DutyType.Pilot:
-                            assistance.SkillBonus = mate.PilotSkillBonus;
-                            break;
-                        case DutyType.Procure:
-                            assistance.SkillBonus = mate.ProcureSkillBonus;
-                            break;
-                        case DutyType.RepairHull:
-                            assistance.SkillBonus = mate.RepairSkillBonus;
-                            break;
-                        case DutyType.RepairSails:
-                            assistance.SkillBonus = mate.RepairSkillBonus;
-                            break;
-                        case DutyType.RepairSeigeEngine:
-                            assistance.SkillBonus = mate.RepairSkillBonus;
-                            break;
-                        case DutyType.Stow:
-                            assistance.SkillBonus = mate.StowSkillBonus;
-                            break;
-                        case DutyType.Unload:
-                            assistance.SkillBonus = mate.UnloadSkillBonus;
-                            break;
-                        case DutyType.Watch:
-                            assistance.SkillBonus = mate.WatchSkillBonus;
-                            break;
-                    }
-                }
-
-                assists.Add(assistance);
-            }
-
-            return assists;
-        }
-
-
-    }
 
     /// <summary>
     /// This class helps sthe <see cref="GameEngine"/> run.
     /// </summary>
     public class Ship
     {
+        public string Name { get; set; }
+
         public ShipSize ShipSize { get; set; }
 
         public int CrewSize { get; set; }
@@ -127,7 +40,7 @@ namespace Nu.OfficerMiniGame
 
         public int ShipQuality { get; set; } // Place holder for generic bonus.
 
-        public ShipsCrew ShipsCrew { get; set; } = new ShipsCrew();
+        public ShipsCrew ShipsCrew { get; set; }
 
         public Morale CrewMorale { get; set; } = new Morale();
 
@@ -148,51 +61,21 @@ namespace Nu.OfficerMiniGame
             }
         }
 
-        public bool HasDisciplineOfficer
-        {
-            get
-            {
-                return AssignedJobs.Exists(a => a.DutyType == DutyType.Discipline);
-            }
-        }
-
-        public bool HasHealer
-        {
-            get
-            {
-                return AssignedJobs.Exists(a => a.DutyType == DutyType.Heal);
-            }
-        }
-
         public DisciplineStandards DisciplineStandards { get; set; }
 
         public int CrewDisciplineModifier
         {
             get
             {
-                int retval = TemporaryDisciplineModifier;
-
-                switch (DisciplineStandards)
-                {
-                    case DisciplineStandards.Lax:
-                        retval += 2;
-                        break;
-                    case DisciplineStandards.Strict:
-                        retval -= 2;
-                        break;
-                }
-
                 switch (ShipsAlignment)
                 {
                     case Alignment.Chaotic:
-                        retval += 2;
-                        break;
+                    return 2;
                     case Alignment.Lawful:
-                        retval -= 2;
-                        break;
+                        return  2;
+                    default:
+                        return 0;
                 }
-
-                return retval;
             }
         }
 
@@ -205,7 +88,6 @@ namespace Nu.OfficerMiniGame
         public int Swabbies { get; set; }
 
         public decimal AverageSwabbieQuality { get; set; }
-
 
         public int AvailableCrew
         {
@@ -248,29 +130,9 @@ namespace Nu.OfficerMiniGame
             }
         }
 
-        private List<Job> assignedJobs;
-
-        public List<Job> AssignedJobs
-        {
-            get
-            {
-                if (assignedJobs == null)
-                {
-                    assignedJobs = new List<Job>();
-
-                    foreach (var matey in ShipsCrew)
-                    {
-                        assignedJobs.AddRange(matey.Jobs);
-                    }
-
-                }
-                return assignedJobs;
-            }
-        }
-
         public string GetRandomCrewName(int count = 1)
         {
-            var swabCount = Swabbies + ShipsCrew.Count(a => a.CountsAsCrew);
+            var swabCount = Swabbies + ShipsCrew.CountAsCrew;
             var mates = ShipsCrew.Where(a => a.CountsAsCrew).ToList();
             HashSet<int> picked = new HashSet<int>();
             StringBuilder sb = new StringBuilder();
@@ -303,305 +165,15 @@ namespace Nu.OfficerMiniGame
 
             return sb.ToString();
         }
-        public JobMessage CommanderJob
-        {
-            get
-            {
-                JobMessage retval = new JobMessage() { DutyType = DutyType.Command, SkillBonus = -5, IsAssistant = false, CrewName = "No one" };
 
-                if (AssignedJobs.Exists(a => a.DutyType == DutyType.Command))
-                {
-                    string commanderName = AssignedJobs.First(a => a.DutyType == DutyType.Command && !a.IsAssistant).CrewName;
-
-                    var commander = ShipsCrew.FirstOrDefault(a => a.Name == commanderName);
-
-                    if (commander != null)
-                    {
-                        retval.CrewName = string.Format("{0} {1}", commander.Title, commander.Name).Trim();
-                        retval.SkillBonus = commander.CommanderSkillBonus;
-                    }
-                }
-
-                return retval;
-            }
-        }
-
-        /// <summary>
-        /// In the engine, this adds to DC so the result needs to be inverse of a modification to a dice role.
-        /// </summary>
         public int CrewPilotModifier
         {
             get
             {
-                return (SkeletonCrewPenalty + ShipPilotingBonus + CrewQuality + TemporaryPilotingModifier);
+                return SkeletonCrewPenalty + ShipPilotingBonus + CrewQuality;
             }
         }
 
-        public int TemporaryDisciplineModifier { get; set; }
-
-        public int TemporaryCommandModifier { get; set; }
-
-        public int TemporaryPilotingModifier { get; set; }
-
-        public int TemporaryNavigationModifier { get; set; }
-
-        public int HullDamageSinceRefit { get; set; }
-
-        public int CurrentHullDamage { get; set; }
-
-        public int SailDamageSinceRefit { get; set; }
-
-        public int CurrentSailDamage { get; set; }
-
-        public void AlterHullDamage(int damage)
-        {
-            if (damage > 0)
-            {
-                CurrentHullDamage += damage;
-                HullDamageSinceRefit += damage;
-            }
-            else
-            {
-                if ((CurrentHullDamage - Math.Ceiling(HullDamageSinceRefit * .1)) >= Math.Abs(damage))
-                    CurrentHullDamage += damage;
-                else
-                    CurrentHullDamage = Convert.ToInt32((Math.Ceiling(HullDamageSinceRefit * .1)));
-            }
-        }
-
-        public void AlterSailDamage(int damage)
-        {
-            if (damage > 0)
-            {
-                CurrentSailDamage += damage;
-                SailDamageSinceRefit += damage;
-            }
-            else
-            {
-                if ((CurrentSailDamage - Math.Ceiling(SailDamageSinceRefit * .1)) >= Math.Abs(damage))
-                    CurrentSailDamage += damage;
-                else
-                    CurrentSailDamage = Convert.ToInt32((Math.Ceiling(SailDamageSinceRefit * .1)));
-            }
-        }
-
-
-        public JobMessage PilotJob
-        {
-            get
-            {
-                JobMessage retval = new JobMessage() { DutyType = DutyType.Pilot, SkillBonus = -5, IsAssistant = false, CrewName = "No one" };
-
-                if (AssignedJobs.Exists(a => a.DutyType == DutyType.Pilot))
-                {
-                    string pilotName = AssignedJobs.First(a => a.DutyType == DutyType.Pilot && !a.IsAssistant).CrewName;
-
-                    var pilot = ShipsCrew.FirstOrDefault(a => a.Name == pilotName);
-
-                    if (pilot != null)
-                    {
-                        retval.CrewName = string.Format("{0} {1}", pilot.Title, pilot.Name).Trim();
-                        retval.SkillBonus = pilot.PilotSkillBonus;
-                    }
-                }
-
-                return retval;
-            }
-        }
-
-        public JobMessage DisciplineJob
-        {
-            get
-            {
-                JobMessage retval = new JobMessage() { DutyType = DutyType.Pilot, SkillBonus = -5, IsAssistant = false, CrewName = "No one" };
-
-                if (AssignedJobs.Exists(a => a.DutyType == DutyType.Discipline))
-                {
-                    string bosunName = AssignedJobs.First(a => a.DutyType == DutyType.Discipline && !a.IsAssistant).CrewName;
-
-                    var bosun = ShipsCrew.FirstOrDefault(a => a.Name == bosunName);
-
-                    if (bosun != null)
-                    {
-                        retval.CrewName = string.Format("{0} {1}", bosun.Title, bosun.Name).Trim();
-                        retval.SkillBonus = bosun.DisciplineSkillBonus;
-                    }
-                }
-
-                return retval;
-            }
-        }
-
-
-        public List<int> WatchBonuses
-        {
-            get
-            {
-                int[] watchBonuses = new int[3] { -5, -5, -5 };
-
-                var day = AssignedJobs.Where(a => a.DutyType == DutyType.Watch);
-                var i = 0;
-
-                foreach (var watch in day)
-                {
-                    var lookout = ShipsCrew.FirstOrDefault(a => a.Name == watch.CrewName);
-
-                    if (lookout != null)
-                    {
-                        watchBonuses[i] = lookout.WatchSkillBonus;
-                        i++;
-                    }
-
-                    if (i >= 3)
-                        break;
-                }
-
-                return watchBonuses.ToList();
-            }
-        }
-
-
-        public List<int> MinistrelBonuses
-        {
-            get
-            {
-                List<int> shantyBonuses = new List<int>();
-
-                var day = AssignedJobs.Where(a => a.DutyType == DutyType.Ministrel);
-
-                foreach (var watch in day)
-                {
-                    var ministrel = ShipsCrew.FirstOrDefault(a => a.Name == watch.CrewName);
-
-                    if (ministrel != null)
-                    {
-                        shantyBonuses.Add(ministrel.MinistrelSkillBonus);
-                    }
-                }
-
-                return shantyBonuses.ToList();
-            }
-        }
-
-
-        public JobMessage MaintainJob
-        {
-            get
-            {
-                JobMessage retval = new JobMessage() { DutyType = DutyType.Maintain, SkillBonus = -5, IsAssistant = false, CrewName = "No one" };
-
-                if (AssignedJobs.Exists(a => a.DutyType == DutyType.Maintain))
-                {
-                    string fixitFelixName = AssignedJobs.First(a => a.DutyType == DutyType.Maintain && !a.IsAssistant).CrewName;
-
-                    var fixitFelix = ShipsCrew.FirstOrDefault(a => a.Name == fixitFelixName);
-
-                    if (fixitFelix != null)
-                    {
-                        retval.CrewName = string.Format("{0} {1}", fixitFelix.Title, fixitFelix.Name).Trim();
-                        retval.SkillBonus = fixitFelix.MaintainSkillBonus;
-                    }
-                }
-
-                return retval;
-            }
-        }
-
-
-        public JobMessage ManagerJob
-        {
-            get
-            {
-                JobMessage retval = new JobMessage() { DutyType = DutyType.Manage, SkillBonus = -5, IsAssistant = false, CrewName = "No one" };
-
-                if (AssignedJobs.Exists(a => a.DutyType == DutyType.Manage))
-                {
-                    string pointyHairedOneName = AssignedJobs.First(a => a.DutyType == DutyType.Manage && !a.IsAssistant).CrewName;
-
-                    var pointyHairedOne = ShipsCrew.FirstOrDefault(a => a.Name == pointyHairedOneName);
-
-                    if (pointyHairedOne != null)
-                    {
-                        retval.CrewName = string.Format("{0} {1}", pointyHairedOne.Title, pointyHairedOne.Name).Trim();
-                        retval.SkillBonus = pointyHairedOne.ManagerSkillBonus;
-                    }
-                }
-
-                return retval;
-            }
-        }
-
-
-        public JobMessage NavigatorJob
-        {
-            get
-            {
-                JobMessage retval = new JobMessage() { DutyType = DutyType.Navigate, SkillBonus = -5, IsAssistant = false, CrewName = "No one" };
-
-                if (AssignedJobs.Exists(a => a.DutyType == DutyType.Navigate))
-                {
-                    string navigatorName = AssignedJobs.First(a => a.DutyType == DutyType.Navigate && !a.IsAssistant).CrewName;
-
-                    var navigator = ShipsCrew.FirstOrDefault(a => a.Name == navigatorName);
-
-                    if (navigator != null)
-                    {
-                        retval.CrewName = string.Format("{0} {1}", navigator.Title, navigator.Name).Trim();
-                        retval.SkillBonus = navigator.NavigatorSkillBonus;
-                    }
-                }
-
-                return retval;
-            }
-        }
-
-
-        public JobMessage HealerJob
-        {
-            get
-            {
-                JobMessage retval = new JobMessage() { DutyType = DutyType.Heal, SkillBonus = -5, IsAssistant = false, CrewName = "No one" };
-
-                if (AssignedJobs.Exists(a => a.DutyType == DutyType.Heal))
-                {
-                    string healerName = AssignedJobs.First(a => a.DutyType == DutyType.Heal && !a.IsAssistant).CrewName;
-
-                    var healer = ShipsCrew.FirstOrDefault(a => a.Name == healerName);
-
-                    if (healer != null)
-                    {
-                        retval.CrewName = string.Format("{0} {1}", healer.Title, healer.Name).Trim();
-                        retval.SkillBonus = healer.HealerSkillBonus;
-                    }
-                }
-
-                return retval;
-            }
-        }
-
-
-        public JobMessage CookJob
-        {
-            get
-            {
-                JobMessage retval = new JobMessage() { DutyType = DutyType.Cook, SkillBonus = -5, IsAssistant = false, CrewName = "No one" };
-
-                if (AssignedJobs.Exists(a => a.DutyType == DutyType.Cook))
-                {
-                    string cookName = AssignedJobs.First(a => a.DutyType == DutyType.Cook && !a.IsAssistant).CrewName;
-
-                    var cook = ShipsCrew.FirstOrDefault(a => a.Name == cookName);
-
-                    if (cook != null)
-                    {
-                        retval.CrewName = string.Format("{0} {1}", cook.Title, cook.Name).Trim();
-                        retval.SkillBonus = cook.CookSkillBonus;
-                    }
-                }
-
-                return retval;
-            }
-        }
 
         public int CargoPoints { get; set; }
 

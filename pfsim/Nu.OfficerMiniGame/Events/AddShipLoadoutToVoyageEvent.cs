@@ -1,6 +1,4 @@
-﻿using Nu.OfficerMiniGame.Dal.Dto;
-
-namespace Nu.OfficerMiniGame
+﻿namespace Nu.OfficerMiniGame
 {
     public class AddShipLoadoutToVoyageEvent
     {

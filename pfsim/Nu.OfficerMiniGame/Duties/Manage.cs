@@ -1,8 +1,7 @@
 ﻿using Nu.Game.Common;
-using System;
 using System.Collections.Generic;
 
-namespace  Nu.OfficerMiniGame
+namespace Nu.OfficerMiniGame
 {
     /// <summary>
     /// Manage – Allocate resources, tools and supplies from the ship’s stock in order to perform the ship’s daily
@@ -14,37 +13,24 @@ namespace  Nu.OfficerMiniGame
     /// Cook, Maintain, and Repair checks during that day (including attempts to assist those checks), and a +2 
     /// chance of Discipline problems.  You may have up to two assistants.
     /// </summary>
-    public class Manage : IDuty
+    public class Manage : BaseDuty
     {
-        public void PerformDuty(Ship ship, bool verbose, ref MiniGameStatus status)
+        public override List<object> PerformDuty(Ship ship, FleetState state)
         {
-            var dc = 5 + ship.ShipDc + (ship.TotalCrew / 20) - status.CommandModifier;
-            var assistBonus = PerformAssists(ship.GetAssistance(DutyType.Manage));
-            var job = ship.ManagerJob;
-            status.ManageResult = (DiceRoller.D20(1) + job.SkillBonus + assistBonus) - dc;
-            if ((status.ManageResult < 0 && status.ManageResult >= -2) || (status.ManageResult <= -10 && status.ManageResult > -12))
+            var events = new List<object>();
+            var dc = 5 + ship.ShipDc + (ship.TotalCrew / 20) - state.ShipStates[ship.Name].CommandModifier;
+            var assistBonus = PerformAssists(ship, DutyType.Manage);
+            var job = GetDutyBonus(ship, DutyType.Manage);
+            var result = (DiceRoller.D20(1) + job.SkillBonus + assistBonus) - dc;
+            if ((result < 0 && result >= -2) || (result <= -10 && result > -12))
             {
-                // Use a ministrel.
-                int ministrel = status.MinistrelResults.Count;
-
-                if (ship.MinistrelBonuses.Count > ministrel)
-                {
-                    dc = 10 + (ship.TotalCrew / 20) > 15 ? 10 + (ship.TotalCrew / 20) : 15;
-                    var shanty = DiceRoller.D20(1) + ship.MinistrelBonuses[ministrel] - dc;
-                    status.MinistrelResults.Add(shanty);
-                    if (shanty >= 0)
-                    { 
-                        status.ManageResult += 2;
-                        status.GameEvents.Add(new SeaShantyEvent(DutyType.Manage));
-                    }
-                }
+                result += UseMinstrel(ship, state, events, DutyType.Manage);
             }
-            if(verbose)
-                status.GameEvents.Add(new PerformedDutyEvent(DutyType.Manage, job.CrewName, dc, assistBonus, job.SkillBonus, status.ManageResult));
+            events.Add(new PerformedDutyEvent(ship.Name, DutyType.Manage, job.CrewName, dc, assistBonus, job.SkillBonus, result));
 
-            if (status.ManageResult < 0)
-            { 
-                var e = new MismanagedSuppliesEvent();
+            if (result < 0)
+            {
+                var e = new MismanagedSuppliesEvent { ShipName = ship.Name };
                 if (DiceRoller.D20(1) <= (ship.TotalCrew / 10 + 1))  // Possibly replace this random balancer with finer granularity in the future.
                 {
                     e.SupplyType = (SupplyType)DiceRoller.D4(1);
@@ -54,26 +40,15 @@ namespace  Nu.OfficerMiniGame
                         e.QuantityLost = ShipConstants.ShipFoodPerCargoPoint;
                 }
 
-                if(status.ManageResult <= -10)
+                if (result <= -10)
                 {
                     e.CausedConfusion = true;
                 }
 
-                if(e.CausedConfusion || e.SupplyType.HasValue)
-                    status.GameEvents.Add(e);
+                if (e.CausedConfusion || e.SupplyType.HasValue)
+                    events.Add(e);
             }
-        }
-
-        private int PerformAssists(List<JobMessage> list)
-        {
-            int retval = 0;
-
-            foreach (var assist in list)
-            {
-                retval += ((DiceRoller.D20(1) + assist.SkillBonus) >= 10) ? 2 : 0;
-            }
-
-            return retval;
+            return events;
         }
     }
 }

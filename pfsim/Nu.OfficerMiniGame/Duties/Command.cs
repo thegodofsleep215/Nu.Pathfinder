@@ -2,30 +2,10 @@
 using Nu.OfficerMiniGame.Dal.Dto;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Nu.OfficerMiniGame
 {
-    public abstract class BaseDuty : IDuty 
-    {
-        public abstract void PerformDuty(Ship ship, ref MiniGameStatus status);
-
-        protected int PerformAssists(List<JobMessage> list)
-        {
-            int retval = 0;
-
-            foreach (var assist in list)
-            {
-                retval += (DiceRoller.D20(1) + assist.SkillBonus >= 10) ? 2 : 0;
-            }
-
-            return retval;
-        }
-
-        protected int GetSkillBonus(DutyType dutyType)
-        {
-        }
-    }
-
     /// <summary>
     /// Command – Issue instructions to crew.  Always first check of day.  DC is 5 + Ship’s difficulty modifier + 1 / 10 crew.
     /// The ship’s morale bonus is a bonus or penalty to any command check.   Failure by 5 or more results in a -2 check on
@@ -35,30 +15,19 @@ namespace Nu.OfficerMiniGame
     /// </summary>
     public class Command : BaseDuty
     {
-        public override void PerformDuty(Ship ship, ref MiniGameStatus status)
+        public override List<object> PerformDuty(Ship ship, FleetState state)
         {
-            var dc = 5 + ship.ShipDc + (ship.TotalCrew / 10) + ship.TemporaryCommandModifier;
-            var assistBonus = PerformAssists(ship.GetAssistance(DutyType.Command));
-            var job = ship.CommanderJob;
-            status.CommandResult = (DiceRoller.D20(1) + job.SkillBonus + assistBonus) - dc;
-            if (status.CommandResult < 0 && status.CommandResult >= -2)
+            var events = new List<object>();
+            var dc = 5 + ship.ShipDc + (ship.TotalCrew / 10) + state.ShipStates[ship.Name].TemporaryCommandModifier;
+            var assistBonus = PerformAssists(ship, DutyType.Command);
+            var job = GetDutyBonus(ship, DutyType.Command);
+            var result = (DiceRoller.D20(1) + job.SkillBonus + assistBonus) - dc;
+            if (result < 0 && result >= -2)
             {
-                // Use a ministrel.
-                int ministrel = status.MinistrelResults.Count;
-
-                if (ship.MinistrelBonuses.Count > ministrel)
-                {
-                    dc = 10 + (ship.TotalCrew / 10) > 15 ? 10 + (ship.TotalCrew / 10) : 15;
-                    var shanty = DiceRoller.D20(1) + ship.MinistrelBonuses[ministrel] - dc;
-                    status.MinistrelResults.Add(shanty);
-                    if (shanty >= 0)
-                    {
-                        status.CommandResult += 2;
-                        status.GameEvents.Add(new SeaShantyEvent(DutyType.Command));
-                    }
-                }
+                result += UseMinstrel(ship, state, events, DutyType.Command);
             }
-            status.GameEvents.Add(new PerformedDutyEvent(DutyType.Command, job.CrewName, dc, assistBonus, job.SkillBonus, status.CommandResult));
+            events.Add(new PerformedDutyEvent(ship.Name, DutyType.Command, job.CrewName, dc, assistBonus, job.SkillBonus, result));
+            return events;
         }
     }
 }

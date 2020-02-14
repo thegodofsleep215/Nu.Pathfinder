@@ -18,20 +18,20 @@ namespace  Nu.OfficerMiniGame
     ///Gargantuan  1d4	
     ///Colossal    1d6	
     /// </summary>
-    public class Maintain : IDuty
+    public class Maintain : BaseDuty
     {
-        public void PerformDuty(Ship ship, bool verbose, ref MiniGameStatus status)
+        public override List<object> PerformDuty(Ship ship, FleetState state)
         {
-            var weatherModifier = status.GetWeatherModifier(DutyType.Maintain);
-            var dc = 5 + ship.ShipDc - status.CommandModifier - status.ManageModifier + weatherModifier;
+            var events = new List<object>();
+            var weatherModifier = state.GetWeatherModifier(DutyType.Maintain);
+            var dc = 5 + ship.ShipDc - state.ShipStates[ship.Name].CommandModifier - state.ShipStates[ship.Name].ManageModifier + weatherModifier;
             dc += ship.IsShipOverburdened ? (int)Math.Ceiling(ship.OverburdenedFactor + 1) : 0;
-            var assistBonus = PerformAssists(ship.GetAssistance(DutyType.Maintain), weatherModifier);
-            var job = ship.MaintainJob;
-            status.MaintainResult = DiceRoller.D20(1) + job.SkillBonus + assistBonus - dc;
-            if(verbose)
-                status.GameEvents.Add(new PerformedDutyEvent(DutyType.Maintain, job.CrewName, dc, assistBonus, job.SkillBonus, status.MaintainResult));
+            var assistBonus = PerformAssists(ship, DutyType.Maintain, weatherModifier);
+            var job = GetDutyBonus(ship, DutyType.Maintain);
+            var result = DiceRoller.D20(1) + job.SkillBonus + assistBonus - dc;
+            events.Add(new PerformedDutyEvent(ship.Name, DutyType.Maintain, job.CrewName, dc, assistBonus, job.SkillBonus, result));
 
-            if (status.MaintainResult < 0)
+            if (result < 0)
             {
                 int damage;
                 switch (ship.ShipSize)
@@ -53,20 +53,9 @@ namespace  Nu.OfficerMiniGame
                 }
                 damage = (int)Math.Ceiling(damage * ship.OverburdenedFactor);
 
-                status.GameEvents.Add(new PoorMaintenanceEvent { Damage = damage });
+                events.Add(new PoorMaintenanceEvent { ShipName = ship.Name, Damage = damage });
             }
-        }
-        
-        private int PerformAssists(List<JobMessage> list, int modifier)
-        {
-            int retval = 0;
-
-            foreach (var assist in list)
-            {
-                retval += ((DiceRoller.D20(1) + assist.SkillBonus) >= (10 - modifier)) ? 2 : 0;
-            }
-
-            return retval;
+            return events;
         }
     }
 }

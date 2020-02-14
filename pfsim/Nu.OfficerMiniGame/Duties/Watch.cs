@@ -11,7 +11,7 @@ namespace  Nu.OfficerMiniGame
     /// cumulative for each watch failure.  Success on a watch results in a +2 circumstance bonus on initiative
     /// checks for encounters during that watch.  You may have 1 assistant on each watch. 
     /// </summary>
-    public class Watch : IDuty
+    public class Watch : BaseDuty
     {
         private WatchShift watchShift;
 
@@ -20,38 +20,41 @@ namespace  Nu.OfficerMiniGame
             this.watchShift = watchShift;
         }
 
-        public void PerformDuty(Ship ship, bool verbose, ref MiniGameStatus status)
+        public override List<object> PerformDuty(Ship ship, FleetState state)
         {
-            var weatherModifier =  status.GetWatchModifier(watchShift);
-            var dc = 10 + weatherModifier - status.CommandModifier;
-            var assistBonus = PerformAssists(ship.GetAssistance(DutyType.Watch), weatherModifier, status);
+            var events = new List<object>();
+            var weatherModifier =  state.GetWatchModifier(watchShift);
+            var dc = 10 + weatherModifier - state.ShipStates[ship.Name].CommandModifier;
+            var assistBonus = PerformAssists(ship, state, weatherModifier);
 
-            int watch = status.WatchResults.Count;
+            int watch = state.ShipStates[ship.Name].WatchResults.Count;
 
             var result = -5;
-            if(ship.WatchBonuses.Count > watch)
-                result = (DiceRoller.D20(1) + ship.WatchBonuses[watch] + assistBonus) - dc;
-            status.WatchResults.Add(result);
-            status.GameEvents.Add(new WatchResultEvent
+            if(ship.ShipsCrew.WatchBonuses.Count > watch)
+                result = (DiceRoller.D20(1) + ship.ShipsCrew.WatchBonuses[watch] + assistBonus) - dc;
+            state.ShipStates[ship.Name].WatchResults.Add(result);
+            events.Add(new WatchResultEvent
             {
+                ShipName = ship.Name,
                 Watch = watch + 1,
                 Success = result >= 0
             });
+            return events;
         }
 
-        private int PerformAssists(List<JobMessage> list, int weatherModifier, MiniGameStatus status)
+        private int PerformAssists(Ship ship, FleetState state, int weatherModifier)
         {
+            var list = ship.ShipsCrew.GetWatchBonuses();
             int retval = 0;
-            int watch = status.WatchResults.Count;
+            int watch = state.ShipStates[ship.Name].WatchResults.Count;
 
-            if(list.Count > watch)
+            if (list.Count > watch)
             {
                 var assist = list[watch - 1];
-                retval += ((DiceRoller.D20(1) + assist.SkillBonus) >= (10  - weatherModifier)) ? 2 : 0;
+                retval += ((DiceRoller.D20(1) + assist) >= (10 - weatherModifier)) ? 2 : 0;
             }
 
             return retval;
         }
     }
-
 }

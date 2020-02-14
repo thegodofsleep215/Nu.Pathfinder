@@ -23,26 +23,28 @@ namespace  Nu.OfficerMiniGame
     /// Huge		4d8	
     /// Gargantuan	6d8	
     /// Colossal	8d8	
-    public class Pilot : IDuty
+    public class Pilot : BaseDuty
     {
-        public void PerformDuty(Ship ship, bool verbose, ref MiniGameStatus status)
+        public override List<object> PerformDuty(Ship ship, FleetState state)
         {
-            var weatherModifier = status.GetWeatherModifier(DutyType.Pilot);
-            var dc = 7 + ship.ShipDc - status.CommandModifier - ship.CrewPilotModifier + weatherModifier + status.WatchModifier;
-            var job = ship.PilotJob;
-            var assistBonus = PerformAssists(ship.GetAssistance(DutyType.Pilot), weatherModifier);
-            status.PilotResult = (DiceRoller.D20(1) + job.SkillBonus + assistBonus) - dc;
-            if(verbose)
-                status.GameEvents.Add(new PerformedDutyEvent(DutyType.Pilot, job.CrewName, dc, assistBonus, job.SkillBonus, status.PilotResult));
+            var events = new List<object>();
+            var weatherModifier = state.GetWeatherModifier(DutyType.Pilot);
+            var dc = 7 + ship.ShipDc - state.ShipStates[ship.Name].CommandModifier - ship.CrewPilotModifier + weatherModifier +
+                state.ShipStates[ship.Name].WatchModifier;
 
-            if (status.PilotResult >= 0)
+            var job = GetDutyBonus(ship, DutyType.Pilot);
+            var assistBonus = PerformAssists(ship, DutyType.Pilot, weatherModifier);
+            var result = (DiceRoller.D20(1) + job.SkillBonus + assistBonus) - dc;
+            events.Add(new PerformedDutyEvent(ship.Name, DutyType.Pilot, job.CrewName, dc, assistBonus, job.SkillBonus, result));
+
+            if (result >= 0)
             {
-                status.GameEvents.Add(new PilotSuccessEvent());
+                events.Add(new PilotSuccessEvent { ShipName = ship.Name });
             }
-            if (status.PilotResult < 0)
+            if (result < 0)
             {
                 int damage = 0;
-                if (status.PilotResult <= -15)
+                if (result <= -15)
                 {
                     switch (ship.ShipSize)
                     {
@@ -62,31 +64,24 @@ namespace  Nu.OfficerMiniGame
                             damage = DiceRoller.D8(8);
                             break;
                     }
-                    status.GameEvents.Add(new PilotFailedEvent
+                    events.Add(new PilotFailedEvent
                     {
+                        ShipName = ship.Name,
                         Damage = damage
                     });
                 }
                 else
                 {
-                    status.GameEvents.Add(new PilotFailedEvent
+                    events.Add(new PilotFailedEvent
                     {
+                        ShipName = ship.Name,
                         Damage = 0
                     });
                 }
             }
+
+            return events;
         }
 
-        private int PerformAssists(List<JobMessage> list, int modifier)
-        {
-            int retval = 0;
-
-            foreach (var assist in list)
-            {
-                retval += ((DiceRoller.D20(1) + assist.SkillBonus) >= (10 + modifier)) ? 2 : 0;
-            }
-
-            return retval;
-        }
     }
 }

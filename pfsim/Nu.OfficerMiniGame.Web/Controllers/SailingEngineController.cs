@@ -119,28 +119,6 @@ namespace Nu.OfficerMiniGame.Web.Controllers
             //return new JsonResult(anon);
             throw new NotImplementedException();
         }
-
-
-        private void ProcessSailingParameters(SailingParameters sp, ref Ship ship)
-        {
-            if (sp.ShipModifiers != null)
-            {
-                var sm = sp.ShipModifiers.ToDictionary(x => x.LoadoutName, x => x);
-                if (sm.ContainsKey(ship.CrewName))
-                {
-                    ship.CrewMorale.TemporaryMoralePenalty = sm[ship.CrewName].MoraleModifier;
-                    ship.TemporaryDisciplineModifier = sm[ship.CrewName].DisciplineModifier;
-                    ship.TemporaryCommandModifier = sm[ship.CrewName].CommandModifier;
-                    ship.CrewUnfitForDuty = sm[ship.CrewName].NumberOfCrewUnfitForDuty;
-                    ship.DiseasedCrew = sm[ship.CrewName].NumberOfCrewDiseased;
-                    ship.DisciplineStandards = sm[ship.CrewName].DisciplineStandards;
-                    ship.Swabbies = sm[ship.CrewName].Swabbies;
-                    ship.TemporaryPilotingModifier = sp.PilotingModifier;
-                    ship.TemporaryNavigationModifier = sp.NavigationModifier;
-                }
-            }
-        }
-
     }
 
 }

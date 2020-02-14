@@ -4,31 +4,40 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace  Nu.OfficerMiniGame
+namespace Nu.OfficerMiniGame
 {
     public class PerformedDutyEvent
     {
-        private DutyType _duty;
-        private string _crew;
-        private int _dc;
-        private int _result;
-        private int _assist;
-        private int _skill;
+        public DutyType Duty { get; set; }
+
+        public string CrewMember { get; set; }
+
+        public int DC { get; set; }
+
+        public int Result { get; set; }
+
+        public int Assist { get; set; }
+
+        public int SkillBonus { get; set; }
 
         public string ShipName { get; set; }
-        public PerformedDutyEvent(DutyType duty, string crew, int dc, int assist, int skill, int result)
+
+        public PerformedDutyEvent() { }
+
+        public PerformedDutyEvent(string shipName, DutyType duty, string crew, int dc, int assist, int skill, int result)
         {
-            _duty = duty;
-            _crew = crew;
-            _dc = dc;
-            _assist = assist;
-            _skill = skill;
-            _result = result;
+            ShipName = shipName;
+            Duty = duty;
+            CrewMember = crew;
+            DC = dc;
+            Assist = assist;
+            SkillBonus = skill;
+            Result = result;
         }
 
         public override string ToString()
         {
-            return string.Format("{0} performed the duty of {1} which had a difficulty of {2}.  The sailor had a skill of {3} with an assistance of {4}, and the result was {5}.", _crew, _duty.ToString(), _dc, _skill, _assist, _result);
+            return $"{CrewMember} performed the duty of {Duty} which had a difficulty of {DC}.  The sailor had a skill of {SkillBonus} with an assistance of {Assist}, and the result was {Result}.";
         }
     }
 }

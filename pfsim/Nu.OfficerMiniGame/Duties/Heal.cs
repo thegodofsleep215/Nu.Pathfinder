@@ -1,7 +1,7 @@
 ﻿using Nu.Game.Common;
 using System.Collections.Generic;
 
-namespace  Nu.OfficerMiniGame
+namespace Nu.OfficerMiniGame
 {
     /// Heal – Treat illness and help contain it and prevent its spread.   In practice, the normal application 
     /// of this job works much like Discipline.   No one has to take it, but if no one takes it then it is 
@@ -40,41 +40,36 @@ namespace  Nu.OfficerMiniGame
     /// injured characters (such wounds as in battle, or lashes received from punishment) a process roughly as 
     /// difficult as providing first aid, then each injured character should be checked for a chance of disease.  
     /// If disease is indicated, that character acquires a serious infection 1d4 days after receiving the injury.  
-    public class Heal : IDuty
+    public class Heal : BaseDuty
     {
-        public void PerformDuty(Ship ship, bool verbose, ref MiniGameStatus status)
+        public override List<object> PerformDuty(Ship ship, FleetState state)
         {
+            var hasHealer = ship.ShipsCrew.JobHasAssignedCrewMember(DutyType.Heal, out _);
+            var events = new List<object>();
             var santitation = ship.TotalCrew / 10;
-            santitation += ship.HasHealer ? 0 : 4;
-            santitation += status.CookResult <= -15 ? 4 : 0;
+            santitation += hasHealer ? 0 : 4;
+            santitation += state.ShipStates[ship.Name].CookResult <= -15 ? 4 : 0;
             santitation += ship.CrewMorale.WellBeing == 2 ? 2 : 0;
             santitation += ship.CrewMorale.WellBeing <= 1 ? 4 : 0;
             santitation += ship.DiseaseAboardShip ? 4 : 0;
 
-            var assistBonus = PerformAssists(ship.GetAssistance(DutyType.Heal));
-            var job = ship.HealerJob;
+            var assistBonus = PerformAssists(ship, DutyType.Heal);
+            var job = GetDutyBonus(ship, DutyType.Heal);
             var result = DiceRoller.D20(1) + job.SkillBonus + assistBonus - santitation;
-            if(verbose)
-                status.GameEvents.Add(new PerformedDutyEvent(DutyType.Heal, job.CrewName, santitation, assistBonus, job.SkillBonus, result));
+            events.Add(new PerformedDutyEvent(ship.Name, DutyType.Heal, job.CrewName, santitation, assistBonus, job.SkillBonus, result));
 
-            if (result < 0 || !ship.HasHealer)
+            if (result < 0 || !hasHealer)
             {
                 // The number of sick should scale better with the size of the crew.
                 var sickCount = santitation >= 20 ? DiceRoller.D3(1) * DiceRoller.Roll(ship.TotalCrew / 10, 1) : DiceRoller.Roll(ship.TotalCrew / 10, 1);
-                status.GameEvents.Add(new SicknessEvent { NumberAffected = sickCount });
-            }
-        }
-
-        private int PerformAssists(List<JobMessage> list)
-        {
-            int retval = 0;
-
-            foreach (var assist in list)
-            {
-                retval += (DiceRoller.D20(1) + assist.SkillBonus >= 10) ? 2 : 0;
+                events.Add(new SicknessEvent
+                {
+                    ShipName = ship.Name,
+                    NumberAffected = sickCount
+                }); ;
             }
 
-            return retval;
+            return events;
         }
     }
 

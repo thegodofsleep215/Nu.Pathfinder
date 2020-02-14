@@ -1,9 +1,10 @@
 ﻿using Nu.OfficerMiniGame.Dal.Dto;
+using System.Collections.Generic;
 
 namespace  Nu.OfficerMiniGame
 {
     public interface IDuty
     {
-        void PerformDuty(Ship ship, ref MiniGameStatus status);
+        List<object> PerformDuty(Ship ship, FleetState state);
     }
 }
