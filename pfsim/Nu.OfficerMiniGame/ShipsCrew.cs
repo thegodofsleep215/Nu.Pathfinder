@@ -25,7 +25,7 @@ namespace Nu.OfficerMiniGame
 
         public List<int> GetWatchBonuses()
         {
-            return this.Where(a => a.Jobs.Any(b => b.DutyType == DutyType.Watch)).Select(x => x.GetDutyBonus(DutyType.Watch)).ToList();
+            return this.Where(a => a.Jobs.Any(b => !b.IsAssistant && (b.DutyType == DutyType.Watch || b.DutyType == DutyType.Pilot))).Select(x => x.GetDutyBonus(DutyType.Watch)).ToList();
         }
 
         public int GetDutyBonus(DutyType duty)

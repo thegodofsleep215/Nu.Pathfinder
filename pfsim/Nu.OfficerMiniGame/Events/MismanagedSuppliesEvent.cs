@@ -1,6 +1,6 @@
 ﻿namespace  Nu.OfficerMiniGame
 {
-    public class MismanagedSuppliesEvent
+    public class MismanagedSuppliesEvent : IShipReportEvent
     {
         public string ShipName { get; set; }
         public SupplyType? SupplyType { get; set; }

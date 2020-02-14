@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace  Nu.OfficerMiniGame.Events
 {
-    public class RepairFailureEvent
+    public class RepairFailureEvent : IShipReportEvent
     {
         public string ShipName { get; set; }
     }

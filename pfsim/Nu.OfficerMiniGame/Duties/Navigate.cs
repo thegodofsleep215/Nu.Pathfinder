@@ -17,7 +17,7 @@ namespace  Nu.OfficerMiniGame
         public override List<object> PerformDuty(Ship ship, FleetState state)
         {
             var events = new List<object>();
-            var dc = state.ShipStates[ship.Name].TemporaryNavigationModifier - state.ShipStates[ship.Name].CommandModifier;
+            var dc = state.ShipStates[ship.Name].CommandModifier + state.NavigationModifier;
             var assistBonus = PerformAssists(ship, DutyType.Navigate);
             var job = GetDutyBonus(ship, DutyType.Navigate);
             var result = (DiceRoller.D20(1) + job.SkillBonus + assistBonus) - dc + 3; // The +3 because I am assuming compass + map

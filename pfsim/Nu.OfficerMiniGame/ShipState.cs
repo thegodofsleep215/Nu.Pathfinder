@@ -5,23 +5,46 @@ namespace Nu.OfficerMiniGame
 {
     public class ShipState
     {
+        public ShipState() { }
+       
+        public ShipState(ShipInput input)
+        {
+            LoadoutName = input.LoadoutName;
+            DiseasedCrew = input.DiseasedCrew;
+            Swabbies = input.Swabbies;
+            CrewUnfitForDuty = input.CrewUnfitForDuty;
+            DisciplineStandards = input.DisciplineStandards;
+            TemporaryDisciplineModifier = input.DisciplineModifier;
+            TemporaryCommandModifier = input.CommandModifier;
+        }
+
         public string LoadoutName { get; set; }
+
+        public List<object> ShipReportEvents = new List<object>();
 
         public int DiseasedCrew { get; set; }
 
+        public int Swabbies { get; set; }
+
+        public int CrewUnfitForDuty { get; set; }
+
         public DisciplineStandards DisciplineStandards { get; set; }
 
-        public int SwabbieCount { get; set; }
+        public bool DiseaseAboardShip
+        {
+            get
+            {
+                return DiseasedCrew > 0;
+            }
+        }
 
         public int TemporaryDisciplineModifier { get; set; }
 
         public int TemporaryCommandModifier { get; set; }
 
-        public int TemporaryPilotingModifier { get; set; }
+        public Morale CrewMorale { get; set; } = new Morale();
 
-        public int TemporaryNavigationModifier { get; set; }
-
-        public int CrewDisciplineModifier
+        public int DisciplineStandardsModifier
         {
             get
             {
@@ -39,8 +62,6 @@ namespace Nu.OfficerMiniGame
                 return retval;
             }
         }
-
-
         public Dictionary<string, int> MinistrelResults { get; set; } = new Dictionary<string, int>();
 
         public List<int> WatchResults { get; set; } = new List<int>();
@@ -90,5 +111,4 @@ namespace Nu.OfficerMiniGame
 
         public int PilotResult { get; set; }
     }
-
 }

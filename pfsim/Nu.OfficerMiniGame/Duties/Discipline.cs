@@ -35,8 +35,9 @@ namespace Nu.OfficerMiniGame
             tension += hasDisciplineOfficer ? 0 : 4;
             tension += state.ShipStates[ship.Name].CommandResult <= -15 ? 4 : 0;
             tension += state.ShipStates[ship.Name].ManageResult <= -10 ? 2 : 0;
-            tension += ship.CrewDisciplineModifier;
-            tension -= ship.CrewMorale.MoraleBonus;
+            tension += ship.DisciplineAlignmentModifier;
+            tension -= state.ShipStates[ship.Name].CrewMorale.MoraleBonus;
+            tension += state.ShipStates[ship.Name].DisciplineStandardsModifier;
 
             var roll = DiceRoller.D20(1);
 

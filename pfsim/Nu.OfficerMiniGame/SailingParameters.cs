@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Nu.OfficerMiniGame
 {
@@ -14,44 +15,28 @@ namespace Nu.OfficerMiniGame
 
         public NightStatus NightStatus { get; set; }
 
-        public List<ShipModifiers> ShipModifiers { get; set; }
+        public List<ShipInput> ShipInputs { get; set; }
 
-        public int PilotingModifier
+        public static SailingParameters FromFleetState(string name, FleetState state)
         {
-            get
-            {
-                int dc = 0;
-
-                dc -= ShallowWater ? 5 : 0;
-                dc -= NarrowPassage ? 5 : 0;
-
-                switch (NightStatus)
+            var sp = new SailingParameters { VoyageName = name };
+            sp.NarrowPassage = state.NarrowPassage;
+            sp.ShallowWater = state.ShallowWater;
+            sp.OpenOcean = state.OpenOcean;
+            sp.NightStatus = state.NightStatus;
+            sp.ShipInputs = state.ShipStates.Select(x => {
+                return new ShipInput
                 {
-                    case NightStatus.Underweigh:
-                        dc -= 5;
-                        break;
-                    case NightStatus.Drifting:
-                        dc -= 2;
-                        break;
-                }
-
-                return dc;
-            }
-        }
-
-        public int NavigationModifier
-        {
-            get
-            {
-                int dc = 12;
-
-                dc += OpenOcean ? 5 : 0;
-
-                if (NightStatus == NightStatus.Underweigh)
-                    dc += 5;
-
-                return dc;
-            }
+                    LoadoutName = x.Key,
+                    DiseasedCrew = x.Value.DiseasedCrew,
+                    Swabbies = x.Value.Swabbies,
+                    CrewUnfitForDuty = x.Value.CrewUnfitForDuty,
+                    DisciplineStandards = x.Value.DisciplineStandards,
+                    DisciplineModifier = x.Value.TemporaryDisciplineModifier,
+                    CommandModifier = x.Value.TemporaryCommandModifier,
+                };
+            }).ToList();
+            return sp;
         }
 
     }

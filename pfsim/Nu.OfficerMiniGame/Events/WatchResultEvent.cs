@@ -2,7 +2,7 @@
 
 namespace Nu.OfficerMiniGame
 {
-    public class WatchResultEvent
+    public class WatchResultEvent : IShipReportEvent
     {
         private string[] ordinals = new string[] { "th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th", "th" };
 

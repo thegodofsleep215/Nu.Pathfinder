@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Nu.OfficerMiniGame
 {
-    public class PerformedDutyEvent
+    public class PerformedDutyEvent : IShipEvent
     {
         public DutyType Duty { get; set; }
 

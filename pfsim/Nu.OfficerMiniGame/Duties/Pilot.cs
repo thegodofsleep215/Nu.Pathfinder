@@ -29,8 +29,8 @@ namespace  Nu.OfficerMiniGame
         {
             var events = new List<object>();
             var weatherModifier = state.GetWeatherModifier(DutyType.Pilot);
-            var dc = 7 + ship.ShipDc - state.ShipStates[ship.Name].CommandModifier - ship.CrewPilotModifier + weatherModifier +
-                state.ShipStates[ship.Name].WatchModifier;
+            var dc = 7 + ship.ShipDc - state.ShipStates[ship.Name].CommandModifier - CombinedCrewHelpers.CrewPilotModifer(ship, state.ShipStates[ship.Name]) + weatherModifier +
+                state.ShipStates[ship.Name].WatchModifier + state.PilotingModifier;
 
             var job = GetDutyBonus(ship, DutyType.Pilot);
             var assistBonus = PerformAssists(ship, DutyType.Pilot, weatherModifier);

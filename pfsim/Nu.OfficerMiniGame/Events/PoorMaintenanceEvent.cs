@@ -1,6 +1,6 @@
 ﻿namespace  Nu.OfficerMiniGame
 {
-    public class PoorMaintenanceEvent
+    public class PoorMaintenanceEvent : IShipReportEvent
     {
         public string ShipName { get; set; }
         public int Damage { get; set; }

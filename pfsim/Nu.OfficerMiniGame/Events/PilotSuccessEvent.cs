@@ -1,6 +1,6 @@
 ﻿namespace  Nu.OfficerMiniGame
 {
-    public class PilotSuccessEvent
+    public class PilotSuccessEvent : IShipReportEvent
     {
         public string ShipName { get; set; }
         public override string ToString()

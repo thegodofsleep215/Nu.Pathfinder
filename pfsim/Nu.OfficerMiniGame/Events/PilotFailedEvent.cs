@@ -1,6 +1,6 @@
 ﻿namespace  Nu.OfficerMiniGame
 {
-    public class PilotFailedEvent
+    public class PilotFailedEvent : IShipReportEvent
     {
         public string ShipName { get; set; }
         public int Damage { get; set; }

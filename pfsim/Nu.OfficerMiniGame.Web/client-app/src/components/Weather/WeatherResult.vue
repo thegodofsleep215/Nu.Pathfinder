@@ -2,7 +2,6 @@
     <div class="card">
         <div class="container">
             <h4>Weather Conditions</h4>
-            <div>Date: {{value.date}}</div>
             <div>Temperature: {{value.temperatureInF}} </div>
             <div>Precipitation: {{value.precipitationType}}</div>
             <div>Precipitation Start: {{value.precipitationStartTime}}:00</div>

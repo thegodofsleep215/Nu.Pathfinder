@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,6 +10,17 @@ namespace Nu.OfficerMiniGame.Dal.Dto
         public string Name { get; set; }
 
         public List<VoyageEvent> Events { get; set; } = new List<VoyageEvent>();
+
+        public List<object> EventsAsObject
+        {
+            get
+            {
+                return Events.OrderBy(x => x.EventNumber).Select(x => {
+                    var type = Type.GetType(x.EventName);
+                    return JsonConvert.DeserializeObject(x.EventData, type);
+                }).ToList();
+            }
+        }
 
         public void AddEvents(List<object> events)
         {

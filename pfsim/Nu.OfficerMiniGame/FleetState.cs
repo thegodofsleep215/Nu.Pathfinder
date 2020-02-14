@@ -22,8 +22,57 @@ namespace Nu.OfficerMiniGame
 
         public int DaysPlanned { get; set; }
 
-        public WeatherConditions WeatherConditions { get; set; }
+        public bool OpenOcean { get; set; }
 
+        public bool ShallowWater { get; set; }
+
+        public bool NarrowPassage { get; set; }
+
+        public NightStatus NightStatus { get; set; }
+
+        public WeatherConditions WeatherConditions { get; set; }
+     
+        public int PilotingModifier
+        {
+            get
+            {
+                int dc = 0;
+
+                dc += ShallowWater ? 5 : 0;
+                dc += NarrowPassage ? 5 : 0;
+
+                switch (NightStatus)
+                {
+                    case NightStatus.Underweigh:
+                        dc += 5;
+                        break;
+                    case NightStatus.Drifting:
+                        dc += 2;
+                        break;
+                }
+
+                return dc;
+            }
+        }
+
+        public int NavigationModifier
+        {
+            get
+            {
+                int dc = 12;
+
+                dc += OpenOcean ? 5 : 0;
+
+                if (NightStatus == NightStatus.Underweigh)
+                    dc += 5;
+
+                return dc;
+            }
+        }
+
+
+        public Dictionary<string, ShipState> ShipStates { get; set; } = new Dictionary<string, ShipState>();
+        
         public int GetWeatherModifier(DutyType duty)
         {
             if (WeatherConditions == null)
@@ -159,19 +208,10 @@ namespace Nu.OfficerMiniGame
             return temp;
         }
 
-
-
-        public Dictionary<string, ShipState> ShipStates { get; set; } = new Dictionary<string, ShipState>();
-
-        public Dictionary<string, double> ProgressForEachDay { get; set; } = new Dictionary<string, double>();
-
-        public bool OpenOcean { get; set; }
-
         public void ResetProgress()
         {
             DayOfVoyage = 0;
             ProgressMade = 0;
-            ProgressForEachDay.Clear();
         }
 
         public void AddDaysToVoyage(int days)

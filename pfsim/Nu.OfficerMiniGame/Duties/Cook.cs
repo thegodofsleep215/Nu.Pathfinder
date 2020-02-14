@@ -17,7 +17,7 @@ namespace  Nu.OfficerMiniGame
         public override List<object> PerformDuty(Ship ship, FleetState state)
         {
             var events = new List<object>();
-            var dc = 7 + (ship.TotalCrew / 10) - state.ShipStates[ship.Name].ManageModifier - ship.CrewMorale.WellBeing;
+            var dc = 7 + (ship.TotalCrew / 10) - state.ShipStates[ship.Name].ManageModifier - state.ShipStates[ship.Name].CrewMorale.WellBeing;
             if (dc < 10)
                 dc = 10;
             var assistBonus = PerformAssists(ship, DutyType.Cook);
@@ -29,7 +29,7 @@ namespace  Nu.OfficerMiniGame
             if (result < 0)
             {
                 var wm = Math.Abs(result) / 5 + 1;
-                wm = wm > ship.CrewMorale.WellBeing ? ship.CrewMorale.WellBeing : wm;
+                wm = wm > state.ShipStates[ship.Name].CrewMorale.WellBeing ? state.ShipStates[ship.Name].CrewMorale.WellBeing : wm;
                 events.Add(new EpicCookingFailureEvent
                 {
                     ShipName = ship.Name,

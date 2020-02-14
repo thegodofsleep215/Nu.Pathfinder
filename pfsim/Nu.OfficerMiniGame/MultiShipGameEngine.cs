@@ -1,4 +1,5 @@
 ﻿using Nu.OfficerMiniGame.Dal.Dto;
+using Nu.OfficerMiniGame.Weather;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,45 +7,38 @@ using System.Linq;
 namespace Nu.OfficerMiniGame
 {
 
-    public class MultiShipGameEngine
+    public static class MultiShipGameEngine
     {
         private static Random rand = new Random();
-        protected readonly bool sailing;
-        private readonly bool verbose;
 
-        public MultiShipGameEngine(bool verbose, bool sailing = true)
-        {
-            this.verbose = verbose;
-            this.sailing = sailing;
-        }
 
-        public Dictionary<string, List<object>> Sail(Ship[] ships, SailingParameters sailingParameters, WeatherConditions weatherConditions)
+        public static List<object> Sail(List<Ship> ships, ref FleetState currentState, SailingParameters parameters, IWeatherEngine weatherEngine)
         {
-            var results = ships.ToDictionary(x => x.Name, x => Sail(x, sailingParameters, weatherConditions));
-            var pe = GenerateProgressMadeEvent(results.SelectMany(x => x.Value).ToList(), sailingParameters.NightStatus);
-            results.ToList().ForEach(x => x.Value.Add(pe));
-            return results;
-        }
+            var events = new List<object>();
+            var weather = weatherEngine.GetWeatherConditions(new WeatherInput(currentState.WeatherConditions, 0, currentState.CurrentDate, Region.Tropical));
+            var dawn = DawnOfANewDayEvent.FromInput(parameters, weather);
+            EventProcessor.Update(ref currentState, dawn);
+            events.Add(dawn);
 
-        private List<object> Sail(Ship ship, SailingParameters sailingParameters, WeatherConditions weatherConditions)
-        {
-            var gameQueue = CreateSailingQueue(sailingParameters.NightStatus);
-            var mgs = new MiniGameStatus(weatherConditions);
-            BaseResponse validation = ShipValidation.ValidateShip(ship);
-            if (validation.Success)
+            var queue = CreateSailingQueue(currentState.NightStatus);
+            while (queue.Count > 0)
             {
-                while (gameQueue.Count > 0)
+                var duty = queue.Dequeue();
+                var tempState = currentState;
+                var temp = ships.SelectMany(ship => duty.PerformDuty(ship, tempState)).ToList();
+                foreach (var e in temp)
                 {
-                    var duty = gameQueue.Dequeue();
-                    duty.PerformDuty(ship, verbose, ref mgs);
+                    EventProcessor.Update(ref currentState, e);
                 }
+                events.AddRange(temp);
             }
-
-            return mgs.GameEvents;
-
+            var pme = GenerateProgressMadeEvent(events, currentState.NightStatus);
+            EventProcessor.Update(ref currentState, pme);
+            events.Add(pme);
+            return events;
         }
 
-        public static ProgressMadeEvent GenerateProgressMadeEvent(List<object> allShipsEventsForADay, NightStatus nightStatus)
+        private static ProgressMadeEvent GenerateProgressMadeEvent(List<object> allShipsEventsForADay, NightStatus nightStatus)
         {
             var pe = new ProgressMadeEvent();
             var progressEvents = allShipsEventsForADay.Where(y => y is PilotFailedEvent || y is OffCourseEvent || y is PilotSuccessEvent).ToList();
@@ -62,6 +56,7 @@ namespace Nu.OfficerMiniGame
             }
             return pe;
         }
+
         private static double SlowProgress(NightStatus nightStatus)
         {
             return AdjustStatusForNightStatus(nightStatus, .5);
@@ -117,8 +112,7 @@ namespace Nu.OfficerMiniGame
             return result;
         }
 
-
-        private Queue<IDuty> CreateSailingQueue(NightStatus nightStatus)
+        private static Queue<IDuty> CreateSailingQueue(NightStatus nightStatus)
         {
             var gameQueue = new Queue<IDuty>();
             gameQueue.Enqueue(new Command());
@@ -137,7 +131,7 @@ namespace Nu.OfficerMiniGame
             return gameQueue;
         }
 
-        private Queue<IDuty> CreateAnchoredQueue()
+        private static Queue<IDuty> CreateAnchoredQueue()
         {
             var gameQueue = new Queue<IDuty>();
             gameQueue.Enqueue(new Command());

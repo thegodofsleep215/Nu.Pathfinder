@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace  Nu.OfficerMiniGame
 {
-    public class SuppliesExhaustedEvent
+    public class SuppliesExhaustedEvent : IShipEvent
     {
         public string ShipName { get; set; }
     }

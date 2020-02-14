@@ -1,6 +1,6 @@
 ﻿namespace  Nu.OfficerMiniGame
 {
-    public class SicknessEvent
+    public class SicknessEvent : IShipReportEvent
     {
         public string ShipName { get; set; }
         public int NumberAffected { get; set; }

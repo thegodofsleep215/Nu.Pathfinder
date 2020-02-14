@@ -106,7 +106,7 @@
                                     </table>
                                 </div>
                                 <div style="grid-column-start:1">
-                                    <div v-for="ship in course.shipStates" v-bind:key="ship.loadoutName" class="card">
+                                    <div v-for="ship in course.initialShipStates" v-bind:key="ship.loadoutName" class="card">
                                         <div class="container">
                                             <h2>{{ship.loadoutName}}</h2>
                                             <table>
@@ -164,11 +164,17 @@
     export default {
         name: "SetCourse",
         props: {
-            value: { required: false }
+            value: { required: false },
+            input: { required: false },
+            inputShipStates: { required: false },
+            inputShipLoadouts: { required: false }
         },
         data: function () {
             return {
-                course: {},
+                course: {
+                    shipLoadouts: [],
+                    initialShipStates: []
+                },
                 loadouts: [],
                 date: { year: 2012, month: 1, day: 1 }
             }
@@ -184,43 +190,57 @@
                 self.loadouts = d;
             });
             this.shipLoadoutsChanged();
-            this.parseDate();
-        },
-        watch: {
-            serializedDate: function () {
+            if (this.course.startDate == null) {
                 this.course.startDate = this.serializedDate;
             }
         },
-        methods: {
-            parseDate() {
-                if (this.course.startDate != null) {
-                    var date = /(\d+)\/(\d+)\/(\d+)/;
-                    var match = this.course.startDate.match(date);
-                    this.date.year = match[1];
-                    this.date.month = match[2];
-                    this.date.day = match[3];
+        watch: {
+            value: function () {
+                if (this.value) {
+                    if (this.input.startDate == null) {
+                        this.input.startDate = "2012/1/1 0:0:0";
+                    }
+                    else {
+                        var date = /(\d+)\/(\d+)\/(\d+)/;
+                        var match = this.input.startDate.match(date);
+                        this.date.year = match[1];
+                        this.date.month = match[2];
+                        this.date.day = match[3];
+                    }
+                    this.course.nightStatus = this.input.nightStatus;
+                    this.inputShipStates.forEach(x => {
+                        var t = JSON.parse(JSON.stringify(x));
+                        this.course.initialShipStates.push(t);
+                    });
+
+                    this.inputShipLoadouts.forEach(x => this.course.shipLoadouts.push(x));
+                    this.shipLoadoutsChanged();
                 }
-                else {
-                    this.date = { year: 0, month: 0, day: 0 };
+            },
+            serializedDate: function () {
+                this.course.startDate = this.serializedDate;
+            },
+        },
+        methods: {
+            shipLoadoutsChanged() {
+                if (this.course.initialShipStates == null) {
+                    this.course.initialShipStates = [];
                 }
 
-            },
-            shipLoadoutsChanged() {
-                if (this.course.shipStates == null) {
-                    this.course.shipStates = [];
+                if (this.course.shipLoadouts == null) {
+                    this.course.shipLoadouts = [];
                 }
                 // add new ones
-                this.course.shipLoadouts.filter(x => !this.course.shipStates.map(x => x.loadoutName).includes(x))
-                    .forEach(x => this.course.shipStates.push({
+                this.course.shipLoadouts.filter(x => !this.course.initialShipStates.map(x => x.loadoutName).includes(x))
+                    .forEach(x => this.course.initialShipStates.push({
                         loadoutName: x,
                         swabbies: 0,
                         diseasedCrew: 0,
-                        nightStatus: "Underweigh",
                         disciplineStandards: "Normal",
                     }));
 
                 // remove old ones
-                this.course.shipStates = this.course.shipStates.filter(x => this.course.shipLoadouts.includes(x.loadoutName));
+                this.course.initialShipStates = this.course.initialShipStates.filter(x => this.course.shipLoadouts.includes(x.loadoutName));
             },
             onOk() {
                 this.$emit("setcourse-ok", this.course);

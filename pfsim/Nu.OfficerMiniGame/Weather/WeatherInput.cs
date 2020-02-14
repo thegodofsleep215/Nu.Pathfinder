@@ -5,15 +5,24 @@ namespace Nu.OfficerMiniGame.Weather
 {
     public class WeatherInput
     {
-        public WeatherConditions LastConditions { get; set; }
+        public WeatherInput(WeatherConditions lastConditions, int elevationFt, PfDateTime date, Region region)
+        {
+            LastConditions = lastConditions;
+            ElevationFt = elevationFt;
+            Date = date;
+            Region = region;
+        }
 
-        public int ElevationFt { get; set; }
+        public WeatherConditions LastConditions { get; }
+
+        public int ElevationFt { get; }
+
+        public Region Region { get; }
+
+        public PfDateTime Date { get; }
+
 
         public Season CurrentSeason { get { return Date.Season; } }
-
-        public Region Region { get; set; }
-
-        public PfDateTime Date { get; set; }
 
         public int DaysLeftOfTemperatue
         {

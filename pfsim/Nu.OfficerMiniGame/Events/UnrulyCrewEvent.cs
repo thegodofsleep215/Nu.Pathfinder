@@ -2,7 +2,7 @@
 
 namespace  Nu.OfficerMiniGame
 {
-    public class UnrulyCrewEvent
+    public class UnrulyCrewEvent : IShipReportEvent
     {
         public static readonly Dictionary<int, string> StandardDisciplineResults = new Dictionary<int, string>
         {

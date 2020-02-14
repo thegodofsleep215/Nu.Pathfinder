@@ -50,7 +50,7 @@ namespace  Nu.OfficerMiniGame
 
             if (list.Count > watch)
             {
-                var assist = list[watch - 1];
+                var assist = list[watch];
                 retval += ((DiceRoller.D20(1) + assist) >= (10 - weatherModifier)) ? 2 : 0;
             }
 

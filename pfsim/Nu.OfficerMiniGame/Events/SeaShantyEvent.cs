@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace  Nu.OfficerMiniGame
 {
-    public class SeaShantyEvent
+    public class SeaShantyEvent : IShipReportEvent
     {
         DutyType _duty;
 

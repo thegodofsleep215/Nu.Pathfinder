@@ -42,28 +42,7 @@ namespace Nu.OfficerMiniGame
 
         public ShipsCrew ShipsCrew { get; set; }
 
-        public Morale CrewMorale { get; set; } = new Morale();
-
-        public int CrewQuality
-        {
-            get
-            {
-                double retval = 0;
-
-                retval = Math.Floor(((retval * ShipsCrew.CountAsCrew) + (Convert.ToDouble(AverageSwabbieQuality) * Swabbies)) / (ShipsCrew.Count + Swabbies)) - 4;
-
-                if (retval > 4)
-                    return 4;
-                else if (retval < -4)
-                    return -4;
-                else
-                    return (int)retval;
-            }
-        }
-
-        public DisciplineStandards DisciplineStandards { get; set; }
-
-        public int CrewDisciplineModifier
+        public int DisciplineAlignmentModifier
         {
             get
             {
@@ -85,95 +64,7 @@ namespace Nu.OfficerMiniGame
 
         public int Passengers { get; set; }
 
-        public int Swabbies { get; set; }
-
         public decimal AverageSwabbieQuality { get; set; }
-
-        public int AvailableCrew
-        {
-            get
-            {
-                return ShipsCrew.CountAsCrew + Swabbies - DiseasedCrew - CrewUnfitForDuty;
-            }
-        }
-
-        public int CrewUnfitForDuty { get; set; }
-
-        public bool DiseaseAboardShip
-        {
-            get
-            {
-                return DiseasedCrew > 0;
-            }
-        }
-
-        public int DiseasedCrew { get; set; }
-
-        public int SkeletonCrewPenalty
-        {
-            get
-            {
-                int retval = AvailableCrew - CrewSize;
-
-                if (retval > 0)
-                    return 0;
-                else
-                    return retval < -10 ? -10 : retval;
-            }
-        }
-
-        public bool HasMinimumCrew
-        {
-            get
-            {
-                return AvailableCrew - MinimumCrewSize >= 0;
-            }
-        }
-
-        public string GetRandomCrewName(int count = 1)
-        {
-            var swabCount = Swabbies + ShipsCrew.CountAsCrew;
-            var mates = ShipsCrew.Where(a => a.CountsAsCrew).ToList();
-            HashSet<int> picked = new HashSet<int>();
-            StringBuilder sb = new StringBuilder();
-            int result;
-
-            if (count > swabCount)
-                count = swabCount;
-
-            for (int i = 0; i < count; i++)
-            {
-                do
-                {
-                    result = DiceRoller.Roll(swabCount, 1);
-                }
-                while (picked.Contains(result));
-
-                picked.Add(result);
-
-                if (result > Swabbies)
-                {
-                    var mate = mates[result - (Swabbies + 1)];
-
-                    sb.AppendLine(string.Format("{0} {1}", mate.Title, mate.Name).Trim());
-                }
-                else
-                {
-                    sb.AppendLine(string.Format("Swabby #{0}", result));
-                }
-            }
-
-            return sb.ToString();
-        }
-
-        public int CrewPilotModifier
-        {
-            get
-            {
-                return SkeletonCrewPenalty + ShipPilotingBonus + CrewQuality;
-            }
-        }
-
 
         public int CargoPoints { get; set; }
 

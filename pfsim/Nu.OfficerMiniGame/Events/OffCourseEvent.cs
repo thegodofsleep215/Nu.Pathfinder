@@ -1,6 +1,6 @@
 ﻿namespace  Nu.OfficerMiniGame
 {
-    public class OffCourseEvent
+    public class OffCourseEvent : IShipReportEvent
     {
         public string ShipName { get; set; }
         private bool _lost = false;

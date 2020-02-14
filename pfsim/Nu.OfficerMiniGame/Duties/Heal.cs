@@ -49,9 +49,9 @@ namespace Nu.OfficerMiniGame
             var santitation = ship.TotalCrew / 10;
             santitation += hasHealer ? 0 : 4;
             santitation += state.ShipStates[ship.Name].CookResult <= -15 ? 4 : 0;
-            santitation += ship.CrewMorale.WellBeing == 2 ? 2 : 0;
-            santitation += ship.CrewMorale.WellBeing <= 1 ? 4 : 0;
-            santitation += ship.DiseaseAboardShip ? 4 : 0;
+            santitation += state.ShipStates[ship.Name].CrewMorale.WellBeing == 2 ? 2 : 0;
+            santitation += state.ShipStates[ship.Name].CrewMorale.WellBeing <= 1 ? 4 : 0;
+            santitation += state.ShipStates[ship.Name].DiseaseAboardShip ? 4 : 0;
 
             var assistBonus = PerformAssists(ship, DutyType.Heal);
             var job = GetDutyBonus(ship, DutyType.Heal);
